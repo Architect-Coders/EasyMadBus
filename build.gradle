@@ -27,8 +27,6 @@ buildscript {
                 constraintlayout:   "androidx.constraintlayout:constraintlayout:$constraint_version",
                 junit_test:         "androidx.test.ext:junit:$junit_ext_version",
                 expresso:       "androidx.test.espresso:espresso-core:$expresso_ext_version",
-
-
         ]
 
         test = [
