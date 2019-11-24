@@ -1,0 +1,38 @@
+package com.developer.ivan.core
+
+import kotlinx.coroutines.*
+
+abstract class UseCase<Param, Return, Scope> where Scope : CoroutineScope
+{
+    abstract suspend fun body(param: Param): Either<Failure,Return>
+
+    private fun execute(onResult: (Either<Failure,Return>)->Unit,param: Param,scope: CoroutineScope){
+
+        scope.launch {
+            val deferredResult = async{body(param)}
+
+            withContext(Dispatchers.Main){
+                onResult(deferredResult.await())
+            }
+        }
+    }
+}
+
+sealed class Either<out L, out R> {
+    /** * Represents the left side of [Either] class which by convention is a "Failure". */
+    data class Left<out L>(val a: L) : Either<L, Nothing>()
+    /** * Represents the right side of [Either] class which by convention is a "Success". */
+    data class Right<out R>(val b: R) : Either<Nothing, R>()
+
+    val isRht get() = this is Right<R>
+    val isLeft get() = this is Left<L>
+
+    fun <L> left(a: L) = Either.Left(a)
+    fun <R> right(b: R) = Either.Right(b)
+
+    fun either(fnL: (L) -> Any, fnR: (R) -> Any): Any =
+        when (this) {
+            is Left -> fnL(a)
+            is Right -> fnR(b)
+        }
+}
