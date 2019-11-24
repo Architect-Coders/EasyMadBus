@@ -1,4 +1,4 @@
-package com.developer.ivan.core
+package com.developer.ivan.easymadbus.core
 
 import kotlinx.coroutines.*
 
