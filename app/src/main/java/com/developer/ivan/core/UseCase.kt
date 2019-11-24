@@ -6,7 +6,7 @@ abstract class UseCase<Param, Return, Scope> where Scope : CoroutineScope
 {
     abstract suspend fun body(param: Param): Either<Failure,Return>
 
-    private fun execute(onResult: (Either<Failure,Return>)->Unit,param: Param,scope: CoroutineScope){
+    fun execute(onResult: (Either<Failure,Return>)->Unit,param: Param,scope: CoroutineScope){
 
         scope.launch {
             val deferredResult = async{body(param)}
