@@ -20,6 +20,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -35,11 +43,15 @@ dependencies {
     implementation mainApplication.glide
     implementation mainApplication.coroutines
     implementation mainApplication.coroutines_android
-    annotationProcessor  mainApplication.glide_compiler
+    implementation mainApplication.coroutines_android
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    annotationProcessor mainApplication.glide_compiler
 
     implementation androidX.appCompat
     implementation androidX.ktx
     implementation androidX.constraintlayout
+    implementation androidX.navigation_fragment
+    implementation androidX.navigation_ui
 
     testImplementation test.junit
     androidTestImplementation androidX.junit_test
