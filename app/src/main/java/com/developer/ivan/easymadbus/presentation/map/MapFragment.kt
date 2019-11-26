@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.developer.ivan.easymadbus.R
+import com.developer.ivan.easymadbus.core.inflateFragment
 
 /**
  * A simple [Fragment] subclass.
@@ -17,10 +18,7 @@ class MapFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false)
-    }
+    ): View? = container?.inflateFragment(R.layout.fragment_map)
 
 
 }
