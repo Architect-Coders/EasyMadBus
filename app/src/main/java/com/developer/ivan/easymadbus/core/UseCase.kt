@@ -2,7 +2,7 @@ package com.developer.ivan.easymadbus.core
 
 import kotlinx.coroutines.*
 
-abstract class UseCase<Param, Return, Scope> where Scope : CoroutineScope
+/*abstract class UseCase<Param, Return, Scope> where Scope : CoroutineScope
 {
     abstract suspend fun body(param: Param): Either<Failure,Return>
 
@@ -16,7 +16,15 @@ abstract class UseCase<Param, Return, Scope> where Scope : CoroutineScope
             }
         }
     }
+}*/
+
+abstract class UseCase<Param, Return>
+{
+    abstract suspend fun body(param: Param): Either<Failure,Return>
+
+    suspend fun execute(param: Param):Either<Failure,Return> = body(param)
 }
+
 
 sealed class Either<out L, out R> {
     /** * Represents the left side of [Either] class which by convention is a "Failure". */
@@ -35,4 +43,12 @@ sealed class Either<out L, out R> {
             is Left -> fnL(a)
             is Right -> fnR(b)
         }
+
+    fun <T> default(defaultValue: T, fnR: (R) -> T): T =
+        when (this) {
+            is Left -> defaultValue
+            is Right -> fnR(b)
+        }
+
+
 }
