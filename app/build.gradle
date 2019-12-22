@@ -3,6 +3,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
 
 android {
     compileSdkVersion 29
@@ -49,6 +51,8 @@ dependencies {
     implementation mainApplication.location
     implementation mainApplication.retrofit
     implementation mainApplication.retrofit_gson
+    implementation mainApplication.gson
+    implementation mainApplication.scalars
 
     annotationProcessor mainApplication.glide_compiler
 

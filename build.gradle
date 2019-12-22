@@ -19,8 +19,9 @@ buildscript {
         play_map_version = '17.0.0'
         dexter_version = '5.0.0'
         location_version = '17.0.0'
-        lifecycle_version = '2.0.0'
+        lifecycle_version = '2.2.0-alpha03'
         retrofit_version = '2.7.0'
+        gson_version = '2.8.6'
 
 
         mainApplication = [
@@ -33,7 +34,10 @@ buildscript {
                 dexter:         "com.karumi:dexter:$dexter_version",
                 location:       "com.google.android.gms:play-services-location:$location_version",
                 retrofit:       "com.squareup.retrofit2:retrofit:$retrofit_version",
-                retrofit_gson:  "com.squareup.retrofit2:converter-gson:$retrofit_version"
+                retrofit_gson:  "com.squareup.retrofit2:converter-gson:$retrofit_version",
+                gson:           "com.google.code.gson:gson:$gson_version",
+                scalars:        "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+
 
 
         ]
@@ -47,7 +51,7 @@ buildscript {
                 navigation_fragment:"androidx.navigation:navigation-fragment:$nav_version",
                 navigation_ui:      "androidx.navigation:navigation-ui-ktx:$nav_version",
                 legacy:             "androidx.legacy:legacy-support-v4:$legacy_version",
-                viewmodel:          "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+                viewmodel:          "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
         ]
 
@@ -62,7 +66,7 @@ buildscript {
         
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.2'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
