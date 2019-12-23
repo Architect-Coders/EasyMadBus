@@ -60,7 +60,6 @@ interface IBaseRepository {
                             Either.Left(Failure.JsonException(syntaxException.localizedMessage))
 
                         }
-                        Either.Right(transform(result.body() ?: default))
                     }
                     false -> Either.Left(Failure.ServerError(result.code().toString()))
                 }

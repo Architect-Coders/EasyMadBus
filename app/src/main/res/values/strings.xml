@@ -6,4 +6,5 @@
     <string name="favourites">Favourites</string>
     <string name="notifications">Notifications</string>
     <string name="title_activity_maps">Map</string>
+    <string name="lines">Lines: \n\n%s</string>
 </resources>
