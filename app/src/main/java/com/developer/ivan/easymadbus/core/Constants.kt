@@ -20,6 +20,11 @@ object Constants {
 
     }
 
+    object Location {
+        const val INTERVAL = 3000L
+        const val FAST_INTERVAL = 1500L
+    }
+
 
 
 
