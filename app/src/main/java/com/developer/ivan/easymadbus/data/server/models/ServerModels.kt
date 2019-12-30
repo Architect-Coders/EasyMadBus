@@ -5,6 +5,7 @@ import com.developer.ivan.easymadbus.core.empty
 import com.developer.ivan.easymadbus.domain.models.BusStop
 import com.developer.ivan.easymadbus.domain.models.Geometry
 import com.developer.ivan.easymadbus.domain.models.Token
+import com.google.android.gms.maps.model.LatLng
 
 interface ServerModel
 
@@ -25,7 +26,7 @@ class EntityGeometry(val type: String,val coordinates: List<Double>): ServerMode
         fun empty() = EntityGeometry(String.empty, listOf())
     }
 
-    fun toDomain() = Geometry(type,coordinates)
+    fun toDomain() = Geometry(type, LatLng(coordinates[1],coordinates[0]))
 }
 class EntityBusStop(
     private val node: String,
@@ -40,5 +41,5 @@ class EntityBusStop(
             listOf())
     }
 
-    fun toDomain() = BusStop(node,geometry.toDomain(),name,wifi,lines)
+    fun toDomain() = BusStop(node,geometry.toDomain(),name,wifi,lines,false)
 }
