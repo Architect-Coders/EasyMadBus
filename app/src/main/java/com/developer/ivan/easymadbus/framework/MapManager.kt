@@ -1,9 +1,6 @@
 package com.developer.ivan.easymadbus.framework
 
-import android.graphics.Point
-import android.location.Location
 import android.os.Bundle
-import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.Constants
 import com.developer.ivan.easymadbus.domain.models.BusStop
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -11,15 +8,17 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MapManager(private val mapView: MapView?) : OnMapReadyCallback {
-    private var mMap: GoogleMap? = null
+class MapManager(private val mapView: MapView?,
+                 private val onMapReadyCallback: (GoogleMap?)->Unit) : OnMapReadyCallback {
+    private var _mMap: GoogleMap? = null
+
     private var mapPoints: List<BusStop> = listOf()
 
+
     companion object {
-        const val DEFAULT_ZOOM = 16f
+        const val DEFAULT_ZOOM = 15f
     }
 
     fun onCreate(savedInstanceState: Bundle?) {
@@ -31,37 +30,22 @@ class MapManager(private val mapView: MapView?) : OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap?) {
 
-        mMap = p0
+        onMapReadyCallback.invoke(p0)
+        _mMap = p0
         configureMap()
 
     }
 
     private fun configureMap() {
-        mMap?.uiSettings?.isZoomControlsEnabled = false
-
-        mapPoints.forEach {busStop->
-            mMap?.addMarker(
-                MarkerOptions().position(
-                    LatLng(
-                        busStop.geometry.coordinates[1],
-                        busStop.geometry.coordinates[0]
-                    )
-                ).title(buildString {
-                    append(busStop.name)
-                })
-            )
-        }
+        _mMap?.uiSettings?.isZoomControlsEnabled = false
 
     }
-
-    fun setPoints(busStops: List<BusStop>) {
-        mapPoints = busStops.map { it.copy() }
-        configureMap()
+    fun moveToDefaultLocation(){
         moveToLocation(Constants.EMTApi.MADRID_LOC)
     }
 
     fun moveToLocation(location: LatLng) {
-        mMap?.moveCamera(
+        _mMap?.moveCamera(
             CameraUpdateFactory.newLatLngZoom(
                 location, DEFAULT_ZOOM
             )
@@ -88,7 +72,7 @@ class MapManager(private val mapView: MapView?) : OnMapReadyCallback {
 
     fun onDestroy() {
         mapView?.onDestroy()
-        mMap = null
+        _mMap = null
     }
 
     fun onLowMemory() {

@@ -1,5 +1,7 @@
 package com.developer.ivan.easymadbus.domain.repository
 
+import android.app.Application
+import com.developer.ivan.easymadbus.App
 import com.developer.ivan.easymadbus.core.Either
 import com.developer.ivan.easymadbus.core.Failure
 import com.developer.ivan.easymadbus.core.IBaseRepository
@@ -19,12 +21,13 @@ interface IBusRepository {
         clientKey: String
     ): Either<Failure, Token>
 
-    fun busStops(accessToken: String): Either<Failure, List<BusStop>>
+    fun busStops(accessToken: String, forceReload: Boolean = false): Either<Failure, List<BusStop>>
 
 
     class BusRepository(
         private val apiService: ApiService,
-        private val serverMapper: ServerMapper
+        private val serverMapper: ServerMapper,
+        private val application: App
     ) :
         IBaseRepository by IBaseRepository.BaseRepositoryImplementation(), IBusRepository {
         override fun login(
@@ -44,7 +47,8 @@ interface IBusRepository {
                     )
                 ), { token ->
 
-                    val result = when(val data = serverMapper.parseDataServerResponseFirst<EntityToken>(token)){
+                    val result = when (val data =
+                        serverMapper.parseDataServerResponseFirst<EntityToken>(token)) {
                         is Either.Left -> EntityToken.empty()
                         is Either.Right -> data.b
                     }
@@ -58,24 +62,41 @@ interface IBusRepository {
         }
 
         @SuppressWarnings("unchecked")
-        override fun busStops(accessToken: String): Either<Failure, List<BusStop>> {
+        override fun busStops(
+            accessToken: String,
+            forceReload: Boolean
+        ): Either<Failure, List<BusStop>> {
 
 
-            return request(
-                apiService.getBusStops(
-                    mapOf(
-                        "accessToken" to accessToken
+            return with(application.database.busStopDao()) {
+
+                if (getCount() > 0 && !forceReload) {
+                    Either.Right(getAll().map { it.toDomain() })
+                } else {
+                    request(
+                        apiService.getBusStops(
+                            mapOf(
+                                "accessToken" to accessToken
+                            )
+                        ), { token ->
+                            val result = when (val data =
+                                serverMapper.parseDataServerResponse<List<EntityBusStop>>(token)) {
+                                is Either.Left -> listOf()
+                                is Either.Right -> data.b
+                            }
+
+                            val domain = result.map { it.toDomain() }
+
+                            insertBusStops(domain.map { it.toDb() })
+                            domain
+
+                        },
+                        String.empty
                     )
-                ), { token ->
-                    val result = when(val data = serverMapper.parseDataServerResponse<List<EntityBusStop>>(token)){
-                        is Either.Left -> listOf()
-                        is Either.Right -> data.b
-                    }
+                }
 
-                    result.map { it.toDomain() }
-                },
-                String.empty
-            )
+
+            }
 
         }
 

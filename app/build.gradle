@@ -47,6 +47,7 @@ dependencies {
     implementation mainApplication.coroutines
     implementation mainApplication.coroutines_android
     implementation mainApplication.play_map
+    implementation mainApplication.map_utils
     implementation mainApplication.dexter
     implementation mainApplication.location
     implementation mainApplication.retrofit
@@ -54,7 +55,7 @@ dependencies {
     implementation mainApplication.gson
     implementation mainApplication.scalars
 
-    annotationProcessor mainApplication.glide_compiler
+    kapt mainApplication.glide_compiler
 
     implementation androidX.appCompat
     implementation androidX.ktx
@@ -62,7 +63,8 @@ dependencies {
     implementation androidX.navigation_fragment
     implementation androidX.navigation_ui
     implementation androidX.legacy
-    implementation androidX.viewmodel
+    implementation androidX.room
+    kapt androidX.room_compiler
 
     testImplementation test.junit
     androidTestImplementation androidX.junit_test
