@@ -24,6 +24,9 @@ object Constants {
         const val INTERVAL = 3000L
         const val FAST_INTERVAL = 1500L
     }
+    object Token {
+        const val TOKEN_ID=999
+    }
 
 
 
