@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.json.JSONException
+import org.json.JSONObject
 
 
 object ServerMapper
@@ -21,6 +22,18 @@ object ServerMapper
             Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
         }
     }
+
+    inline fun <reified T> parseArriveServerResponse(data: String): Either<Failure,T>
+    {
+        return try {
+
+            val jsonData = JSONArray(data).getJSONObject(0).getString("Arrive")
+            parseDataServerResponse(jsonData)
+        }catch (e: JsonSyntaxException){
+            Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
+        }
+    }
+
 
     inline fun <reified T> parseDataServerResponseFirst(data: String): Either<Failure,T>
     {

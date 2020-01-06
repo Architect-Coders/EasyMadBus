@@ -19,16 +19,15 @@ import com.developer.ivan.easymadbus.core.*
 import com.developer.ivan.easymadbus.data.server.ServerMapper
 import com.developer.ivan.easymadbus.domain.models.BusStop
 import com.developer.ivan.easymadbus.domain.repository.IBusRepository
-import com.developer.ivan.easymadbus.domain.uc.GetBusStops
-import com.developer.ivan.easymadbus.domain.uc.GetCoarseLocation
-import com.developer.ivan.easymadbus.domain.uc.GetFineLocation
-import com.developer.ivan.easymadbus.domain.uc.GetToken
+import com.developer.ivan.easymadbus.domain.uc.*
 import com.developer.ivan.easymadbus.framework.MapManager
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 import com.developer.ivan.easymadbus.framework.PermissionRequester
 import com.developer.ivan.easymadbus.framework.PlayServicesLocationDataSource
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.google.maps.android.clustering.ClusterManager
 import kotlinx.android.synthetic.main.fragment_map.*
 
@@ -50,10 +49,19 @@ class BusMapFragment : Fragment() {
 
             findViewById<MapView>(R.id.map)?.let { mapView ->
                 mapManager =
-                    MapManager(mapView, ::handleMapReady).apply { onCreate(savedInstanceState) }
+                    MapManager(
+                        requireActivity().application,
+                        mapView,
+                        ::handleMapReady,
+                        ::handleMarkClick
+                    ).apply { onCreate(savedInstanceState) }
 
             }
         }
+    }
+
+    private fun handleMarkClick(markId: String, stopId: String) {
+        mViewModel.timeArrive(markId, stopId)
     }
 
 
@@ -135,6 +143,19 @@ class BusMapFragment : Fragment() {
             is BusMapViewModel.BusStopScreenState.ShowFusedLocation -> mapManager?.moveToLocation(
                 LatLng(busStopScreenState.location.latitude, busStopScreenState.location.longitude)
             )
+
+            is BusMapViewModel.BusStopScreenState.ShowBusArrives -> {
+
+                mClusterManager?.markerCollection?.markers?.find { it.id == busStopScreenState.markId }
+                    ?.let {
+                        mViewModel.updateMarkerInfo(it,busStopScreenState.arrives)
+
+                    }
+            }
+
+            is BusMapViewModel.BusStopScreenState.UpdateMarkerInfoWindow -> {
+                busStopScreenState.marker.showInfoWindow()
+            }
         }
     }
 
@@ -162,6 +183,9 @@ class BusMapFragment : Fragment() {
                     repository
                 ),
                 GetToken(
+                    repository
+                ),
+                GetBusStopTime(
                     repository
                 ),
                 GetCoarseLocation(PlayServicesLocationDataSource(application = requireActivity().application)),

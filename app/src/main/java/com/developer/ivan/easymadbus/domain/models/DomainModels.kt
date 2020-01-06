@@ -6,6 +6,8 @@ import com.developer.ivan.easymadbus.data.db.models.DBBusStop
 import com.developer.ivan.easymadbus.data.db.models.DBGeometry
 import com.developer.ivan.easymadbus.data.db.models.DBToken
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.google.maps.android.clustering.ClusterItem
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
@@ -25,15 +27,26 @@ data class BusStop(
     val geometry: Geometry,
     val name: String,
     val wifi: String,
-    val lines: List<String>) : Parcelable, ClusterItem {
-    override fun getSnippet(): String = name
+    val lines: List<Pair<String,List<Arrive>>>) : Parcelable, ClusterItem {
+/*
+    override fun getSnippet(): String =
+            lines.map { it.split("/") }.getOrNull(0)?.joinToString(", ") ?: String.empty
+*/
 
+    override fun getSnippet(): String = Gson().toJson(this,object: TypeToken<BusStop>(){}.type)
     override fun getTitle(): String = name
 
     override fun getPosition(): LatLng  = geometry.coordinates
 
-    fun toDb(): DBBusStop = DBBusStop(node,geometry.toDb(),name,wifi)
+    fun toDb(): DBBusStop = DBBusStop(node,geometry.toDb(),name,wifi,lines.map { it.first })
 }
+
+@Parcelize
+data class Arrive(val line: String,
+                  val stop: String,
+                  val estimateArrive: Int,
+                  val distanceBus:  Int,
+                  val timeStamp: Long) : Parcelable
 
 @Parcelize
 data class Geometry(val type: String, val coordinates: LatLng) : Parcelable

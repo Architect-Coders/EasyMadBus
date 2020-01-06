@@ -18,6 +18,10 @@ val String.Companion.empty: String
 val Int.Companion.default : Int
     get() = 0
 
+val Long.Companion.default : Long
+    get() = 0L
+
+
 fun View.show() = run { visibility = View.VISIBLE }
 fun View.hide() = run { visibility = View.GONE }
 
