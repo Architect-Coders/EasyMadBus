@@ -1,17 +1,19 @@
 package com.developer.ivan.easymadbus.domain.repository
 
-import android.app.Application
 import com.developer.ivan.easymadbus.App
 import com.developer.ivan.easymadbus.core.Either
 import com.developer.ivan.easymadbus.core.Failure
 import com.developer.ivan.easymadbus.core.IBaseRepository
 import com.developer.ivan.easymadbus.core.empty
 import com.developer.ivan.easymadbus.data.server.ServerMapper
+import com.developer.ivan.easymadbus.data.server.models.EntityArrive
 import com.developer.ivan.easymadbus.data.server.models.EntityBusStop
 import com.developer.ivan.easymadbus.data.server.models.EntityToken
+import com.developer.ivan.easymadbus.domain.models.Arrive
 import com.developer.ivan.easymadbus.domain.models.BusStop
 import com.developer.ivan.easymadbus.domain.models.Token
 import com.developer.ivan.easymadbus.framework.ApiService
+import org.json.JSONObject
 
 interface IBusRepository {
     fun login(
@@ -22,6 +24,8 @@ interface IBusRepository {
     ): Either<Failure, Token>
 
     fun busStops(accessToken: String, forceReload: Boolean = false): Either<Failure, List<BusStop>>
+
+    fun stopTimeLines(accessToken: String, busStop: String): Either<Failure,List<Arrive>>
 
 
     class BusRepository(
@@ -108,6 +112,36 @@ interface IBusRepository {
 
 
             }
+
+        }
+
+        override fun stopTimeLines(
+            accessToken: String,
+            busStop: String
+        ): Either<Failure, List<Arrive>> {
+
+            val bodyOptions = JSONObject().apply {
+                put("Text_EstimationsRequired_YN","Y")
+            }
+            return request(
+                apiService.getArrivesEndpoint(
+                    busStop,
+                    bodyOptions.toString(),
+                    mapOf(
+                        "accessToken" to accessToken
+                    )
+                ), { token ->
+                    val result = when (val data =
+                        serverMapper.parseArriveServerResponse<List<EntityArrive>>(token)) {
+                        is Either.Left -> listOf()
+                        is Either.Right -> data.b
+                    }
+
+                    result.map { it.toDomain() }
+
+                },
+                String.empty
+            )
 
         }
 

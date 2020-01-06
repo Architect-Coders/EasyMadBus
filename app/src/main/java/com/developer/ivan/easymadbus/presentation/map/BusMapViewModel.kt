@@ -5,6 +5,7 @@ import android.location.Location
 import androidx.lifecycle.*
 import com.developer.ivan.easymadbus.core.BaseViewModel
 import com.developer.ivan.easymadbus.core.Either
+import com.developer.ivan.easymadbus.domain.models.Arrive
 import com.developer.ivan.easymadbus.domain.models.BusStop
 import com.developer.ivan.easymadbus.domain.uc.*
 import com.developer.ivan.easymadbus.framework.LocationDataSource
@@ -13,6 +14,10 @@ import com.developer.ivan.easymadbus.framework.PlayServicesLocationDataSource
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.model.Marker
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,6 +25,7 @@ import kotlinx.coroutines.withContext
 
 class BusMapViewModel(
     private val busStops: GetBusStops, accessToken: GetToken,
+    private val stopTime: GetBusStopTime,
     private val coarseLocation: GetCoarseLocation,
     private val fineLocation: LocationDataSource,
     private val permissionChecker: PermissionChecker
@@ -31,6 +37,8 @@ class BusMapViewModel(
         object Failure : BusStopScreenState()
         class ShowBusStops(val busStops: List<BusStop>) : BusStopScreenState()
         class ShowFusedLocation(val location: Location) : BusStopScreenState()
+        class ShowBusArrives(val markId: String,val arrives: List<Arrive>) : BusStopScreenState()
+        class UpdateMarkerInfoWindow(val marker: Marker) : BusStopScreenState()
         object RequestCoarseLocation : BusStopScreenState()
         object RequestFineLocation : BusStopScreenState()
     }
@@ -42,6 +50,35 @@ class BusMapViewModel(
     init {
 
         initScope()
+
+    }
+
+    fun updateMarkerInfo(marker: Marker, arrives: List<Arrive>)
+    {
+        try {
+            val busData = Gson().fromJson<BusStop>(
+                marker.snippet,
+                object : TypeToken<BusStop>() {}.type
+            )
+            val mutableListStopArrives =
+                busData.lines.distinctBy { it.first.split("/")[0] }.map { line ->
+                    Pair(
+                        line.first,
+                        (arrives.filter {
+                            it.line == line.first.split(
+                                "/"
+                            )[0]
+                        })
+                    )
+                }
+
+            val busDataCopy = busData.copy(lines = mutableListStopArrives)
+
+            marker.snippet =
+                Gson().toJson(busDataCopy, object : TypeToken<BusStop>() {}.type)
+
+            _busState.postValue(BusStopScreenState.UpdateMarkerInfoWindow(marker))
+        }catch (e: JsonSyntaxException){ }
 
     }
 
@@ -87,6 +124,20 @@ class BusMapViewModel(
         }
     }
 
+    fun timeArrive(markId: String,busStopId: String){
+
+        executeWithToken { token ->
+
+            launch {
+                stopTime.execute(GetBusStopTime.Params(token,busStopId)).either(::handleFailure) {
+
+                    _busState.postValue(BusStopScreenState.ShowBusArrives(markId,it))
+
+                }
+            }
+        }
+    }
+
     private fun handleBusStop(busList: List<BusStop>) {
         _busState.postValue(BusStopScreenState.ShowBusStops(busList))
     }
@@ -100,13 +151,14 @@ class BusMapViewModel(
     class BusMapViewModelFactory(
         private val busStops: GetBusStops,
         private val accessToken: GetToken,
+        private val stopTime: GetBusStopTime,
         val location: GetCoarseLocation,
         val fineLocation: PlayServicesLocationDataSource,
         val permissionChecker: PermissionChecker
     ) :
         ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return BusMapViewModel(busStops, accessToken,location,fineLocation,permissionChecker) as T
+            return BusMapViewModel(busStops, accessToken,stopTime,location,fineLocation,permissionChecker) as T
         }
     }
 }
