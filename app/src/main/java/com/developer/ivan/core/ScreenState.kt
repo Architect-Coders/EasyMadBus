@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.core
+package com.developer.ivan.core
 
 sealed class ScreenState<out T>
 {
