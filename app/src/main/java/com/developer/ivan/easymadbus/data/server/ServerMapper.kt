@@ -36,6 +36,18 @@ object ServerMapper
     }
 
 
+    inline fun <reified T> parseItemServerResponse(data: String): Either<Failure,T>
+    {
+        return try {
+
+            val jsonData = JSONArray(data).getJSONObject(0).getString("item")
+            parseDataServerResponse(jsonData)
+        }catch (e: JsonSyntaxException){
+            Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
+        }
+    }
+
+
     inline fun <reified T> parseDataServerResponseFirst(data: String): Either<Failure,T>
     {
         return try {

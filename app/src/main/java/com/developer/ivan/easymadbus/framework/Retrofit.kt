@@ -17,10 +17,12 @@ interface ApiService {
         const val USERS_ENDPOINT = "user/"
         const val STOPS_ENDPOINT = "stops/"
         const val ARRIVES_ENDPOINT = "arrives/"
+        const val LINES_ENDPOINT = "lines/"
 
 
         const val GET_LOGIN = "login/"
         const val POST_STOPS = "list/"
+        const val GET_INCIDENTS = "incidents/"
 
     }
 
@@ -34,5 +36,9 @@ interface ApiService {
     fun getArrivesEndpoint(@Path("stopId") stopId: String,
                            @Body jsonBody: String,
                            @HeaderMap headers: Map<String, String>): Call<String>
+
+    @retrofit2.http.GET("$TRANSPORT_ENDPOINT$LINES_ENDPOINT$GET_INCIDENTS"+"all")
+    fun getIncidents(@HeaderMap headers: Map<String, String>): Call<String>
+
 
 }

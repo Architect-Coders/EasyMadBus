@@ -1,6 +1,5 @@
 package com.developer.ivan.easymadbus.presentation.favourites
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.developer.ivan.domain.Arrive
 import com.developer.ivan.domain.Either
@@ -12,10 +11,6 @@ import com.developer.ivan.usecases.GetBusAndStopsFavourites
 import com.developer.ivan.usecases.GetBusStopTime
 import com.developer.ivan.usecases.GetToken
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 
 class FavouriteViewModel(
     accessToken: GetToken,
@@ -69,7 +64,7 @@ class FavouriteViewModel(
 
     }
 
-    @ExperimentalCoroutinesApi
+
     fun obtainInfo() {
 
         _favouriteState.value = FavouriteScreenState.Loading
@@ -83,13 +78,12 @@ class FavouriteViewModel(
                         response.filter { it.second != null }
                             .map {
                                 Pair(it.first.toUIBusStop(), it.second!!.toUIStopFavourite())
-                            }.also { list ->
+                            }.let { list ->
                                 _favouriteState.value = (
                                         FavouriteScreenState.ShowBusStopFavouriteInfo(
                                             list
                                         )
                                         )
-                            }.let { list ->
 
                                 getStopsTimes(token,list).awaitAll().forEach { arrives ->
 
@@ -115,7 +109,6 @@ class FavouriteViewModel(
                                         }
                                     }
                                 }
-
                             }
                     }
 

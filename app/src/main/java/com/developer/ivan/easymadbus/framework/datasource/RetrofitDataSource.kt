@@ -6,6 +6,7 @@ import com.developer.ivan.easymadbus.core.IRequest
 import com.developer.ivan.easymadbus.data.server.ServerMapper
 import com.developer.ivan.easymadbus.data.server.models.EntityArrive
 import com.developer.ivan.easymadbus.data.server.models.EntityBusStop
+import com.developer.ivan.easymadbus.data.server.models.EntityIncident
 import com.developer.ivan.easymadbus.data.server.models.EntityToken
 import com.developer.ivan.easymadbus.framework.ApiService
 import kotlinx.coroutines.Dispatchers
@@ -64,6 +65,21 @@ data class RetrofitDataSource(val apiService: ApiService,
                 }.map { it.toDomain() }
             })
         }
+    }
+
+    override suspend fun getIncidents(headers: Map<String, String>): Either<Failure, List<Incident>> {
+
+        return withContext(Dispatchers.IO){
+            request(apiService.getIncidents(headers),{incidents->
+                when (val data =
+                    servermapper.parseItemServerResponse<List<EntityIncident>>(incidents)) {
+                    is Either.Left -> listOf()
+                    is Either.Right -> data.b
+                }.map { it.toDomain() }
+            })
+        }
+
+
     }
 
 

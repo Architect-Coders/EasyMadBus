@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">EasyMadBus</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="map">Bus stop</string>
     <string name="favourites">Favourites</string>
     <string name="notifications">Notifications</string>
     <string name="title_activity_maps">Map</string>
     <string name="lines">Lines: \n\n%s</string>
-    <string name="empty_time">----</string>
+    <string name="empty">----</string>
+    <string name="valid_from">Valid from <b>%1$s</b> until <b>%2$s</b></string>
+    <string name="line_n">Line %1$s</string>
 </resources>

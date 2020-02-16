@@ -11,5 +11,8 @@ interface RemoteDataSource {
         headers: Map<String, String>,
         body: Map<String, String>
     ): Either<Failure, List<Arrive>>
+    suspend fun getIncidents(
+        headers: Map<String, String>
+    ): Either<Failure, List<Incident>>
 
 }
