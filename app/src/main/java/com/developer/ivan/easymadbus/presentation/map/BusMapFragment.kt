@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_map.*
 class BusMapFragment : Fragment() {
 
     private var mapManager: MapManager? = null
-    private lateinit var mViewModel: BusMapViewModel
+    private val mViewModel: BusMapViewModel by lazy { getViewModel { ((requireActivity().application) as App).component.busMapViewModel } }
     private var mClusterManager: ClusterManager<UIBusStop>? = null
     private lateinit var requestManager: PermissionRequester
     private var googleMap: GoogleMap? = null
@@ -63,7 +63,7 @@ class BusMapFragment : Fragment() {
         mViewModel.clickInMark(markId, stopId)
     }
 
-    private fun handleInfoWindowClick(markId: String, busData: Pair<UIBusStop,UIStopFavourite?>){
+    private fun handleInfoWindowClick(markId: String, busData: Pair<UIBusStop, UIStopFavourite?>) {
         mViewModel.clickInInfoWindow(markId, busData)
     }
 
@@ -72,7 +72,7 @@ class BusMapFragment : Fragment() {
         this.googleMap = googleMap
         mClusterManager = ClusterManager(context, this.googleMap)
         mClusterManager!!.setAnimation(true)
-        mClusterManager!!.renderer = ClusterItem(context,googleMap,mClusterManager!!)
+        mClusterManager!!.renderer = ClusterItem(context, googleMap, mClusterManager!!)
 
         this.googleMap?.setOnCameraIdleListener(mClusterManager)
 
@@ -93,7 +93,6 @@ class BusMapFragment : Fragment() {
 
 
         requestManager = PermissionRequester(requireActivity())
-        getViewModel()
 
         initListeners()
 
@@ -103,7 +102,7 @@ class BusMapFragment : Fragment() {
 
     }
 
-    private fun initStates(){
+    private fun initStates() {
         mViewModel.busState.observe(viewLifecycleOwner, Observer {
             renderBusState(it)
         })
@@ -184,6 +183,7 @@ class BusMapFragment : Fragment() {
             mViewModel.fineLocation()
     }
 
+/*
 
     private fun getViewModel() {
         val repository = BusRepository(
@@ -220,6 +220,7 @@ class BusMapFragment : Fragment() {
             )
         )[BusMapViewModel::class.java]
     }
+*/
 
     override fun onResume() {
         super.onResume()
