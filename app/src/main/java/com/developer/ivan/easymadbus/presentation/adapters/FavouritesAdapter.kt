@@ -3,19 +3,12 @@ package com.developer.ivan.easymadbus.presentation.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.developer.ivan.domain.BusStop
 import com.developer.ivan.easymadbus.R
-import com.developer.ivan.easymadbus.core.basicDiffUtil
-import com.developer.ivan.easymadbus.core.hide
-import com.developer.ivan.easymadbus.presentation.map.LineTimeCustomView
-import com.developer.ivan.easymadbus.presentation.models.UIArrive
+import com.developer.ivan.easymadbus.presentation.map.LineCustomView
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import kotlinx.android.synthetic.main.item_favourite.view.*
-import kotlinx.android.synthetic.main.layout_info_line_time.view.*
 
 class FavouritesAdapter :
     RecyclerView.Adapter<FavouritesAdapter.FavouriteViewHolder>() {
@@ -62,7 +55,7 @@ class FavouritesAdapter :
 
                 item.first.lines.forEach {
 
-                    lyLineContainer.addView(LineTimeCustomView(context).apply { setTimeLine(it) })
+                    lyLineContainer.addView(LineCustomView(context).apply { setLine(it) })
                 }
 
                 lyLineContainer
