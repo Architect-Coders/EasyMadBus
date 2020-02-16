@@ -1,12 +1,11 @@
 package com.developer.ivan.easymadbus.domain.uc
 
-import com.developer.ivan.easymadbus.core.Either
-import com.developer.ivan.easymadbus.core.Failure
+import com.developer.ivan.data.repository.IBusRepository
+import com.developer.ivan.domain.Arrive
+import com.developer.ivan.domain.Either
+import com.developer.ivan.domain.Failure
+import com.developer.ivan.domain.Token
 import com.developer.ivan.easymadbus.core.UseCase
-import com.developer.ivan.easymadbus.domain.models.Arrive
-import com.developer.ivan.easymadbus.domain.models.BusStop
-import com.developer.ivan.easymadbus.domain.models.Token
-import com.developer.ivan.easymadbus.domain.repository.IBusRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

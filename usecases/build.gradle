@@ -1,0 +1,15 @@
+apply plugin: 'java-library'
+
+apply plugin: 'kotlin'
+
+
+dependencies {
+    def mainApplication = rootProject.ext.mainApplication
+
+    implementation project(':data')
+    implementation project(':domain')
+
+    implementation mainApplication.kotlin
+
+
+}

@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.developer.ivan.domain.Arrive
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.hide
-import com.developer.ivan.easymadbus.domain.models.Arrive
 import kotlinx.android.synthetic.main.layout_info_line_time.view.*
 
 class LineTimeCustomView @JvmOverloads constructor(

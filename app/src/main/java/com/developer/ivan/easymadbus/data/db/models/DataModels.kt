@@ -1,10 +1,8 @@
 package com.developer.ivan.easymadbus.data.db.models
 
 import androidx.room.*
-import com.developer.ivan.easymadbus.domain.models.Arrive
-import com.developer.ivan.easymadbus.domain.models.BusStop
-import com.developer.ivan.easymadbus.domain.models.Geometry
-import com.developer.ivan.easymadbus.domain.models.Token
+import com.developer.ivan.domain.*
+import com.developer.ivan.easymadbus.presentation.models.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -23,8 +21,12 @@ data class DBBusStop(
     val lines: List<String>
 ){
 //    TODO lines
+    fun toUI() = UIBusStop(node,geometry.toUI(),name,wifi, lines.map { Pair(it, listOf<UIArrive>()) })
     fun toDomain() = BusStop(node,geometry.toDomain(),name,wifi, lines.map { Pair(it, listOf<Arrive>()) })
 }
+
+
+
 
 class LinesConverter {
     @TypeConverter
@@ -42,23 +44,32 @@ class LinesConverter {
     }
 }
 
-/*@Entity(
-    foreignKeys = [ForeignKey(
-        entity = DBBusStop::class,
-        parentColumns = arrayOf("node"),
-        childColumns = arrayOf("busStopId"),
-        onDelete = CASCADE
-    )]
-)
-data class DBFavouriteBusStop(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val busStopId: String
-)*/
+@Entity
+data class DBStopFavourite(
+    @PrimaryKey
+    val busStopId: String,
+    val fname: String?
+){
+    fun toUI() = UIStopFavourite(busStopId, fname)
+    fun toDomain() = StopFavourite(busStopId,fname)
+}
+
+data class DBBusAndStopFavourite
+    (
+    @Embedded
+    val busStop: DBBusStop,
+    @Relation(parentColumn = "node",
+        entityColumn = "busStopId")
+    val dbStopFavourite: DBStopFavourite?=null
+){
+    fun toUI() = Pair(busStop.toUI(),dbStopFavourite?.toUI())
+    fun toDomain() = Pair(busStop.toDomain(), dbStopFavourite?.toDomain())
+}
 
 data class DBGeometry(val type: String, val latitude: Double, val longitude: Double)
 {
-    fun toDomain() = Geometry(type, LatLng(latitude,longitude))
+    fun toUI() = UIGeometry(type, LatLng(latitude,longitude))
+    fun toDomain() = Geometry(type, listOf(longitude,latitude))
 }
 
 @Entity
@@ -69,5 +80,6 @@ data class DBToken(
     val tokenSecExpiration: Int,
     val timeStamp: Long
 ){
-    fun toDomain(): Token = Token(accessToken,tokenSecExpiration,timeStamp)
+    fun toUI() = UIToken(accessToken,tokenSecExpiration,timeStamp)
+    fun toDomain() = Token(accessToken,tokenSecExpiration,timeStamp)
 }

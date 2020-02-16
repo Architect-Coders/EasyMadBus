@@ -1,12 +1,15 @@
 package com.developer.ivan.easymadbus.core
 
+import com.developer.ivan.domain.Either
+import com.developer.ivan.domain.Failure
+import com.developer.ivan.domain.empty
 import com.google.gson.JsonSyntaxException
 import org.json.JSONObject
 import retrofit2.Call
 import kotlin.Throwable as ThrowableRequest
 
 
-interface IBaseRepository {
+interface IRequest {
 
     fun <R> request(
         request: Call<String>,
@@ -15,7 +18,7 @@ interface IBaseRepository {
     ): Either<Failure, R>
 
 
-    class BaseRepositoryImplementation : IBaseRepository {
+    class RequestRetrofitImplementation : IRequest {
 
         companion object {
             const val CODE_OK = "00"

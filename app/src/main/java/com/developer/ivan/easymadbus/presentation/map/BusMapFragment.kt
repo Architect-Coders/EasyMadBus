@@ -1,7 +1,6 @@
 package com.developer.ivan.easymadbus.presentation.map
 
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,24 +9,23 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
-import com.bumptech.glide.RequestManager
+import com.developer.ivan.data.repository.BusRepository
+import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.App
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.*
 import com.developer.ivan.easymadbus.data.server.ServerMapper
-import com.developer.ivan.easymadbus.domain.models.BusStop
-import com.developer.ivan.easymadbus.domain.repository.IBusRepository
-import com.developer.ivan.easymadbus.domain.uc.*
 import com.developer.ivan.easymadbus.framework.MapManager
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 import com.developer.ivan.easymadbus.framework.PermissionRequester
-import com.developer.ivan.easymadbus.framework.PlayServicesLocationDataSource
+import com.developer.ivan.easymadbus.framework.datasource.PlayServicesLocationDataSource
+import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
+import com.developer.ivan.easymadbus.framework.datasource.RoomDataSource
+import com.developer.ivan.easymadbus.presentation.models.UIBusStop
+import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
+import com.developer.ivan.usecases.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.google.maps.android.clustering.ClusterManager
 import kotlinx.android.synthetic.main.fragment_map.*
 
@@ -36,7 +34,7 @@ class BusMapFragment : Fragment() {
 
     private var mapManager: MapManager? = null
     private lateinit var mViewModel: BusMapViewModel
-    private var mClusterManager: ClusterManager<BusStop>? = null
+    private var mClusterManager: ClusterManager<UIBusStop>? = null
     private lateinit var requestManager: PermissionRequester
     private var googleMap: GoogleMap? = null
 
@@ -53,7 +51,8 @@ class BusMapFragment : Fragment() {
                         requireActivity().application,
                         mapView,
                         ::handleMapReady,
-                        ::handleMarkClick
+                        ::handleMarkClick,
+                        ::handleInfoWindowClick
                     ).apply { onCreate(savedInstanceState) }
 
             }
@@ -61,7 +60,11 @@ class BusMapFragment : Fragment() {
     }
 
     private fun handleMarkClick(markId: String, stopId: String) {
-        mViewModel.timeArrive(markId, stopId)
+        mViewModel.clickInMark(markId, stopId)
+    }
+
+    private fun handleInfoWindowClick(markId: String, busData: Pair<UIBusStop,UIStopFavourite?>){
+        mViewModel.clickInInfoWindow(markId, busData)
     }
 
 
@@ -69,15 +72,19 @@ class BusMapFragment : Fragment() {
         this.googleMap = googleMap
         mClusterManager = ClusterManager(context, this.googleMap)
         mClusterManager!!.setAnimation(true)
+        mClusterManager!!.renderer = ClusterItem(context,googleMap,mClusterManager!!)
+
         this.googleMap?.setOnCameraIdleListener(mClusterManager)
+
 
         mViewModel.busStops()
         mViewModel.fusedLocation()
     }
 
-    private fun setPoints(listPoints: List<BusStop>) {
+    private fun setPoints(listPoints: List<UIBusStop>) {
 
         listPoints.forEach { mClusterManager?.addItem(it) }
+        mClusterManager?.cluster()
 //        mapManager?.moveToDefaultLocation()
     }
 
@@ -85,13 +92,18 @@ class BusMapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        requestManager = PermissionRequester(requireActivity())
         getViewModel()
 
         initListeners()
 
-        requestManager = PermissionRequester(requireActivity())
 
 
+        initStates()
+
+    }
+
+    private fun initStates(){
         mViewModel.busState.observe(viewLifecycleOwner, Observer {
             renderBusState(it)
         })
@@ -99,7 +111,6 @@ class BusMapFragment : Fragment() {
         mViewModel.failure.observe(viewLifecycleOwner, Observer {
             handleFailure(it)
         })
-
     }
 
     private fun initListeners() {
@@ -125,7 +136,7 @@ class BusMapFragment : Fragment() {
             is BusMapViewModel.BusStopScreenState.ShowBusStops -> {
                 progressBar.hide()
 
-                setPoints(busStopScreenState.busStops)
+                setPoints(busStopScreenState.uiBusStop)
             }
             is BusMapViewModel.BusStopScreenState.RequestCoarseLocation -> {
                 requestManager.request(
@@ -141,14 +152,18 @@ class BusMapFragment : Fragment() {
             }
 
             is BusMapViewModel.BusStopScreenState.ShowFusedLocation -> mapManager?.moveToLocation(
-                LatLng(busStopScreenState.location.latitude, busStopScreenState.location.longitude)
+                LatLng(busStopScreenState.location.lat, busStopScreenState.location.lng)
             )
 
-            is BusMapViewModel.BusStopScreenState.ShowBusArrives -> {
+            is BusMapViewModel.BusStopScreenState.ShowBusStopInfo -> {
 
                 mClusterManager?.markerCollection?.markers?.find { it.id == busStopScreenState.markId }
                     ?.let {
-                        mViewModel.updateMarkerInfo(it,busStopScreenState.arrives)
+                        mViewModel.updateMarkerInfo(
+                            it,
+                            busStopScreenState.busData,
+                            busStopScreenState.arrives
+                        )
 
                     }
             }
@@ -169,11 +184,11 @@ class BusMapFragment : Fragment() {
             mViewModel.fineLocation()
     }
 
+
     private fun getViewModel() {
-        val repository = IBusRepository.BusRepository(
-            retrofit,
-            ServerMapper,
-            application = requireActivity().application as App
+        val repository = BusRepository(
+            RetrofitDataSource(retrofit, ServerMapper),
+            RoomDataSource((requireActivity().application as App).database)
         )
 
         mViewModel = ViewModelProvider(
@@ -188,8 +203,19 @@ class BusMapFragment : Fragment() {
                 GetBusStopTime(
                     repository
                 ),
-                GetCoarseLocation(PlayServicesLocationDataSource(application = requireActivity().application)),
-                PlayServicesLocationDataSource(application = requireActivity().application),
+                GetBusAndStopsFavourites(repository),
+                InsertStopFavourite(repository),
+                DeleteStopFavourite(repository),
+                GetCoarseLocation(
+                    PlayServicesLocationDataSource(
+                        application = requireActivity().application
+                    )
+                ),
+                GetFineLocation(
+                    PlayServicesLocationDataSource(
+                        application = requireActivity().application
+                    )
+                ),
                 PermissionChecker(application = requireActivity().application)
             )
         )[BusMapViewModel::class.java]

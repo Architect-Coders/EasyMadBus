@@ -2,16 +2,28 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="@dimen/minInfoWindowWidth">
 
 
-    <TextView
-        style="@style/TitleBus"
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtBusStopName"
-        android:layout_width="wrap_content"
+        style="@style/TitleBus"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/chkFavourite"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/chkFavourite"
+        android:layout_width="@dimen/favouriteSizeIcon"
+        android:layout_height="@dimen/favouriteSizeIcon"
+        android:background="@drawable/favourite_state"
+        android:button="@null"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <LinearLayout
         android:id="@+id/lyLineContainer"
@@ -19,6 +31,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtBusStopName"/>
+        app:layout_constraintTop_toBottomOf="@+id/chkFavourite"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

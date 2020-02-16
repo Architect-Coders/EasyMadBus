@@ -2,5 +2,11 @@
 <resources>
     <dimen name="minMargin">8dp</dimen>
     <dimen name="minPadding">8dp</dimen>
+    <dimen name="padding">16dp</dimen>
+    <dimen name="margin">16dp</dimen>
+    <dimen name="favouriteSizeIcon">46dp</dimen>
+    <dimen name="progressSmallSizeIcon">30dp</dimen>
+    <dimen name="minInfoWindowWidth">200dp</dimen>
+    <dimen name="minElevation">4dp</dimen>
 
 </resources>
