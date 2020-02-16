@@ -33,14 +33,10 @@ dependencies {
 
     implementation mainApplication.kotlin
     implementation mainApplication.glide
-    implementation mainApplication.coroutines
-    implementation mainApplication.coroutines_android
     annotationProcessor  mainApplication.glide_compiler
-
     implementation androidX.appCompat
     implementation androidX.ktx
     implementation androidX.constraintlayout
-
     testImplementation test.junit
     androidTestImplementation androidX.junit_test
     androidTestImplementation androidX.expresso
