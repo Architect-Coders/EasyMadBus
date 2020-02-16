@@ -58,6 +58,8 @@ dependencies {
     implementation mainApplication.retrofit_gson
     implementation mainApplication.gson
     implementation mainApplication.scalars
+    implementation mainApplication.dagger
+    kapt mainApplication.dagger_compiler
 
     kapt mainApplication.glide_compiler
 
@@ -70,6 +72,7 @@ dependencies {
     implementation androidX.room
     implementation androidX.viewmodel
     implementation androidX.androidxCore
+
     kapt androidX.room_compiler
 
     testImplementation test.junit

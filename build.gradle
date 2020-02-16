@@ -25,6 +25,7 @@ buildscript {
         gson_version = '2.8.6'
         room_version = "2.2.0-beta01"
         core_version = "1.1.0"
+        dagger_version = "2.23.1"
 
 
 
@@ -41,7 +42,10 @@ buildscript {
                 retrofit:       "com.squareup.retrofit2:retrofit:$retrofit_version",
                 retrofit_gson:  "com.squareup.retrofit2:converter-gson:$retrofit_version",
                 gson:           "com.google.code.gson:gson:$gson_version",
-                scalars:        "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+                scalars:        "com.squareup.retrofit2:converter-scalars:$retrofit_version",
+                dagger:        "com.google.dagger:dagger:$dagger_version",
+                dagger_compiler:"com.google.dagger:dagger-compiler:$dagger_version",
+
 
 
 

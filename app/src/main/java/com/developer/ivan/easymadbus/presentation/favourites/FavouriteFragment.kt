@@ -7,28 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.developer.ivan.data.repository.BusRepository
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.App
 
 import com.developer.ivan.easymadbus.R
-import com.developer.ivan.easymadbus.core.hide
-import com.developer.ivan.easymadbus.core.inflateFragment
-import com.developer.ivan.easymadbus.core.retrofit
-import com.developer.ivan.easymadbus.core.show
-import com.developer.ivan.easymadbus.data.server.ServerMapper
-import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
-import com.developer.ivan.easymadbus.framework.datasource.RoomDataSource
+import com.developer.ivan.easymadbus.core.*
 import com.developer.ivan.easymadbus.presentation.adapters.FavouritesAdapter
 import com.developer.ivan.usecases.*
 import kotlinx.android.synthetic.main.fragment_favourite.*
-import kotlinx.android.synthetic.main.fragment_map.view.*
 
 
 class FavouriteFragment : Fragment() {
 
-    private lateinit var mViewModel: FavouriteViewModel
+    private val mViewModel: FavouriteViewModel by lazy {
+        getViewModel { ((requireActivity().application) as App).component.favouriteViewModel }
+    }
     private lateinit var mAdapter: FavouritesAdapter
 
     override fun onCreateView(
@@ -39,7 +32,6 @@ class FavouriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getViewModel()
         initStates()
         initUI()
         initListeners()
@@ -92,28 +84,6 @@ class FavouriteFragment : Fragment() {
                 progressBar.show()
             }
         }
-    }
-
-    private fun getViewModel() {
-        val repository = BusRepository(
-            RetrofitDataSource(retrofit, ServerMapper),
-            RoomDataSource((requireActivity().application as App).database)
-        )
-
-        mViewModel = ViewModelProvider(
-            this,
-            FavouriteViewModel.FavouriteViewModelFactory(
-                GetToken(
-                    repository
-                ),
-                GetBusStopTime(
-                    repository
-                ),
-                GetBusAndStopsFavourites(
-                    repository
-                )
-            )
-        )[FavouriteViewModel::class.java]
     }
 
 }
