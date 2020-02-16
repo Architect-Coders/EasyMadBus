@@ -10,22 +10,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : ViewModel(), Scope by Scope.MainScopeImplementation() {
+abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : ViewModel() {
 
     private val _failure = MutableLiveData<Failure>()
     val failure: LiveData<Failure>
         get() = _failure
 
     fun handleFailure(failure: Failure) {
-        _failure.postValue(failure)
+        _failure.value = failure
     }
 
     protected fun executeWithToken(body: (Token) -> Unit) {
 
         getAccessToken?.let { accessToken ->
 
-                launch(Dispatchers.IO) {
+            viewModelScope.launch {
 
+                withContext(Dispatchers.IO){
                     accessToken.execute(
                         GetToken.Params(
                             Constants.EMTApi.USER_EMAIL,
@@ -34,11 +35,12 @@ abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : Vie
                             Constants.EMTApi.CLIENT_KEY
                         )
                     ).either(::handleFailure, body)
-
                 }
-            }
 
+            }
         }
+
+    }
 
 
 }

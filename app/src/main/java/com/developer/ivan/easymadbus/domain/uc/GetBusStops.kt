@@ -6,8 +6,6 @@ import com.developer.ivan.easymadbus.core.UseCase
 import com.developer.ivan.easymadbus.domain.models.BusStop
 import com.developer.ivan.easymadbus.domain.models.Token
 import com.developer.ivan.easymadbus.domain.repository.IBusRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class GetBusStops(private val repository: IBusRepository) :
     UseCase<GetBusStops.Params, List<BusStop>>() {
