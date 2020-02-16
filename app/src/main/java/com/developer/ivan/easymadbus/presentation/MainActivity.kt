@@ -22,19 +22,14 @@ class MainActivity : AppCompatActivity() {
 //        val host = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
         val navController = findNavController(R.id.nav_host_fragment)
 
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.mapFragment,
-                R.id.favouriteFragment,
-                R.id.notificationFragment
-            )
-        )
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.mapFragment,R.id.favouriteFragment,R.id.notificationFragment))
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        setupActionBarWithNavController(navController,appBarConfiguration)
         setupBottomNavigationItems(navController)
     }
 
-    private fun setupBottomNavigationItems(navController: NavController) {
+    private fun setupBottomNavigationItems(navController: NavController)
+    {
         nav_view.setupWithNavController(navController)
     }
 
