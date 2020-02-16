@@ -2,6 +2,7 @@ package com.developer.ivan.easymadbus.data.db.dao
 
 import androidx.room.*
 import com.developer.ivan.easymadbus.data.db.models.DBBusStop
+import com.developer.ivan.easymadbus.domain.models.BusStop
 
 @Dao
 interface BusStopDao{
