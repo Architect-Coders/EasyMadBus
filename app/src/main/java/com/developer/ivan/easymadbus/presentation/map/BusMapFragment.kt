@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.developer.ivan.data.repository.BusRepository
+import com.developer.ivan.domain.BusStop
 import com.developer.ivan.domain.Failure
+import com.developer.ivan.domain.StopFavourite
 import com.developer.ivan.easymadbus.App
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.*
@@ -72,10 +74,7 @@ class BusMapFragment : Fragment() {
         this.googleMap = googleMap
         mClusterManager = ClusterManager(context, this.googleMap)
         mClusterManager!!.setAnimation(true)
-        mClusterManager!!.renderer = ClusterItem(context,googleMap,mClusterManager!!)
-
         this.googleMap?.setOnCameraIdleListener(mClusterManager)
-
 
         mViewModel.busStops()
         mViewModel.fusedLocation()
@@ -84,7 +83,6 @@ class BusMapFragment : Fragment() {
     private fun setPoints(listPoints: List<UIBusStop>) {
 
         listPoints.forEach { mClusterManager?.addItem(it) }
-        mClusterManager?.cluster()
 //        mapManager?.moveToDefaultLocation()
     }
 
@@ -92,18 +90,13 @@ class BusMapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        requestManager = PermissionRequester(requireActivity())
         getViewModel()
 
         initListeners()
 
+        requestManager = PermissionRequester(requireActivity())
 
 
-        initStates()
-
-    }
-
-    private fun initStates(){
         mViewModel.busState.observe(viewLifecycleOwner, Observer {
             renderBusState(it)
         })
@@ -111,6 +104,7 @@ class BusMapFragment : Fragment() {
         mViewModel.failure.observe(viewLifecycleOwner, Observer {
             handleFailure(it)
         })
+
     }
 
     private fun initListeners() {

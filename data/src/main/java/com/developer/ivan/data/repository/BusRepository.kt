@@ -12,14 +12,13 @@ interface IBusRepository {
     ): Either<Failure, Token>
 
     suspend fun busStops(accessToken: String, forceReload: Boolean = false): Either<Failure, List<BusStop>>
+
     suspend fun stopTimeLines(accessToken: String, busStop: String): Either<Failure, List<Arrive>>
 
     suspend fun favourites(id: Int? = null): Either<Failure, List<StopFavourite>>
     suspend fun favouritesAndBusStops(id: String? = null): Either<Failure, List<Pair<BusStop, StopFavourite?>>>
     suspend fun insertStopFavourite(stopFavourite: StopFavourite): Either<Failure, Unit>
     suspend fun deleteStopFavourite(stopFavourite: StopFavourite): Either<Failure, Unit>
-
-    suspend fun incidents(accessToken: String): Either<Failure, List<Incident>>
 }
 
 
@@ -124,14 +123,5 @@ class BusRepository(
     override suspend fun deleteStopFavourite(stopFavourite: StopFavourite): Either<Failure, Unit> {
         localDataSource.deleteFavourite(stopFavourite)
         return Either.Right(Unit)
-    }
-
-    override suspend fun incidents(accessToken: String): Either<Failure, List<Incident>> {
-        return remoteDataSource.getIncidents(
-            mapOf(
-                "accessToken" to accessToken
-            )
-        )
-
     }
 }

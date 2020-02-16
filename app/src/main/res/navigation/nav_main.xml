@@ -14,10 +14,10 @@
         android:id="@+id/notificationFragment"
         android:name="com.developer.ivan.easymadbus.presentation.notifications.NotificationFragment"
         android:label="@string/notifications"
-        tools:layout="@layout/fragment_incident"/>
+        tools:layout="@layout/fragment_notification"/>
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragment"
         android:label="FavouriteFragment"
-        tools:layout="@layout/fragment_favourite" />
+        tools:layout="@layout/fragment_notification" />
 </navigation>

@@ -3,7 +3,6 @@ package com.developer.ivan.easymadbus.core
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.domain.Token
 import com.developer.ivan.usecases.GetToken
@@ -25,8 +24,9 @@ abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : Vie
 
         getAccessToken?.let { accessToken ->
 
-            viewModelScope.launch {
+            launch {
 
+                withContext(Dispatchers.IO){
                     accessToken.execute(
                         GetToken.Params(
                             Constants.EMTApi.USER_EMAIL,
@@ -35,6 +35,8 @@ abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : Vie
                             Constants.EMTApi.CLIENT_KEY
                         )
                     ).fold(::handleFailure, body)
+                }
+
 
             }
         }

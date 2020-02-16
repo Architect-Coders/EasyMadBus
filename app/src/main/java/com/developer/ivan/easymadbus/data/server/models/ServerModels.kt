@@ -17,7 +17,7 @@ class EntityToken(private val accessToken: String, private val tokenSecExpiratio
 }
 
 
-class EntityGeometry(val type: String, val coordinates: List<Double>) : ServerModel {
+class EntityGeometry(val type: String,val coordinates: List<Double>): ServerModel{
     companion object {
         fun empty() = EntityGeometry(String.empty, listOf())
     }
@@ -30,14 +30,13 @@ class EntityArrive(
     private val stop: String,
     private val estimateArrive: Int,
     @SerializedName("DistanceBus")
-    val distanceBus: Int
-) : ServerModel {
+    val distanceBus:  Int): ServerModel{
 
     companion object {
-        fun empty() = EntityArrive(String.empty, String.empty, Int.default, Int.default)
+        fun empty() = EntityArrive(String.empty, String.empty,Int.default,Int.default)
     }
 
-    fun toDomain() = Arrive(line, stop, estimateArrive, distanceBus, System.currentTimeMillis())
+    fun toDomain() = Arrive(line,stop,estimateArrive,distanceBus,System.currentTimeMillis())
 }
 
 class EntityBusStop(
@@ -46,41 +45,12 @@ class EntityBusStop(
     val name: String,
     val wifi: String,
     val lines: List<String>
-) : ServerModel {
+): ServerModel{
 
     companion object {
-        fun empty() = EntityBusStop(
-            String.empty, EntityGeometry.empty(), String.empty, String.empty,
-            listOf()
-        )
+        fun empty() = EntityBusStop(String.empty,EntityGeometry.empty(),String.empty,String.empty,
+            listOf())
     }
 
-    fun toDomain() = BusStop(
-        node,
-        geometry.toDomain(),
-        name,
-        wifi,
-        lines.distinctBy { it.split("/")[0] }.map { Pair(it.split("/")[0].toInt().toString(), listOf<Arrive>()) })
-}
-
-data class EntityIncident(val title: String,
-                    val description: String,
-                    val link: String,
-                    val rssAfectaDesde: String,
-                    val rssAfectaHasta: String) : ServerModel
-{
-
-    companion object {
-        fun empty() = EntityIncident(
-            String.empty, String.empty, String.empty, String.empty, String.empty
-        )
-    }
-    fun toDomain() = Incident(
-        title,
-        description,
-        link,
-        rssAfectaDesde,
-        rssAfectaHasta)
-
-
+    fun toDomain() = BusStop(node,geometry.toDomain(),name,wifi,lines.map { Pair(it, listOf<Arrive>()) })
 }

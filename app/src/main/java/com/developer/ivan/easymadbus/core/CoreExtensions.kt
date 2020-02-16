@@ -21,9 +21,6 @@ fun View.hide() = run { visibility = View.GONE }
 val Context.app: App
     get() = applicationContext as App
 
-fun String.removeHTML()=
-    this.replace(Regex("<(.*)>.*</(.)>"),"")
-
 inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffUtil(
     initialValue: List<T>,
     crossinline areItemsTheSame: (T, T) -> Boolean = { old, new -> old == new },

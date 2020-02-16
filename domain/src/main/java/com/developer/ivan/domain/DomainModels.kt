@@ -30,12 +30,6 @@ data class StopFavourite(val busStopId: String,
                          val name: String?
                          )
 
-data class Incident(val title: String,
-                    val description: String,
-                    val link: String,
-                    val rssAfectaDesde: String,
-                    val rssAfectaHasta: String)
-
 sealed class Failure
 {
     object ConnectivityError: Failure()

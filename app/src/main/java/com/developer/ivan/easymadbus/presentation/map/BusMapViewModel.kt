@@ -63,12 +63,13 @@ class BusMapViewModel(
 
         marker.tag = Pair(busDataCopy, busData.second)
 
-        _busState.value = (BusStopScreenState.UpdateMarkerInfoWindow(marker))
+        _busState.postValue(BusStopScreenState.UpdateMarkerInfoWindow(marker))
 
     }
 
     fun fusedLocation() {
         if (permissionChecker.check(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
 
             viewModelScope.launch {
                 coarseLocation.execute(Unit).fold(::handleFailure, ::handleLocation)
@@ -80,6 +81,7 @@ class BusMapViewModel(
 
     fun fineLocation() {
         if (permissionChecker.check(Manifest.permission.ACCESS_FINE_LOCATION)) {
+
 
             viewModelScope.launch {
                 fineLocation.execute(Unit).fold(::handleFailure, ::handleLocation)
