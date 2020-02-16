@@ -8,12 +8,12 @@
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.developer.ivan.easymadbus.presentation.map.BusMapFragment"
-        android:label="@string/map"
+        android:label="MapFragment"
         tools:layout="@layout/fragment_map"/>
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.developer.ivan.easymadbus.presentation.notifications.NotificationFragment"
-        android:label="@string/notifications"
+        android:label="NotificationFragment"
         tools:layout="@layout/fragment_notification"/>
     <fragment
         android:id="@+id/favouriteFragment"

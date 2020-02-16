@@ -5,11 +5,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.developer.ivan.easymadbus"
         minSdkVersion 22
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -45,10 +45,6 @@ dependencies {
     implementation mainApplication.coroutines
     implementation mainApplication.coroutines_android
     implementation mainApplication.play_map
-    implementation mainApplication.dexter
-    implementation mainApplication.location
-    implementation mainApplication.retrofit
-    implementation mainApplication.retrofit_gson
 
     annotationProcessor mainApplication.glide_compiler
 
@@ -58,7 +54,6 @@ dependencies {
     implementation androidX.navigation_fragment
     implementation androidX.navigation_ui
     implementation androidX.legacy
-    implementation androidX.viewmodel
 
     testImplementation test.junit
     androidTestImplementation androidX.junit_test

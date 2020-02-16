@@ -17,10 +17,6 @@ buildscript {
         nav_version = '2.1.0-rc01'
         legacy_version = '1.0.0'
         play_map_version = '17.0.0'
-        dexter_version = '5.0.0'
-        location_version = '17.0.0'
-        lifecycle_version = '2.0.0'
-        retrofit_version = '2.7.0'
 
 
         mainApplication = [
@@ -29,13 +25,7 @@ buildscript {
                 glide_compiler: "com.github.bumptech.glide:compiler:$glide_version",
                 coroutines:     "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version",
                 coroutines_android:     "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version",
-                play_map:       "com.google.android.gms:play-services-maps:$play_map_version",
-                dexter:         "com.karumi:dexter:$dexter_version",
-                location:       "com.google.android.gms:play-services-location:$location_version",
-                retrofit:       "com.squareup.retrofit2:retrofit:$retrofit_version",
-                retrofit_gson:  "com.squareup.retrofit2:converter-gson:$retrofit_version"
-
-
+                play_map:       "com.google.android.gms:play-services-maps:$play_map_version"
         ]
 
         androidX = [
@@ -46,9 +36,7 @@ buildscript {
                 expresso:           "androidx.test.espresso:espresso-core:$expresso_ext_version",
                 navigation_fragment:"androidx.navigation:navigation-fragment:$nav_version",
                 navigation_ui:      "androidx.navigation:navigation-ui-ktx:$nav_version",
-                legacy:             "androidx.legacy:legacy-support-v4:$legacy_version",
-                viewmodel:          "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-
+                legacy:             "androidx.legacy:legacy-support-v4:$legacy_version"
         ]
 
         test = [
