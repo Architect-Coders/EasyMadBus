@@ -3,12 +3,14 @@ package com.developer.ivan.easymadbus.core
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.developer.ivan.easymadbus.domain.models.Token
 import com.developer.ivan.easymadbus.domain.uc.GetToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : ViewModel(), Scope by Scope.DefaultScopeImplementation() {
+abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : ViewModel(), Scope by Scope.MainScopeImplementation() {
 
     private val _failure = MutableLiveData<Failure>()
     val failure: LiveData<Failure>
@@ -22,7 +24,7 @@ abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : Vie
 
         getAccessToken?.let { accessToken ->
 
-                launch {
+                launch(Dispatchers.IO) {
 
                     accessToken.execute(
                         GetToken.Params(

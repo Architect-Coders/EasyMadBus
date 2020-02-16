@@ -17,14 +17,11 @@ buildscript {
         nav_version = '2.1.0-rc01'
         legacy_version = '1.0.0'
         play_map_version = '17.0.0'
-        play_map_utils_version = '0.5'
         dexter_version = '5.0.0'
         location_version = '17.0.0'
         lifecycle_version = '2.2.0-alpha03'
         retrofit_version = '2.7.0'
         gson_version = '2.8.6'
-        room_version = "2.2.0-beta01"
-
 
 
         mainApplication = [
@@ -34,7 +31,6 @@ buildscript {
                 coroutines:     "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version",
                 coroutines_android:     "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version",
                 play_map:       "com.google.android.gms:play-services-maps:$play_map_version",
-                map_utils:       "com.google.maps.android:android-maps-utils:$play_map_utils_version",
                 dexter:         "com.karumi:dexter:$dexter_version",
                 location:       "com.google.android.gms:play-services-location:$location_version",
                 retrofit:       "com.squareup.retrofit2:retrofit:$retrofit_version",
@@ -55,9 +51,7 @@ buildscript {
                 navigation_fragment:"androidx.navigation:navigation-fragment:$nav_version",
                 navigation_ui:      "androidx.navigation:navigation-ui-ktx:$nav_version",
                 legacy:             "androidx.legacy:legacy-support-v4:$legacy_version",
-                viewmodel:          "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version",
-                room:               "androidx.room:room-runtime:$room_version",
-                room_compiler:      "androidx.room:room-compiler:$room_version"
+                viewmodel:          "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
         ]
 

@@ -20,11 +20,11 @@ interface Scope : CoroutineScope {
     }
 
 
-    class DefaultScopeImplementation: Scope {
+    class MainScopeImplementation: Scope {
         override lateinit var job: Job
 
         override val coroutineContext: CoroutineContext
-            get() = Dispatchers.Default + job
+            get() = Dispatchers.Main + job
     }
 
     class IOScopeImplementation : Scope {
