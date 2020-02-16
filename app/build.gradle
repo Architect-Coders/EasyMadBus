@@ -38,10 +38,6 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(':data')
-    implementation project(':domain')
-    implementation project(':usecases')
-
     def mainApplication = rootProject.ext.mainApplication
     def androidX = rootProject.ext.androidX
     def test = rootProject.ext.test
@@ -68,7 +64,6 @@ dependencies {
     implementation androidX.navigation_ui
     implementation androidX.legacy
     implementation androidX.room
-    implementation androidX.viewmodel
     kapt androidX.room_compiler
 
     testImplementation test.junit

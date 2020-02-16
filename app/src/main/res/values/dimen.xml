@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="minMargin">8dp</dimen>
-    <dimen name="minPadding">8dp</dimen>
-    <dimen name="favouriteSizeIcon">46dp</dimen>
-    <dimen name="progressSmallSizeIcon">30dp</dimen>
 
 </resources>
