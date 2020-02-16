@@ -37,39 +37,28 @@ interface IBusRepository {
             clientKey: String
         ): Either<Failure, Token> {
 
-
-            return with(application.database.tokenDao())
-            {
-                val token = getToken().getOrNull(0)?.toDomain()
-                if(token!=null && !token.isExpired()){
-                    Either.Right(token)
-                }else
-                {
-                    request(
-                        apiService.getLogin(
-                            mapOf(
-                                "email" to email,
-                                "password" to password,
-                                "X-ApiKey" to apiKey,
-                                "X-ClientId" to clientKey
-                            )
-                        ), { token ->
-
-                            val result = when (val data =
-                                serverMapper.parseDataServerResponseFirst<EntityToken>(token)) {
-                                is Either.Left -> EntityToken.empty()
-                                is Either.Right -> data.b
-                            }.toDomain()
-
-                            inserToken(result.toDb())
-                            result
-
-                        },
-                        String.empty
+            return request(
+                apiService.getLogin(
+                    mapOf(
+                        "email" to email,
+                        "password" to password,
+                        "X-ApiKey" to apiKey,
+                        "X-ClientId" to clientKey
                     )
+                ), { token ->
 
-                }
-            }
+                    val result = when (val data =
+                        serverMapper.parseDataServerResponseFirst<EntityToken>(token)) {
+                        is Either.Left -> EntityToken.empty()
+                        is Either.Right -> data.b
+                    }
+
+                    result.toDomain()
+
+                },
+                String.empty
+            )
+
         }
 
         @SuppressWarnings("unchecked")
