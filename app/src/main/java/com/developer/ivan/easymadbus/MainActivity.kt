@@ -1,8 +1,7 @@
-package com.developer.ivan.easymadbus.presentation
+package com.developer.ivan.easymadbus
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.developer.ivan.easymadbus.R
 
 class MainActivity : AppCompatActivity() {
 
