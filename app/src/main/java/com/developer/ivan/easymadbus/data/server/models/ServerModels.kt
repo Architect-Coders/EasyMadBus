@@ -17,7 +17,7 @@ class EntityToken(private val accessToken: String, private val tokenSecExpiratio
         fun empty() = EntityToken(String.empty, Int.default)
     }
 
-    fun toDomain() = Token(accessToken, tokenSecExpiration, System.currentTimeMillis())
+    fun toDomain() = Token(accessToken, tokenSecExpiration)
 }
 
 
@@ -41,5 +41,5 @@ class EntityBusStop(
             listOf())
     }
 
-    fun toDomain() = BusStop(node,geometry.toDomain(),name,wifi,lines)
+    fun toDomain() = BusStop(node,geometry.toDomain(),name,wifi,lines,false)
 }
