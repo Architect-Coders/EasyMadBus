@@ -8,14 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.inflateFragment
-import com.developer.ivan.easymadbus.framework.MapManager
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 
-class BusMapFragment : Fragment() {
+class BusMapFragment : Fragment(), OnMapReadyCallback {
 
     private var mMap: GoogleMap?=null
-    private var mapManager: MapManager?=null
+    private var mMapView: MapView?=null
 
 
     override fun onCreateView(
@@ -23,46 +24,65 @@ class BusMapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return container?.inflateFragment(R.layout.fragment_map)?.apply {
-            findViewById<MapView>(R.id.map).also {
-
-                mapManager = MapManager(it).also {mapManager->
-                    mapManager.onCreate(savedInstanceState)
-                }
+            mMapView = findViewById<MapView>(R.id.map).apply {
+                onCreate(savedInstanceState)
+                getMapAsync(this@BusMapFragment)
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        mapManager?.onResume()
+        mMapView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapManager?.onPause()
+        mMapView?.onPause()
     }
 
     override fun onStart() {
         super.onStart()
-        mapManager?.onStart()
+        mMapView?.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapManager?.onStop()
+        mMapView?.onStop()
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager?.onDestroy()
+        mMapView?.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapManager?.onLowMemory()
+        mMapView?.onLowMemory()
     }
 
+
+    override fun onMapReady(p0: GoogleMap?) {
+
+        mMap = p0
+
+
+        mMap?.uiSettings?.isZoomControlsEnabled = false
+        mMap?.addMarker(MarkerOptions().position(LatLng(40.4165000,-3.7025600)))
+        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(40.4165000,-3.7025600), 18f))
+
+    }
+
+    private fun configureMap()
+    {
+        mMap?.uiSettings?.isMyLocationButtonEnabled = true
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mMapView?.onSaveInstanceState(outState)
+    }
 
 
 }
