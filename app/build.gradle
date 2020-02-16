@@ -28,7 +28,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
 }
 
 dependencies {
@@ -44,8 +43,8 @@ dependencies {
     implementation mainApplication.glide
     implementation mainApplication.coroutines
     implementation mainApplication.coroutines_android
-    implementation mainApplication.play_map
-
+    implementation mainApplication.coroutines_android
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor mainApplication.glide_compiler
 
     implementation androidX.appCompat
@@ -53,7 +52,6 @@ dependencies {
     implementation androidX.constraintlayout
     implementation androidX.navigation_fragment
     implementation androidX.navigation_ui
-    implementation androidX.legacy
 
     testImplementation test.junit
     androidTestImplementation androidX.junit_test
