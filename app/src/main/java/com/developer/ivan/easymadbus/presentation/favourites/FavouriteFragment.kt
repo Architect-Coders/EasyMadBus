@@ -18,12 +18,14 @@ import com.developer.ivan.easymadbus.core.inflateFragment
 import com.developer.ivan.easymadbus.core.retrofit
 import com.developer.ivan.easymadbus.core.show
 import com.developer.ivan.easymadbus.data.server.ServerMapper
+import com.developer.ivan.easymadbus.framework.PermissionChecker
+import com.developer.ivan.easymadbus.framework.datasource.PlayServicesLocationDataSource
 import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
 import com.developer.ivan.easymadbus.framework.datasource.RoomDataSource
 import com.developer.ivan.easymadbus.presentation.adapters.FavouritesAdapter
+import com.developer.ivan.easymadbus.presentation.map.BusMapViewModel
 import com.developer.ivan.usecases.*
 import kotlinx.android.synthetic.main.fragment_favourite.*
-import kotlinx.android.synthetic.main.fragment_map.view.*
 
 
 class FavouriteFragment : Fragment() {
@@ -42,7 +44,6 @@ class FavouriteFragment : Fragment() {
         getViewModel()
         initStates()
         initUI()
-        initListeners()
 
         mViewModel.obtainInfo()
     }
@@ -64,19 +65,11 @@ class FavouriteFragment : Fragment() {
         rcvFavourites.adapter = mAdapter
     }
 
-    private fun initListeners()
-    {
-        swipeRefresh.setOnRefreshListener {
-            mViewModel.obtainInfo()
-        }
-    }
-
     private fun handleFailure(failure: Failure?) {
-        swipeRefresh.isRefreshing = false
+
     }
 
     private fun renderFavouriteState(state: FavouriteViewModel.FavouriteScreenState?) {
-        swipeRefresh.isRefreshing=false
         when(state)
         {
             is FavouriteViewModel.FavouriteScreenState.ShowBusStopFavouriteInfo -> {

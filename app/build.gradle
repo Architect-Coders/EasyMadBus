@@ -69,7 +69,6 @@ dependencies {
     implementation androidX.legacy
     implementation androidX.room
     implementation androidX.viewmodel
-    implementation androidX.androidxCore
     kapt androidX.room_compiler
 
     testImplementation test.junit

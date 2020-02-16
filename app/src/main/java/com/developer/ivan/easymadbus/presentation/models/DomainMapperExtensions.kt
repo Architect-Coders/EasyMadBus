@@ -6,12 +6,9 @@ import com.developer.ivan.easymadbus.data.db.models.DBGeometry
 import com.developer.ivan.easymadbus.data.db.models.DBStopFavourite
 import com.developer.ivan.easymadbus.data.db.models.DBToken
 import com.google.android.gms.maps.model.LatLng
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
 
 fun Token.toUIToken() = UIToken(accessToken, tokenSecExpiration, timeStamp)
-fun Token.toDBToken() = DBToken(0, accessToken, tokenSecExpiration, timeStamp)
+fun Token.toDBToken() = DBToken(0,accessToken,tokenSecExpiration,timeStamp)
 
 fun BusStop.toUIBusStop() = UIBusStop(
     node,
@@ -37,23 +34,11 @@ fun StopFavourite.toDBStopFavourite() = DBStopFavourite(
     name
 )
 
-fun Incident.toUIIncident(): UIIncident {
 
 
-    return UIIncident(
-        title,
-        description,
-        link,
-        rssAfectaDesde,
-        rssAfectaHasta
-    )
 
-
-}
-
-
-fun Arrive.toUIArrive() = UIArrive(line, stop, estimateArrive, distanceBus, timeStamp)
+fun Arrive.toUIArrive() = UIArrive(line,stop,estimateArrive,distanceBus,timeStamp)
 
 fun Geometry.toUIGeometry() = UIGeometry(type, LatLng(coordinates[1], coordinates[0]))
-fun Geometry.toDBGeometry() = DBGeometry(type, coordinates[1], coordinates[0])
+fun Geometry.toDBGeometry() = DBGeometry(type, coordinates[1],coordinates[0])
 

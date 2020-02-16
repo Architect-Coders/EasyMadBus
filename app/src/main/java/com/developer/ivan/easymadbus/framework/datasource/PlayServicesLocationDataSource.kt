@@ -48,18 +48,14 @@ class PlayServicesLocationDataSource(
                     override fun onLocationResult(p0: LocationResult?) {
                         super.onLocationResult(p0)
                         cancelableCoroutine.resume(
-                            if (p0?.locations?.getOrNull(0) != null){
-                                val location = p0.locations[0]
-                                fusedLocationClient.removeLocationUpdates(this)
-                                Locate(
-                                    location.latitude,
-                                    location.longitude
-                                )
-                            } else null
+                            if (p0?.locations?.getOrNull(0) != null) Locate(
+                                p0.locations[0].latitude,
+                                p0.locations[0].longitude
+                            ) else null
                         )
                     }
                 },
-                null)
+                Looper.getMainLooper())
 
         }
 
