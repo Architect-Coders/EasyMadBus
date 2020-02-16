@@ -3,8 +3,6 @@ package com.developer.ivan.easymadbus.framework
 import android.graphics.Point
 import android.location.Location
 import android.os.Bundle
-import com.developer.ivan.easymadbus.R
-import com.developer.ivan.easymadbus.core.Constants
 import com.developer.ivan.easymadbus.domain.models.BusStop
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -19,7 +17,7 @@ class MapManager(private val mapView: MapView?) : OnMapReadyCallback {
     private var mapPoints: List<BusStop> = listOf()
 
     companion object {
-        const val DEFAULT_ZOOM = 16f
+        const val DEFAULT_ZOOM = 18f
     }
 
     fun onCreate(savedInstanceState: Bundle?) {
@@ -39,16 +37,14 @@ class MapManager(private val mapView: MapView?) : OnMapReadyCallback {
     private fun configureMap() {
         mMap?.uiSettings?.isZoomControlsEnabled = false
 
-        mapPoints.forEach {busStop->
+        mapPoints.forEach {
             mMap?.addMarker(
                 MarkerOptions().position(
                     LatLng(
-                        busStop.geometry.coordinates[1],
-                        busStop.geometry.coordinates[0]
+                        it.geometry.coordinates[0],
+                        it.geometry.coordinates[1]
                     )
-                ).title(buildString {
-                    append(busStop.name)
-                })
+                ).title(it.name)
             )
         }
 
@@ -57,13 +53,15 @@ class MapManager(private val mapView: MapView?) : OnMapReadyCallback {
     fun setPoints(busStops: List<BusStop>) {
         mapPoints = busStops.map { it.copy() }
         configureMap()
-        moveToLocation(Constants.EMTApi.MADRID_LOC)
     }
 
-    fun moveToLocation(location: LatLng) {
+    fun moveToLocation(location: Location) {
         mMap?.moveCamera(
             CameraUpdateFactory.newLatLngZoom(
-                location, DEFAULT_ZOOM
+                LatLng(
+                    location.latitude,
+                    location.longitude
+                ), DEFAULT_ZOOM
             )
         )
 

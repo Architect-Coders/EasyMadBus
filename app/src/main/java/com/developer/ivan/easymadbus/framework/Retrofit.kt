@@ -17,14 +17,14 @@ interface ApiService {
 
 
         const val GET_LOGIN = "login/"
-        const val POST_STOPS = "list/"
+        const val POST_STOPS = "stops/"
 
     }
 
     @retrofit2.http.GET(MOBILITY_LABS_ENDPOINT + USERS_ENDPOINT + GET_LOGIN)
     fun getLogin(@HeaderMap headers: Map<String, String>): Call<String>
 
-    @retrofit2.http.POST(TRANSPORT_ENDPOINT + STOPS_ENDPOINT + POST_STOPS)
+    @retrofit2.http.GET(TRANSPORT_ENDPOINT + STOPS_ENDPOINT + POST_STOPS)
     fun getBusStops(@HeaderMap headers: Map<String, String>): Call<String>
 
 }

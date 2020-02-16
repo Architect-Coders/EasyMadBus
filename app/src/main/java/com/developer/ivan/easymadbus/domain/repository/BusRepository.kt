@@ -43,14 +43,8 @@ interface IBusRepository {
                         "X-ClientId" to clientKey
                     )
                 ), { token ->
-
-                    val result = when(val data = serverMapper.parseDataServerResponseFirst<EntityToken>(token)){
-                        is Either.Left -> EntityToken.empty()
-                        is Either.Right -> data.b
-                    }
-
-                    result.toDomain()
-
+                    (serverMapper.parseDataServerResponseFirst<EntityToken>(token).either({ EntityToken.empty() },
+                        { it }) as EntityToken).toDomain()
                 },
                 String.empty
             )
@@ -62,17 +56,13 @@ interface IBusRepository {
 
 
             return request(
-                apiService.getBusStops(
+                apiService.getLogin(
                     mapOf(
                         "accessToken" to accessToken
                     )
                 ), { token ->
-                    val result = when(val data = serverMapper.parseDataServerResponse<List<EntityBusStop>>(token)){
-                        is Either.Left -> listOf()
-                        is Either.Right -> data.b
-                    }
-
-                    result.map { it.toDomain() }
+                    (serverMapper.parseDataServerResponse<List<EntityBusStop>>(token).either({ listOf<EntityBusStop>() },
+                        { it }) as List<EntityBusStop>).map { it.toDomain() }
                 },
                 String.empty
             )
