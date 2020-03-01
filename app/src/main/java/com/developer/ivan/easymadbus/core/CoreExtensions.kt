@@ -21,6 +21,7 @@ fun ViewGroup.inflateFragment
 
 fun View.show() = run { visibility = View.VISIBLE }
 fun View.hide() = run { visibility = View.GONE }
+fun View.invisible() = run { visibility = View.INVISIBLE }
 
 val Context.app: App
     get() = applicationContext as App

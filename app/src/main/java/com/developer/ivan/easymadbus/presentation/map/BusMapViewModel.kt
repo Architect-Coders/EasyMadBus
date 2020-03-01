@@ -38,9 +38,7 @@ class BusMapViewModel(
 
 
         object RequestCoarseLocation : BusStopScreenState()
-        object ShowCoarseLocation : BusStopScreenState()
         object RequestFineLocation : BusStopScreenState()
-        object ShowFineLocation : BusStopScreenState()
 
     }
 
@@ -176,34 +174,5 @@ class BusMapViewModel(
     override fun onCleared() {
         super.onCleared()
         cancelScope()
-    }
-
-
-    @Suppress("UNCHECKED_CAST")
-    class BusMapViewModelFactory(
-        private val busStops: GetBusStops,
-        private val accessToken: GetToken,
-        private val stopTime: GetBusStopTime,
-        private val busAndStopsFavourites: GetBusAndStopsFavourites,
-        private val insertStopFavourite: InsertStopFavourite,
-        private val deleteStopFavourite: DeleteStopFavourite,
-        val location: GetCoarseLocation,
-        val fineLocation: GetFineLocation,
-        val permissionChecker: PermissionChecker
-    ) :
-        ViewModelProvider.NewInstanceFactory() {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return BusMapViewModel(
-                busStops,
-                accessToken,
-                stopTime,
-                busAndStopsFavourites,
-                insertStopFavourite,
-                deleteStopFavourite,
-                location,
-                fineLocation,
-                permissionChecker
-            ) as T
-        }
     }
 }

@@ -1,16 +1,14 @@
-package com.developer.ivan.easymadbus.di
+package com.developer.ivan.easymadbus.presentation.map
 
 import com.developer.ivan.easymadbus.framework.PermissionChecker
-import com.developer.ivan.easymadbus.presentation.favourites.FavouriteViewModel
-import com.developer.ivan.easymadbus.presentation.map.BusMapViewModel
-import com.developer.ivan.easymadbus.presentation.notifications.NotificationsViewModel
 import com.developer.ivan.usecases.*
 import dagger.Module
 import dagger.Provides
+import dagger.Subcomponent
 
 @Module
-class ViewModelsModule
-{
+class BusMapFragmentModule {
+
     @Provides
     fun busMapFragmentViewModelProvider(
         busStops: GetBusStops,
@@ -32,19 +30,9 @@ class ViewModelsModule
             location,
             fineLocation,
             permissionChecker)
-    @Provides
-    fun favouriteViewModelProvider(
-        accessToken: GetToken,
-        stopTime: GetBusStopTime,
-        busAndStopsFavourites: GetBusAndStopsFavourites
 
-    ): FavouriteViewModel = FavouriteViewModel(accessToken, stopTime, busAndStopsFavourites)
-
-    @Provides
-    fun notificationsViewModelProvider(
-        accessToken: GetToken,
-        incidents: GetIncidents
-
-    ): NotificationsViewModel = NotificationsViewModel(accessToken,incidents)
-
+}
+@Subcomponent(modules = [BusMapFragmentModule::class])
+interface BusMapFragmentComponent {
+    val busMapViewmodel: BusMapViewModel
 }

@@ -18,6 +18,7 @@ import com.developer.ivan.easymadbus.data.server.ServerMapper
 import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
 import com.developer.ivan.easymadbus.framework.datasource.RoomDataSource
 import com.developer.ivan.easymadbus.presentation.adapters.IncidentsAdapter
+import com.developer.ivan.easymadbus.presentation.map.BusMapFragmentModule
 import com.developer.ivan.easymadbus.presentation.map.BusMapViewModel
 import com.developer.ivan.usecases.*
 import kotlinx.android.synthetic.main.fragment_incident.*
@@ -26,10 +27,16 @@ import kotlinx.android.synthetic.main.fragment_incident.*
 class NotificationFragment : Fragment() {
 
     private val mViewModel: NotificationsViewModel by lazy {
-        getViewModel { ((requireActivity().application) as App).component.notificationsViewModel }
+        getViewModel { component.notificationsViewModel }
     }
 
     private lateinit var mAdapter: IncidentsAdapter
+    private lateinit var component: NotificationsFragmentComponent
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        component = ((requireActivity().application) as App).component.plus(NotificationsFragmentModule())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

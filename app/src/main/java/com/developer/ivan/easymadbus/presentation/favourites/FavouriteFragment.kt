@@ -13,6 +13,7 @@ import com.developer.ivan.easymadbus.App
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.*
 import com.developer.ivan.easymadbus.presentation.adapters.FavouritesAdapter
+import com.developer.ivan.easymadbus.presentation.notifications.NotificationsFragmentModule
 import com.developer.ivan.usecases.*
 import kotlinx.android.synthetic.main.fragment_favourite.*
 
@@ -20,9 +21,19 @@ import kotlinx.android.synthetic.main.fragment_favourite.*
 class FavouriteFragment : Fragment() {
 
     private val mViewModel: FavouriteViewModel by lazy {
-        getViewModel { ((requireActivity().application) as App).component.favouriteViewModel }
+        getViewModel { component.favouriteViewModel }
     }
+
     private lateinit var mAdapter: FavouritesAdapter
+
+    private lateinit var component: FavouriteFragmentComponent
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        component = ((requireActivity().application) as App).component.plus(
+            FavouriteFragmentModule()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +47,7 @@ class FavouriteFragment : Fragment() {
         initUI()
         initListeners()
 
-        mViewModel.obtainInfo()
+
     }
 
     private fun initStates()
@@ -84,6 +95,13 @@ class FavouriteFragment : Fragment() {
                 progressBar.show()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mViewModel.obtainInfo()
+
+
     }
 
 }

@@ -31,6 +31,7 @@ class AppModule {
     @Named("endpoint")
     fun endPointProvider() = Constants.EMTApi.ENDPOINT
 
+
     @Provides
     @Singleton
     fun okHttpProvider() = OkHttpClient.Builder()

@@ -8,22 +8,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.developer.ivan.data.repository.BusRepository
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.App
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.*
-import com.developer.ivan.easymadbus.data.server.ServerMapper
 import com.developer.ivan.easymadbus.framework.MapManager
-import com.developer.ivan.easymadbus.framework.PermissionChecker
 import com.developer.ivan.easymadbus.framework.PermissionRequester
-import com.developer.ivan.easymadbus.framework.datasource.PlayServicesLocationDataSource
-import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
-import com.developer.ivan.easymadbus.framework.datasource.RoomDataSource
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
-import com.developer.ivan.usecases.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
@@ -33,12 +25,18 @@ import kotlinx.android.synthetic.main.fragment_map.*
 class BusMapFragment : Fragment() {
 
     private var mapManager: MapManager? = null
-    private val mViewModel: BusMapViewModel by lazy { getViewModel { ((requireActivity().application) as App).component.busMapViewModel } }
+    private lateinit var component: BusMapFragmentComponent
+
+    private val mViewModel: BusMapViewModel by lazy { getViewModel { component.busMapViewmodel } }
     private var mClusterManager: ClusterManager<UIBusStop>? = null
     private lateinit var requestManager: PermissionRequester
     private var googleMap: GoogleMap? = null
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        component = ((requireActivity().application) as App).component.plus(BusMapFragmentModule())
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,7 +69,7 @@ class BusMapFragment : Fragment() {
     private fun handleMapReady(googleMap: GoogleMap?) {
         this.googleMap = googleMap
         mClusterManager = ClusterManager(context, this.googleMap)
-        mClusterManager!!.setAnimation(true)
+        mClusterManager!!.setAnimation(false)
         mClusterManager!!.renderer = ClusterItem(context, googleMap, mClusterManager!!)
 
         this.googleMap?.setOnCameraIdleListener(mClusterManager)
@@ -85,7 +83,6 @@ class BusMapFragment : Fragment() {
 
         listPoints.forEach { mClusterManager?.addItem(it) }
         mClusterManager?.cluster()
-//        mapManager?.moveToDefaultLocation()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -95,9 +92,6 @@ class BusMapFragment : Fragment() {
         requestManager = PermissionRequester(requireActivity())
 
         initListeners()
-
-
-
         initStates()
 
     }
@@ -182,45 +176,6 @@ class BusMapFragment : Fragment() {
         if (granted)
             mViewModel.fineLocation()
     }
-
-/*
-
-    private fun getViewModel() {
-        val repository = BusRepository(
-            RetrofitDataSource(retrofit, ServerMapper),
-            RoomDataSource((requireActivity().application as App).database)
-        )
-
-        mViewModel = ViewModelProvider(
-            this,
-            BusMapViewModel.BusMapViewModelFactory(
-                GetBusStops(
-                    repository
-                ),
-                GetToken(
-                    repository
-                ),
-                GetBusStopTime(
-                    repository
-                ),
-                GetBusAndStopsFavourites(repository),
-                InsertStopFavourite(repository),
-                DeleteStopFavourite(repository),
-                GetCoarseLocation(
-                    PlayServicesLocationDataSource(
-                        application = requireActivity().application
-                    )
-                ),
-                GetFineLocation(
-                    PlayServicesLocationDataSource(
-                        application = requireActivity().application
-                    )
-                ),
-                PermissionChecker(application = requireActivity().application)
-            )
-        )[BusMapViewModel::class.java]
-    }
-*/
 
     override fun onResume() {
         super.onResume()
