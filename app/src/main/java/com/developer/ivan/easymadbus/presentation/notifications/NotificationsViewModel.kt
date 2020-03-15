@@ -41,7 +41,7 @@ class NotificationsViewModel(
         executeWithToken { token ->
             viewModelScope.launch {
 
-                incidents.execute(GetIncidents.Params(token.accessToken)).fold(::handleFailure,::handleIncidents)
+                incidents.execute(GetIncidents.Params(token)).fold(::handleFailure,::handleIncidents)
 
             }
 

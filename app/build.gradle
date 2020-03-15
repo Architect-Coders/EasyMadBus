@@ -45,6 +45,7 @@ dependencies {
     def mainApplication = rootProject.ext.mainApplication
     def androidX = rootProject.ext.androidX
     def test = rootProject.ext.test
+    def androidTest = rootProject.ext.androidTest
 
     implementation mainApplication.kotlin
     implementation mainApplication.glide
@@ -75,7 +76,6 @@ dependencies {
 
     kapt androidX.room_compiler
 
-    testImplementation test.junit
-    androidTestImplementation androidX.junit_test
-    androidTestImplementation androidX.expresso
+    testImplementation test.values()
+    testImplementation androidTest.values()
 }

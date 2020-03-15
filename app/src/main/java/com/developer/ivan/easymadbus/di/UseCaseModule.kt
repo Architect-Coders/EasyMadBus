@@ -3,6 +3,7 @@ package com.developer.ivan.easymadbus.di
 import com.developer.ivan.data.datasources.LocationDataSource
 import com.developer.ivan.data.repository.BusRepository
 import com.developer.ivan.data.repository.IBusRepository
+import com.developer.ivan.data.repository.ILocationRepository
 import com.developer.ivan.easymadbus.framework.datasource.PlayServicesLocationDataSource
 import com.developer.ivan.usecases.*
 import dagger.Module
@@ -27,11 +28,11 @@ class UseCaseModule
         GetBusStopTime(busRepository)
 
     @Provides
-    fun getCoarseLocationProvider(locationDataSource: LocationDataSource)=
+    fun getCoarseLocationProvider(locationDataSource: ILocationRepository)=
         GetCoarseLocation(locationDataSource)
 
     @Provides
-    fun getFineLocationProvider(locationDataSource: LocationDataSource)=
+    fun getFineLocationProvider(locationDataSource: ILocationRepository)=
         GetFineLocation(locationDataSource)
 
     @Provides

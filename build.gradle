@@ -26,6 +26,9 @@ buildscript {
         room_version = "2.2.0-beta01"
         core_version = "1.1.0"
         dagger_version = "2.23.1"
+        mockito_kotlin = '2.2.0'
+        mockito_inline = '2.28.2'
+        arch_test_version = '2.1.0'
 
 
 
@@ -69,7 +72,15 @@ buildscript {
         ]
 
         test = [
-                junit:          "junit:junit:$junit_version"
+                junit: "junit:junit:$junit_version",
+                mockito_kotlin: "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin",
+                mockito_inline: "org.mockito:mockito-inline:$mockito_inline",
+                testShared : project(':testShared')
+        ]
+
+        androidTest = [
+                archTest : "androidx.arch.core:core-testing:$arch_test_version",
+                coroutines_test : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutine_version"
         ]
 
     }

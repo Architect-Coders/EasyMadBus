@@ -2,7 +2,6 @@ package com.developer.ivan.easymadbus.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.IntegerRes
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.NavigationBottomUtil
 import com.developer.ivan.easymadbus.core.hide
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
     }
 
     override fun onBackPressed() {
-        navBottomUtil.backPresed()
+        navBottomUtil.backPressed()
     }
 
     private fun setupBottomNavigationItems() {

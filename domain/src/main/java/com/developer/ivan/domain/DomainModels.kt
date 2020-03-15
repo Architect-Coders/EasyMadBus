@@ -17,6 +17,12 @@ data class BusStop(
     val wifi: String,
     val lines: List<Pair<String,List<Arrive>>>)
 
+
+data class Line(
+    val id: String,
+    val label: String
+)
+
 data class Arrive(val line: String,
                   val stop: String,
                   val estimateArrive: Int,

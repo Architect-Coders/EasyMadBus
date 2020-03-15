@@ -8,13 +8,12 @@ import com.developer.ivan.domain.StopFavourite
 class InsertStopFavourite(private val repository: IBusRepository) :
     UseCase<InsertStopFavourite.Params, StopFavourite>() {
     override suspend fun body(param: Params): Either<Failure, StopFavourite> {
-        val stopFavourite = StopFavourite(param.busStopCode,param.name)
-        repository.insertStopFavourite(stopFavourite)
-        return Either.Right(stopFavourite)
+        repository.insertStopFavourite(param.stopFavourite)
+        return Either.Right(param.stopFavourite)
     }
 
 
-    class Params(val name: String, val busStopCode: String)
+    class Params(val stopFavourite: StopFavourite)
 }
 
 /*UseCase<Params, List<Pair(BusStop,StopFavourite)>>() {

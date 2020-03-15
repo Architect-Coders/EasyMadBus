@@ -5,11 +5,16 @@ apply plugin: 'kotlin'
 
 dependencies {
     def mainApplication = rootProject.ext.mainApplication
+    def test = rootProject.ext.test
+    def androidTest = rootProject.ext.androidTest
 
     implementation project(':data')
     implementation project(':domain')
 
     implementation mainApplication.kotlin
+    implementation mainApplication.coroutines
 
+    testImplementation test.values()
+    testImplementation androidTest.values()
 
 }

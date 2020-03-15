@@ -148,8 +148,7 @@ class BusMapViewModel(
                 async {
                     insertStopFavourite.execute(
                         InsertStopFavourite.Params(
-                            name = busData.first.name,
-                            busStopCode = busData.first.node
+                            StopFavourite(busData.first.node, busData.first.name)
                         )
                     )
                 }

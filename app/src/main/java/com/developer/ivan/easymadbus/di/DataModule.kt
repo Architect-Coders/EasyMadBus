@@ -1,9 +1,8 @@
 package com.developer.ivan.easymadbus.di
 
 import com.developer.ivan.data.datasources.LocalDataSource
-import com.developer.ivan.data.repository.BusRepository
-import com.developer.ivan.data.repository.IBusRepository
-import com.developer.ivan.data.repository.RemoteDataSource
+import com.developer.ivan.data.datasources.LocationDataSource
+import com.developer.ivan.data.repository.*
 import dagger.Module
 import dagger.Provides
 
@@ -15,4 +14,9 @@ class DataModule
         remoteDataSource: RemoteDataSource,
         localDataSource: LocalDataSource
     ): IBusRepository = BusRepository(remoteDataSource, localDataSource)
+
+    @Provides
+    fun locationRepositoryProvider(
+        locationDataSource: LocationDataSource
+    ): ILocationRepository = LocationRepository(locationDataSource)
 }

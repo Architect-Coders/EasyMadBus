@@ -73,6 +73,8 @@ class AppModule {
     fun locationDataSourceProvider(app: Application): LocationDataSource =
         PlayServicesLocationDataSource(app)
 
+
+
     @Provides
     fun permisionCheckerProvider(app: Application): PermissionChecker =
         PermissionChecker(app)

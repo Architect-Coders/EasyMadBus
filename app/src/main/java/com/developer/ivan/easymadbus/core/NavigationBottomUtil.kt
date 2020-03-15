@@ -58,7 +58,7 @@ class NavigationBottomUtil(activity: AppCompatActivity)
 
     }
 
-    fun backPresed()
+    fun backPressed()
     {
         mCurrentNavHost?.navigateUp()
     }

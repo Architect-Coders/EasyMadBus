@@ -8,11 +8,14 @@ dependencies {
     def test = rootProject.ext.test
     def androidTest = rootProject.ext.androidTest
 
-    implementation project(":domain")
+    implementation project(':data')
+    implementation project(':domain')
+    implementation project(':usecases')
+
     implementation mainApplication.kotlin
     implementation mainApplication.coroutines
 
+
     testImplementation test.values()
     testImplementation androidTest.values()
-
 }

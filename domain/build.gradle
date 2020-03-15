@@ -5,10 +5,13 @@ apply plugin: 'kotlin'
 
 dependencies {
     def mainApplication = rootProject.ext.mainApplication
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    def test = rootProject.ext.test
+    def androidTest = rootProject.ext.androidTest
 
     implementation mainApplication.kotlin
+    implementation mainApplication.coroutines
 
 
+    testImplementation test.values()
+    testImplementation androidTest.values()
 }
