@@ -35,7 +35,7 @@ class RoomDataSource(db: Database) : LocalDataSource {
       }
     }
 
-    override suspend fun inserToken(token: Token) {
+    override suspend fun insertToken(token: Token) {
         withContext(Dispatchers.IO){
             tokenDao.inserToken(token.toDBToken())
         }

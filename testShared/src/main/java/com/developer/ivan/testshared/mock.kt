@@ -3,6 +3,7 @@ package com.developer.ivan.testshared
 import com.developer.ivan.domain.*
 import java.util.concurrent.TimeUnit
 
+val locateMock = Locate(0.0,0.0)
 val tokenMock = Token("1234", 9999, System.currentTimeMillis())
 val stopFavouriteMock = StopFavourite("1234", "My stop favourite")
 

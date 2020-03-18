@@ -76,7 +76,7 @@ class BusRepositoryTest {
 
             transactionRepository.login("", "", "", "")
 
-            verify(localDataSource).inserToken(token)
+            verify(localDataSource).insertToken(token)
         }
     }
 

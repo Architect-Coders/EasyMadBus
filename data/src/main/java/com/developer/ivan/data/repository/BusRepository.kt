@@ -50,7 +50,7 @@ class BusRepository(
 
             when (response) {
                 is Either.Right -> {
-                    localDataSource.inserToken(response.b)
+                    localDataSource.insertToken(response.b)
                     Either.Right(response.b)
                 }
 
