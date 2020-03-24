@@ -5,6 +5,7 @@ import com.developer.ivan.usecases.*
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 class BusMapFragmentModule {
@@ -19,17 +20,18 @@ class BusMapFragmentModule {
         deleteStopFavourite: DeleteStopFavourite,
         location: GetCoarseLocation,
         fineLocation: GetFineLocation,
-        permissionChecker: PermissionChecker
+        permissionChecker: PermissionChecker,
+        dispatcher: CoroutineDispatcher
     ): BusMapViewModel =
         BusMapViewModel(busStops,
-            accessToken,
             stopTime,
             busAndStopsFavourites,
             insertStopFavourite,
             deleteStopFavourite,
             location,
             fineLocation,
-            permissionChecker)
+            permissionChecker,
+            dispatcher)
 
 }
 @Subcomponent(modules = [BusMapFragmentModule::class])

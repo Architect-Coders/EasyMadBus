@@ -6,6 +6,7 @@ import com.developer.ivan.usecases.GetToken
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import kotlinx.coroutines.CoroutineDispatcher
 
 
 @Module
@@ -13,11 +14,11 @@ class FavouriteFragmentModule {
 
     @Provides
     fun favouriteViewModelProvider(
-        accessToken: GetToken,
         stopTime: GetBusStopTime,
-        busAndStopsFavourites: GetBusAndStopsFavourites
+        busAndStopsFavourites: GetBusAndStopsFavourites,
+        dispatcher: CoroutineDispatcher
 
-    ): FavouriteViewModel = FavouriteViewModel(accessToken, stopTime, busAndStopsFavourites)
+    ): FavouriteViewModel = FavouriteViewModel(stopTime, busAndStopsFavourites,dispatcher)
 }
 
 @Subcomponent(modules = [(FavouriteFragmentModule::class)])

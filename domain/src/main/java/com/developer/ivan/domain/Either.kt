@@ -9,8 +9,8 @@ sealed class Either<out L, out R> {
     val isRht get() = this is Right<R>
     val isLeft get() = this is Left<L>
 
-    fun <L> left(a: L) = Either.Left(a)
-    fun <R> right(b: R) = Either.Right(b)
+    suspend fun <L> left(a: L) = Either.Left(a)
+    suspend fun <R> right(b: R) = Either.Right(b)
 
     suspend fun fold(fnL: suspend (L) -> Any, fnR: suspend (R) -> Any): Any =
         when (this) {
@@ -18,7 +18,7 @@ sealed class Either<out L, out R> {
             is Right -> fnR(b)
         }
 
-    fun <T> default(defaultValue: T, fnR: (R) -> T): T =
+    suspend fun <T> default(defaultValue: T, fnR: (R) -> T): T =
         when (this) {
             is Left -> defaultValue
             is Right -> fnR(b)
@@ -26,3 +26,17 @@ sealed class Either<out L, out R> {
 
 
 }
+
+suspend fun <A, B, C> (suspend (A) -> B).c(f: suspend (B) -> C): suspend (A) -> C = {
+    f(this(it))
+}
+
+suspend fun <T, L, R> Either<L, R>.flatMap(fn: suspend (R) -> Either<L, T>): Either<L, T> =
+    when (this) {
+        is Either.Left ->{
+            Either.Left(a)
+        }
+        is Either.Right -> fn(b)
+    }
+
+suspend fun <T, L, R> Either<L, R>.map(fn: suspend (R) -> (T)): Either<L, T> = this.flatMap(fn.c(::right))

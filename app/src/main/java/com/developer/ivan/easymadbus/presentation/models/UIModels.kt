@@ -2,7 +2,6 @@ package com.developer.ivan.easymadbus.presentation.models
 
 import android.os.Parcelable
 import com.developer.ivan.domain.*
-import com.developer.ivan.easymadbus.core.Constants
 import com.developer.ivan.easymadbus.data.db.models.DBBusStop
 import com.developer.ivan.easymadbus.data.db.models.DBGeometry
 import com.developer.ivan.easymadbus.data.db.models.DBToken

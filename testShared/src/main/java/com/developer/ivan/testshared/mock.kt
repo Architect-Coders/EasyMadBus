@@ -26,3 +26,5 @@ val busStopsMock = listOf(
         listOf(Pair("002", listOf(arrivesMock[1])))
     )
 )
+
+val lambdaTokenMock : suspend (Token)->Unit = {token: Token -> Unit}

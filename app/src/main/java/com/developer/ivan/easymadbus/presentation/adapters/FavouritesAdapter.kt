@@ -31,15 +31,17 @@ class FavouritesAdapter :
     override fun onBindViewHolder(holder: FavouriteViewHolder, position: Int) {
         holder.onBind(items[position])
     }
-    fun updateItem(item: Pair<UIBusStop,UIStopFavourite>)
-    {
-        items = items.toList().map { if(it.first.node==item.first.node) it.copy(item.first,item.second) else it }
+
+    fun updateItem(item: Pair<UIBusStop, UIStopFavourite>) {
+        items = items.toList()
+            .map { if (it.first.node == item.first.node) it.copy(item.first, item.second) else it }
     }
-    fun updateItems(items: List<Pair<UIBusStop,UIStopFavourite>>){
+
+    fun updateItems(items: List<Pair<UIBusStop, UIStopFavourite>>) {
         this.items = items
     }
 
-    fun addItem(item: Pair<UIBusStop,UIStopFavourite>){
+    fun addItem(item: Pair<UIBusStop, UIStopFavourite>) {
         this.items += item
     }
 

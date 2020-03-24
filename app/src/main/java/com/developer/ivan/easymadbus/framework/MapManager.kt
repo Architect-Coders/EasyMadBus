@@ -2,7 +2,7 @@ package com.developer.ivan.easymadbus.framework
 
 import android.app.Application
 import android.os.Bundle
-import com.developer.ivan.easymadbus.core.Constants
+import com.developer.ivan.domain.Constants
 import com.developer.ivan.easymadbus.presentation.map.BusInfoWindow
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
@@ -49,7 +49,7 @@ class MapManager(private val application: Application,
 
     }
     fun moveToDefaultLocation(){
-        moveToLocation(Constants.EMTApi.MADRID_LOC)
+        moveToLocation(LatLng(Constants.EMTApi.MADRID_LOC.lat,Constants.EMTApi.MADRID_LOC.lng))
     }
 
     fun moveToLocation(location: LatLng) {

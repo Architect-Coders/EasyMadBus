@@ -3,8 +3,8 @@ package com.developer.ivan.easymadbus.framework.datasource
 import android.app.Application
 import android.location.Location
 import android.os.Looper
-import com.developer.ivan.easymadbus.core.Constants
 import com.developer.ivan.data.datasources.LocationDataSource
+import com.developer.ivan.domain.Constants
 import com.developer.ivan.domain.Either
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.domain.Locate

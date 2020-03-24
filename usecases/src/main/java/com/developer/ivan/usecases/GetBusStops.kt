@@ -1,16 +1,17 @@
 package com.developer.ivan.usecases
 
 import com.developer.ivan.data.repository.IBusRepository
-import com.developer.ivan.domain.BusStop
-import com.developer.ivan.domain.Either
-import com.developer.ivan.domain.Failure
-import com.developer.ivan.domain.Token
+import com.developer.ivan.domain.*
 
-class GetBusStops(private val repository: IBusRepository) :
-    UseCase<GetBusStops.Params, List<BusStop>>() {
-    class Params(val accessToken: Token)
+class GetBusStops(
+    private val repository: IBusRepository,
+    val getAccessToken: GetToken
+) :
+    UseCase<GetBusStops.Params, List<BusStop>>(),
+    IExecuteToken by IExecuteToken.ExecuteTokenImpl(getAccessToken) {
+    class Params
 
     override suspend fun body(param: Params): Either<Failure, List<BusStop>> =
-        repository.busStops(param.accessToken.accessToken)
+        executeWithToken().flatMap { repository.busStops(it.accessToken) }
 
 }

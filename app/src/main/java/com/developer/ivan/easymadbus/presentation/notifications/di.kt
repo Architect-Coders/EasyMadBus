@@ -11,10 +11,9 @@ class NotificationsFragmentModule{
 
     @Provides
     fun notificationsViewModelProvider(
-        accessToken: GetToken,
         incidents: GetIncidents
 
-    ): NotificationsViewModel = NotificationsViewModel(accessToken,incidents)
+    ): NotificationsViewModel = NotificationsViewModel(incidents)
 
 }
 

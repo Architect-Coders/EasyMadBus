@@ -7,39 +7,25 @@ import androidx.lifecycle.viewModelScope
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.domain.Token
 import com.developer.ivan.usecases.GetToken
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-abstract class BaseViewModel(private val getAccessToken: GetToken? = null) : ViewModel(), Scope by Scope.IOScopeImplementation(){
 
-    private val _failure = MutableLiveData<Failure>()
+interface BaseViewModel
+{
+    val _failure: MutableLiveData<Failure>
+        get() = MutableLiveData<Failure>()
     val failure: LiveData<Failure>
         get() = _failure
 
-    suspend fun handleFailure(failure: Failure) {
-        _failure.postValue(failure)
-    }
+    suspend fun handleFailure(failure: Failure)
 
-    protected fun executeWithToken(body: suspend (Token) -> Unit) {
-
-        getAccessToken?.let { accessToken ->
-
-            viewModelScope.launch {
-
-                    accessToken.execute(
-                        GetToken.Params(
-                            Constants.EMTApi.USER_EMAIL,
-                            Constants.EMTApi.USER_PASSWORD,
-                            Constants.EMTApi.API_KEY,
-                            Constants.EMTApi.CLIENT_KEY
-                        )
-                    ).fold(::handleFailure, body)
-
-            }
+    class BaseViewModelImpl(): BaseViewModel{
+        override suspend fun handleFailure(failure: Failure) {
+            _failure.postValue(failure)
         }
 
     }
-
-
 }

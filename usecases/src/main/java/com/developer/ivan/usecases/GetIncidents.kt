@@ -3,16 +3,16 @@ package com.developer.ivan.usecases
 import com.developer.ivan.data.repository.IBusRepository
 import com.developer.ivan.domain.*
 
-class GetIncidents(private val repository: IBusRepository) :
-    UseCase<GetIncidents.Params, List<Incident>>() {
+class GetIncidents(
+    private val repository: IBusRepository,
+    getAccessToken: GetToken
+) :
+    UseCase<GetIncidents.Params, List<Incident>>(),
+    IExecuteToken by IExecuteToken.ExecuteTokenImpl(getAccessToken) {
     override suspend fun body(param: Params): Either<Failure, List<Incident>> =
-        repository.incidents(param.token.accessToken)
+        executeWithToken().flatMap {
+            repository.incidents(it.accessToken)
+        }
 
-    class Params(val token: Token)
+    class Params
 }
-
-/*UseCase<Params, List<Pair(BusStop,StopFavourite)>>() {
-override suspend fun body(param: Params): Either<Failure, List<StopFavourite>> =
-    repository.favouritesAndBusStops(param.id)
-
-class Params(val id: Int)*/

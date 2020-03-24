@@ -11,16 +11,16 @@ import com.google.android.gms.maps.model.Marker
 import kotlinx.coroutines.*
 
 class BusMapViewModel(
-    private val busStops: GetBusStops, accessToken: GetToken,
+    private val busStops: GetBusStops,
     private val stopTime: GetBusStopTime,
     private val busAndStopsFavourites: GetBusAndStopsFavourites,
     private val insertStopFavourite: InsertStopFavourite,
     private val deleteStopFavourite: DeleteStopFavourite,
     private val coarseLocation: GetCoarseLocation,
     private val fineLocation: GetFineLocation,
-    private val permissionChecker: PermissionChecker
-) :
-    BaseViewModel(accessToken) {
+    private val permissionChecker: PermissionChecker,
+    private val uiDispatcher: CoroutineDispatcher
+) : BaseViewModel by BaseViewModel.BaseViewModelImpl(), ViewModel() {
 
     sealed class BusStopScreenState {
 
@@ -46,9 +46,6 @@ class BusMapViewModel(
     val busState: LiveData<BusStopScreenState>
         get() = _busState
 
-    init {
-        initScope()
-    }
 
     fun updateMarkerInfo(
         marker: Marker,
@@ -68,8 +65,8 @@ class BusMapViewModel(
     fun fusedLocation() {
         if (permissionChecker.check(Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
-            viewModelScope.launch {
-                coarseLocation.execute(Unit).fold(::handleFailure, ::handleLocation)
+            viewModelScope.launch(uiDispatcher) {
+                coarseLocation.execute(Unit).fold(::handleFailure,::handleLocation)
             }
         } else {
             _busState.value = BusStopScreenState.RequestCoarseLocation
@@ -79,7 +76,7 @@ class BusMapViewModel(
     fun fineLocation() {
         if (permissionChecker.check(Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            viewModelScope.launch {
+            viewModelScope.launch(uiDispatcher) {
                 fineLocation.execute(Unit).fold(::handleFailure, ::handleLocation)
             }
         } else {
@@ -89,30 +86,27 @@ class BusMapViewModel(
 
     private suspend fun handleLocation(location: Locate?) {
         if (location != null)
-            _busState.postValue(BusStopScreenState.ShowFusedLocation(location))
+            _busState.value = BusStopScreenState.ShowFusedLocation(location)
     }
 
     fun busStops() {
-        executeWithToken { token ->
-
-            viewModelScope.launch {
-                busStops.execute(GetBusStops.Params(token)).fold(::handleFailure, ::handleBusStop)
-            }
+            viewModelScope.launch(uiDispatcher) {
+                busStops.execute(GetBusStops.Params()).fold(::handleFailure, ::handleBusStop)
         }
     }
 
     fun clickInMark(markId: String, busStopId: String) {
 
-        executeWithToken { token ->
 
-            viewModelScope.launch {
+            viewModelScope.launch(uiDispatcher) {
                 val deferredTime =
-                    async { stopTime.execute(GetBusStopTime.Params(token, busStopId)) }
+                    async { stopTime.execute(GetBusStopTime.Params(busStopId)) }
                 val deferredFavourite =
                     async { busAndStopsFavourites.execute(GetBusAndStopsFavourites.Params(busStopId)) }
 
                 val time = deferredTime.await()
                 val favourite = deferredFavourite.await()
+
 
                 time.fold(::handleFailure) { listArrives ->
 
@@ -131,7 +125,6 @@ class BusMapViewModel(
 
                 }
             }
-        }
     }
 
     private suspend fun handleBusStop(busListDomain: List<BusStop>) {
@@ -140,7 +133,7 @@ class BusMapViewModel(
 
     fun clickInInfoWindow(markId: String, busData: Pair<UIBusStop, UIStopFavourite?>) {
         var deferredFavourite: Deferred<Either<Failure, StopFavourite>>
-        viewModelScope.launch {
+        viewModelScope.launch(uiDispatcher) {
 
             deferredFavourite = if (busData.second != null) {
                 async { deleteStopFavourite.execute(DeleteStopFavourite.Params(busData.second!!.toDomain())) }
@@ -170,8 +163,4 @@ class BusMapViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        cancelScope()
-    }
 }

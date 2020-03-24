@@ -20,12 +20,12 @@ class UseCaseModule
         GetBusAndStopsFavourites(busRepository)
 
     @Provides
-    fun getBusStopsProvider(busRepository: IBusRepository)=
-        GetBusStops(busRepository)
+    fun getBusStopsProvider(busRepository: IBusRepository, getAccessToken: GetToken)=
+        GetBusStops(busRepository,getAccessToken)
 
     @Provides
-    fun getBusStopTimProvidere(busRepository: IBusRepository)=
-        GetBusStopTime(busRepository)
+    fun getBusStopTimProvidere(busRepository: IBusRepository, getAccessToken: GetToken)=
+        GetBusStopTime(busRepository, getAccessToken)
 
     @Provides
     fun getCoarseLocationProvider(locationDataSource: ILocationRepository)=
@@ -36,8 +36,8 @@ class UseCaseModule
         GetFineLocation(locationDataSource)
 
     @Provides
-    fun getIncidentsProvider(busRepository: IBusRepository)=
-        GetIncidents(busRepository)
+    fun getIncidentsProvider(busRepository: IBusRepository, getAccessToken: GetToken)=
+        GetIncidents(busRepository,getAccessToken)
 
     @Provides
     fun getStopFavouriteProvider(busRepository: IBusRepository)=

@@ -1,22 +1,18 @@
 package com.developer.ivan.easymadbus.presentation.notifications
 
 import androidx.lifecycle.*
-import com.developer.ivan.domain.*
+import com.developer.ivan.domain.Incident
 import com.developer.ivan.easymadbus.core.BaseViewModel
-import com.developer.ivan.easymadbus.presentation.models.*
+import com.developer.ivan.easymadbus.presentation.models.UIIncident
+import com.developer.ivan.easymadbus.presentation.models.toUIIncident
 import com.developer.ivan.usecases.GetIncidents
 import com.developer.ivan.usecases.GetToken
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 
 class NotificationsViewModel(
-    accessToken: GetToken,
     private val incidents: GetIncidents
 ) :
-    BaseViewModel(accessToken) {
-
-    init {
-        initScope()
-    }
+    BaseViewModel by BaseViewModel.BaseViewModelImpl(), ViewModel() {
 
     sealed class IncidentsScreenState {
 
@@ -37,25 +33,18 @@ class NotificationsViewModel(
         _indicentsState.value =
             IncidentsScreenState.Loading
 
+        viewModelScope.launch {
 
-        executeWithToken { token ->
-            viewModelScope.launch {
-
-                incidents.execute(GetIncidents.Params(token)).fold(::handleFailure,::handleIncidents)
-
-            }
+            incidents.execute(GetIncidents.Params()).fold(::handleFailure, ::handleIncidents)
 
         }
-    }
-
-    private suspend fun handleIncidents(incidents: List<Incident>){
-        _indicentsState.value = IncidentsScreenState.ShowIncidents(incidents.map { it.toUIIncident() })
 
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        cancelScope()
+    private suspend fun handleIncidents(incidents: List<Incident>) {
+        _indicentsState.value =
+            IncidentsScreenState.ShowIncidents(incidents.map { it.toUIIncident() })
+
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -66,7 +55,6 @@ class NotificationsViewModel(
         ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return NotificationsViewModel(
-                accessToken,
                 incidents
             ) as T
         }

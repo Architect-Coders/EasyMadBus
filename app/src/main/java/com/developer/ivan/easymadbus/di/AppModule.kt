@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.developer.ivan.data.datasources.LocalDataSource
 import com.developer.ivan.data.datasources.LocationDataSource
 import com.developer.ivan.data.repository.RemoteDataSource
-import com.developer.ivan.easymadbus.core.Constants
+import com.developer.ivan.domain.Constants
 import com.developer.ivan.easymadbus.data.db.Database
 import com.developer.ivan.easymadbus.data.server.ServerMapper
 import com.developer.ivan.easymadbus.framework.ApiService
@@ -15,6 +15,8 @@ import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
 import com.developer.ivan.easymadbus.framework.datasource.RoomDataSource
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -79,6 +81,9 @@ class AppModule {
     fun permisionCheckerProvider(app: Application): PermissionChecker =
         PermissionChecker(app)
 
+    @Singleton
+    @Provides
+    fun dispatcherProvides(): CoroutineDispatcher = Dispatchers.Main
 
 
 
