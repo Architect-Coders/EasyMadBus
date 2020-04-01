@@ -12,6 +12,7 @@ import kotlinx.coroutines.*
 
 class BusMapViewModel(
     private val busStops: GetBusStops,
+    private val busStopDetail: GetStopDetail,
     private val stopTime: GetBusStopTime,
     private val busAndStopsFavourites: GetBusAndStopsFavourites,
     private val insertStopFavourite: InsertStopFavourite,
@@ -22,10 +23,12 @@ class BusMapViewModel(
     private val uiDispatcher: CoroutineDispatcher
 ) : BaseViewModel by BaseViewModel.BaseViewModelImpl(), ViewModel() {
 
+//    Errors
+    class BusMarkError(val markId: String) : Failure.FailureAbstract()
+
     sealed class BusStopScreenState {
 
         object Loading : BusStopScreenState()
-        object Failure : BusStopScreenState()
         class ShowBusStops(val uiBusStop: List<UIBusStop>) : BusStopScreenState()
         class ShowFusedLocation(val location: Locate) : BusStopScreenState()
         class ShowBusStopInfo(
@@ -47,6 +50,12 @@ class BusMapViewModel(
         get() = _busState
 
 
+    fun updateMarkerError(
+        marker: Marker
+    ){
+        marker.tag = BusMarkError(marker.id)
+        _busState.value = (BusStopScreenState.UpdateMarkerInfoWindow(marker))
+    }
     fun updateMarkerInfo(
         marker: Marker,
         busData: Pair<UIBusStop, UIStopFavourite?>,
@@ -66,7 +75,7 @@ class BusMapViewModel(
         if (permissionChecker.check(Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
             viewModelScope.launch(uiDispatcher) {
-                coarseLocation.execute(Unit).fold(::handleFailure,::handleLocation)
+                coarseLocation.execute(Unit).fold(::handleFailure, ::handleLocation)
             }
         } else {
             _busState.value = BusStopScreenState.RequestCoarseLocation
@@ -90,41 +99,54 @@ class BusMapViewModel(
     }
 
     fun busStops() {
-            viewModelScope.launch(uiDispatcher) {
-                busStops.execute(GetBusStops.Params()).fold(::handleFailure, ::handleBusStop)
+        viewModelScope.launch(uiDispatcher) {
+            busStops.execute(GetBusStops.Params()).fold(::handleFailure, ::handleBusStop)
         }
     }
 
     fun clickInMark(markId: String, busStopId: String) {
 
 
-            viewModelScope.launch(uiDispatcher) {
-                val deferredTime =
-                    async { stopTime.execute(GetBusStopTime.Params(busStopId)) }
-                val deferredFavourite =
-                    async { busAndStopsFavourites.execute(GetBusAndStopsFavourites.Params(busStopId)) }
+        viewModelScope.launch(uiDispatcher) {
+            val deferredTime =
+                async { stopTime.execute(GetBusStopTime.Params(busStopId)) }
+            val deferredFavourite =
+                async { busAndStopsFavourites.execute(GetBusAndStopsFavourites.Params(busStopId)) }
+            val deferredStopWithLines =
+                async { busStopDetail.execute(GetStopDetail.Params(busStopId)) }
 
-                val time = deferredTime.await()
-                val favourite = deferredFavourite.await()
+            val time = deferredTime.await()
+            val favourite = deferredFavourite.await()
+            val busStopWithLines = deferredStopWithLines.await()
 
 
-                time.fold(::handleFailure) { listArrives ->
 
-                    favourite.fold(::handleFailure) { favourite ->
+            busStopWithLines.fold( {
+                handleFailure(BusMarkError(markId))
+            },{busStop->
 
-                        _busState.value = BusStopScreenState.ShowBusStopInfo(
-                            markId,
-                            Pair(
-                                favourite.first().first.toUIBusStop(),
-                                favourite.first().second?.toUIStopFavourite()
-                            ),
-                            listArrives.map { it.toUIArrive() })
-                        Unit
-                    }
+                val arrives = when(time){
+                    is Either.Left -> listOf()
+                    is Either.Right -> time.b
+                }
 
+                favourite.fold(::handleFailure) { favourite ->
+
+                    _busState.value = BusStopScreenState.ShowBusStopInfo(
+                        markId,
+                        Pair(
+                            busStop.toUIBusStop(),
+                            if (favourite.isNotEmpty()) favourite.first().second?.toUIStopFavourite() else null
+                        ),
+                        arrives.map { it.toUIArrive() })
+                    Unit
 
                 }
-            }
+
+
+
+            } )
+        }
     }
 
     private suspend fun handleBusStop(busListDomain: List<BusStop>) {
@@ -154,7 +176,7 @@ class BusMapViewModel(
                         BusStopScreenState.ShowBusStopInfo(
                             markId,
                             busUI,
-                            busData.first.lines.flatMap { line -> line.second })
+                            busData.first.lines.flatMap { line -> line.arrives })
                         )
                 Unit
 

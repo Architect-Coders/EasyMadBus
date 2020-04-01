@@ -2,6 +2,10 @@ package com.developer.ivan.easymadbus.core
 
 import android.content.Context
 import android.opengl.Visibility
+import android.os.Build
+import android.text.Html
+import android.text.Spanned
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +33,21 @@ val Context.app: App
 fun String.removeHTML()=
     this.replace(Regex("<(.*)>.*</(.)>"),"")
 
+fun Context.getValueInDP(value: Int): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        value.toFloat(),
+        this.resources.displayMetrics
+    ).toInt()
+}
+
+fun String.fromHTML() =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        Html.fromHtml(this,Html.FROM_HTML_MODE_LEGACY)
+    } else {
+        Html.fromHtml(this)
+    }
+
 inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffUtil(
     initialValue: List<T>,
     crossinline areItemsTheSame: (T, T) -> Boolean = { old, new -> old == new },
@@ -48,15 +67,7 @@ inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffU
         }).dispatchUpdatesTo(this@basicDiffUtil)
     }
 
-@Suppress("UNCHECKED_CAST")
-inline fun <reified T : ViewModel> FragmentActivity.getViewModel(crossinline factory: () -> T): T {
 
-    val vmFactory = object : ViewModelProvider.Factory {
-        override fun <U : ViewModel> create(modelClass: Class<U>): U = factory() as U
-    }
-
-    return ViewModelProvider(this, vmFactory)[T::class.java]
-}
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T : ViewModel> Fragment.getViewModel(crossinline factory: () -> T): T {

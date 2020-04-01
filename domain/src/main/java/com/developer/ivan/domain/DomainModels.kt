@@ -15,12 +15,19 @@ data class BusStop(
     val geometry: Geometry,
     val name: String,
     val wifi: String,
-    val lines: List<Pair<String,List<Arrive>>>)
+    var lines: List<Line> = emptyList()
+)
 
 
 data class Line(
-    val id: String,
-    val label: String
+    val line: String,
+    val label: String,
+    val direction: String,
+    val maxFreq: String,
+    val minFreq: String,
+    val headerA: String,
+    val headerB: String,
+    var arrives: List<Arrive> = emptyList()
 )
 
 data class Arrive(val line: String,

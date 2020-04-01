@@ -40,6 +40,19 @@ class EntityArrive(
     fun toDomain() = Arrive(line, stop, estimateArrive, distanceBus, System.currentTimeMillis())
 }
 
+class EntityLine(
+    private val line: String,
+    private val label: String,
+    private val direction: String,
+    private val maxFreq: String,
+    private val minFreq: String,
+    private val headerA: String,
+    private val headerB: String
+) : ServerModel {
+
+    fun toDomain() = Line(line,label,direction,maxFreq,minFreq,headerA,headerB)
+}
+
 class EntityBusStop(
     private val node: String,
     private val geometry: EntityGeometry,
@@ -55,12 +68,20 @@ class EntityBusStop(
         )
     }
 
+/*
     fun toDomain() = BusStop(
         node,
         geometry.toDomain(),
         name,
         wifi,
         lines.distinctBy { it.split("/")[0] }.map { Pair(it.split("/")[0].toInt().toString(), listOf<Arrive>()) })
+*/
+
+    fun toDomain() = BusStop(
+        node,
+        geometry.toDomain(),
+        name,
+        wifi)
 }
 
 data class EntityIncident(val title: String,

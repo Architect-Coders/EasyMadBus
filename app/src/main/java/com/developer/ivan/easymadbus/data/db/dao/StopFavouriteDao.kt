@@ -10,8 +10,8 @@ interface StopFavouriteDao {
     @Query("SELECT * FROM DBBusStop INNER JOIN DBStopFavourite WHERE DBBusStop.node = DBStopFavourite.busStopId")
     fun getAllWithBusStops(): List<DBBusAndStopFavourite>
 
-    @Query("SELECT * FROM DBBusStop LEFT JOIN DBStopFavourite WHERE DBBusStop.node=:id")
-    fun getByIdWithBusStops(id: String): List<DBBusAndStopFavourite>
+    @Query("SELECT * FROM DBStopFavourite LEFT JOIN DBBusStop  WHERE DBBusStop.node=:id")
+    fun getByIdWithBusStops(id: String): DBBusAndStopFavourite?
 
     @Query("SELECT * FROM DBStopFavourite")
     fun getAll(): List<DBStopFavourite>
@@ -25,11 +25,3 @@ interface StopFavouriteDao {
     @Delete
     fun deleteFavourite(busStop: DBStopFavourite)
 }
-
-/*
-@Dao
-interface BusStopFavouriteDao{
-
-    @Query("SELECT * FROM DBFavouriteBusStop")
-    fun getFavourites() : List<BusStop>
-}*/

@@ -11,7 +11,17 @@ interface IBusRepository {
         clientKey: String
     ): Either<Failure, Token>
 
-    suspend fun busStops(accessToken: String, forceReload: Boolean = false): Either<Failure, List<BusStop>>
+    suspend fun busStops(
+        accessToken: String,
+        forceReload: Boolean = false
+    ): Either<Failure, List<BusStop>>
+
+    suspend fun busStopWithLines(
+        accessToken: String,
+        busStop: String,
+        forceReload: Boolean = true
+    ): Either<Failure, BusStop>
+
     suspend fun stopTimeLines(accessToken: String, busStop: String): Either<Failure, List<Arrive>>
 
     suspend fun favourites(id: Int? = null): Either<Failure, List<StopFavourite>>
@@ -27,7 +37,7 @@ class BusRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) : IBusRepository {
-     override suspend fun login(
+    override suspend fun login(
         email: String,
         password: String,
         apiKey: String,
@@ -88,6 +98,43 @@ class BusRepository(
                 }
             }
         }
+    }
+
+    override suspend fun busStopWithLines(
+        accessToken: String,
+        busStop: String,
+        forceReload: Boolean
+    ): Either<Failure, BusStop> {
+
+        return with(localDataSource) {
+
+            if (getCountLines(busStop) > 0) {
+                Either.Right(getBusStopWithLines(busStop))
+            } else {
+
+                val response = remoteDataSource.getLines(
+                    mapOf(
+                        "accessToken" to accessToken
+                    ),
+                    busStop
+                )
+
+                when (response) {
+                    is Either.Left -> response
+                    is Either.Right -> {
+                        localDataSource.insertBusStopLines(busStop, response.b)
+                        val busStopData = localDataSource.getBusStopById(busStop)
+
+                        if (busStopData != null)
+                            Either.Right(busStopData.apply { lines = response.b })
+                        else
+                            Either.Left(Failure.NullResult)
+                    }
+                }
+            }
+        }
+
+
     }
 
     override suspend fun stopTimeLines(

@@ -6,14 +6,15 @@ import com.developer.ivan.domain.Either
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.core.BaseViewModel
 import com.developer.ivan.easymadbus.presentation.models.*
+import com.developer.ivan.usecases.DeleteStopFavourite
 import com.developer.ivan.usecases.GetBusAndStopsFavourites
 import com.developer.ivan.usecases.GetBusStopTime
-import com.developer.ivan.usecases.GetToken
 import kotlinx.coroutines.*
 
 class FavouriteViewModel(
     private val stopTime: GetBusStopTime,
     private val busAndStopsFavourites: GetBusAndStopsFavourites,
+    private val deleteStopFavourite: DeleteStopFavourite,
     private val dispatcher: CoroutineDispatcher
 ) : BaseViewModel by BaseViewModel.BaseViewModelImpl(), ViewModel() {
 
@@ -29,6 +30,14 @@ class FavouriteViewModel(
             val busData: Pair<UIBusStop, UIStopFavourite>
         ) : FavouriteScreenState()
 
+        class ShowConfirmDialogDelete(
+            val busData: Pair<UIBusStop, UIStopFavourite>,
+            val position: Int
+        ) :
+            FavouriteScreenState()
+
+        class ShowItemDeleted(val busData: Pair<UIBusStop, UIStopFavourite>) :
+            FavouriteScreenState()
 
     }
 
@@ -55,6 +64,11 @@ class FavouriteViewModel(
 
         return deferredList
 
+
+    }
+
+    fun onSwipedItem(item: Pair<UIBusStop, UIStopFavourite>, position: Int) {
+        _favouriteState.value = FavouriteScreenState.ShowConfirmDialogDelete(item, position)
 
     }
 
@@ -121,6 +135,17 @@ class FavouriteViewModel(
                 }
 
 
+        }
+    }
+
+    fun deleteItem(item: Pair<UIBusStop, UIStopFavourite>) {
+
+        viewModelScope.launch {
+            deleteStopFavourite.execute(DeleteStopFavourite.Params(item.second.toDomain()))
+                .fold(::handleFailure) {
+                    _favouriteState.value = FavouriteScreenState.ShowItemDeleted(item)
+                    Unit
+                }
         }
     }
 

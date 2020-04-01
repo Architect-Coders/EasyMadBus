@@ -4,13 +4,12 @@ import android.os.Parcelable
 import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.data.db.models.DBBusStop
 import com.developer.ivan.easymadbus.data.db.models.DBGeometry
+import com.developer.ivan.easymadbus.data.db.models.DBLine
 import com.developer.ivan.easymadbus.data.db.models.DBToken
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -26,13 +25,27 @@ data class UIToken(val accessToken: String, val tokenSecExpiration: Int, val tim
 }
 
 @Parcelize
+data class UILine(
+    val line: String,
+    val label: String,
+    val direction: String,
+    val maxFreq: String,
+    val minFreq: String,
+    val headerA: String,
+    val headerB: String,
+    var arrives: List<UIArrive> = emptyList()
+) : Parcelable
+
+@Parcelize
 data class UIBusStop(
     val node: String,
     val geometry: UIGeometry,
     val name: String,
     val wifi: String,
-    val lines: List<Pair<String, List<UIArrive>>>
+    var lines: List<UILine> = emptyList()
 ) : Parcelable, ClusterItem {
+
+
 /*
     override fun getSnippet(): String =
             lines.map { it.split("/") }.getOrNull(0)?.joinToString(", ") ?: String.empty
@@ -43,13 +56,12 @@ data class UIBusStop(
 
     override fun getPosition(): LatLng = geometry.coordinates
 
-    fun toDb(): DBBusStop = DBBusStop(node, geometry.toDb(), name, wifi, lines.map { it.first })
+    fun toDb(): DBBusStop = DBBusStop(node, geometry.toDb(), name, wifi)
     fun toDomain(): BusStop = BusStop(
         node,
         geometry.toDomain(),
         name,
-        wifi,
-        lines.map { Pair(it.first, it.second.map { arrive -> arrive.toDomain() }) })
+        wifi)
 }
 
 @Parcelize
@@ -102,14 +114,9 @@ data class UIIncident(
 }
 
 
-fun convertToBusArrives(busStop: UIBusStop, arrives: List<UIArrive>) =
-    busStop.lines.distinctBy { it.first.split("/")[0] }.map { line ->
-        Pair(
-            line.first,
-            (arrives.filter {
-                it.line == line.first.split(
-                    "/"
-                )[0].toInt().toString()
-            })
-        )
+fun convertToBusArrives(busStop: UIBusStop, arrives: List<UIArrive>): List<UILine> {
+    return busStop.lines.map { line ->
+        line.arrives = arrives.filter { arrive -> arrive.line.toLowerCase() == line.label.toLowerCase() }
+        line
     }
+}

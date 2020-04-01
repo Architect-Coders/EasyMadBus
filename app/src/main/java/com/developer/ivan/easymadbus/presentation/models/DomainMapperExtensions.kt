@@ -1,10 +1,7 @@
 package com.developer.ivan.easymadbus.presentation.models
 
 import com.developer.ivan.domain.*
-import com.developer.ivan.easymadbus.data.db.models.DBBusStop
-import com.developer.ivan.easymadbus.data.db.models.DBGeometry
-import com.developer.ivan.easymadbus.data.db.models.DBStopFavourite
-import com.developer.ivan.easymadbus.data.db.models.DBToken
+import com.developer.ivan.easymadbus.data.db.models.*
 import com.developer.ivan.easymadbus.presentation.map.BusMapViewModel
 import com.google.android.gms.maps.model.LatLng
 import java.text.ParseException
@@ -19,14 +16,21 @@ fun BusStop.toUIBusStop() = UIBusStop(
     geometry.toUIGeometry(),
     name,
     wifi,
-    lines.map { line -> Pair(line.first, line.second.map { it.toUIArrive() }) })
+    lines.map { line-> line.toUILine() })
 
 fun BusStop.toDBBusStop() = DBBusStop(
     node,
     geometry.toDBGeometry(),
     name,
-    wifi,
-    lines.map { line -> line.first })
+    wifi)
+
+fun Line.toDBLine() = DBLine(
+    line, label, direction, maxFreq, minFreq, headerA, headerB
+)
+
+fun Line.toUILine() = UILine(
+    line, label, direction, maxFreq, minFreq, headerA, headerB
+)
 
 fun StopFavourite.toUIStopFavourite() = UIStopFavourite(
     busStopId,
