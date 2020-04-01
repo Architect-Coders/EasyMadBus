@@ -18,7 +18,6 @@ import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.clustering.ClusterManager
 import kotlinx.android.synthetic.main.fragment_map.*
 
 
@@ -28,9 +27,7 @@ class BusMapFragment : Fragment() {
     private lateinit var component: BusMapFragmentComponent
 
     private val mViewModel: BusMapViewModel by lazy { getViewModel { component.busMapViewmodel } }
-    private var mClusterManager: ClusterManager<UIBusStop>? = null
     private lateinit var requestManager: PermissionRequester
-    private var googleMap: GoogleMap? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,23 +63,14 @@ class BusMapFragment : Fragment() {
     }
 
 
-    private fun handleMapReady(googleMap: GoogleMap?) {
-        this.googleMap = googleMap
-        mClusterManager = ClusterManager(context, this.googleMap)
-        mClusterManager!!.setAnimation(false)
-        mClusterManager!!.renderer = ClusterItem(context, googleMap, mClusterManager!!)
-
-        this.googleMap?.setOnCameraIdleListener(mClusterManager)
-
-
+    private fun handleMapReady() {
         mViewModel.busStops()
         mViewModel.fusedLocation()
     }
 
     private fun setPoints(listPoints: List<UIBusStop>) {
 
-        listPoints.forEach { mClusterManager?.addItem(it) }
-        mClusterManager?.cluster()
+        mapManager?.addPoints(listPoints)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -115,7 +103,17 @@ class BusMapFragment : Fragment() {
     }
 
     private fun handleFailure(failure: Failure?) {
-        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+
+        when(failure)
+        {
+            is BusMapViewModel.BusMarkError -> {
+               mapManager?.findMarker(failure.markId)?.let {marker->
+                    mViewModel.updateMarkerError(marker)
+                }
+            }
+            else-> Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+
+        }
     }
 
     private fun renderBusState(busStopScreenState: BusMapViewModel.BusStopScreenState) {
@@ -123,9 +121,6 @@ class BusMapFragment : Fragment() {
 
         when (busStopScreenState) {
             BusMapViewModel.BusStopScreenState.Loading -> progressBar.show()
-            BusMapViewModel.BusStopScreenState.Failure -> {
-                progressBar.hide()
-            }
             is BusMapViewModel.BusStopScreenState.ShowBusStops -> {
                 progressBar.hide()
 
@@ -150,15 +145,15 @@ class BusMapFragment : Fragment() {
 
             is BusMapViewModel.BusStopScreenState.ShowBusStopInfo -> {
 
-                mClusterManager?.markerCollection?.markers?.find { it.id == busStopScreenState.markId }
-                    ?.let {
-                        mViewModel.updateMarkerInfo(
-                            it,
-                            busStopScreenState.busData,
-                            busStopScreenState.arrives
-                        )
+                mapManager?.findMarker(busStopScreenState.markId)?.let {
 
-                    }
+                    mViewModel.updateMarkerInfo(
+                        it,
+                        busStopScreenState.busData,
+                        busStopScreenState.arrives
+                    )
+
+                }
             }
 
             is BusMapViewModel.BusStopScreenState.UpdateMarkerInfoWindow -> {

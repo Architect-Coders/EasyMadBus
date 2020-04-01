@@ -20,11 +20,15 @@ class UseCaseModule
         GetBusAndStopsFavourites(busRepository)
 
     @Provides
+    fun getBusStopDetailProvider(busRepository: IBusRepository, getAccessToken: GetToken)=
+        GetStopDetail(busRepository,getAccessToken)
+
+    @Provides
     fun getBusStopsProvider(busRepository: IBusRepository, getAccessToken: GetToken)=
         GetBusStops(busRepository,getAccessToken)
 
     @Provides
-    fun getBusStopTimProvidere(busRepository: IBusRepository, getAccessToken: GetToken)=
+    fun getBusStopTimProvider(busRepository: IBusRepository, getAccessToken: GetToken)=
         GetBusStopTime(busRepository, getAccessToken)
 
     @Provides

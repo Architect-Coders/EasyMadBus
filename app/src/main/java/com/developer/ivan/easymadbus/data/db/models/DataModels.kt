@@ -17,15 +17,26 @@ data class DBBusStop(
     @Embedded
     val geometry: DBGeometry,
     val name: String,
-    val wifi: String,
-    val lines: List<String>
-){
-//    TODO lines
-    fun toUI() = UIBusStop(node,geometry.toUI(),name,wifi, lines.map { Pair(it, listOf<UIArrive>()) })
-    fun toDomain() = BusStop(node,geometry.toDomain(),name,wifi, lines.map { Pair(it, listOf<Arrive>()) })
+    val wifi: String
+) {
+    //    TODO lines
+    fun toUI() = UIBusStop(node, geometry.toUI(), name, wifi)
+
+    fun toDomain() = BusStop(node, geometry.toDomain(), name, wifi)
 }
 
-
+@Entity(primaryKeys = ["line","direction"])
+class DBLine(
+    val line: String,
+    val label: String,
+    val direction: String,
+    val maxFreq: String,
+    val minFreq: String,
+    val headerA: String,
+    val headerB: String
+){
+    fun toDomain() = Line(line, label, direction, maxFreq, minFreq, headerA, headerB)
+}
 
 
 class LinesConverter {
@@ -44,32 +55,89 @@ class LinesConverter {
     }
 }
 
+@Entity(
+    primaryKeys = ["busStopId","lineId","directionId"],
+    indices = [
+        Index("busStopId"),
+        Index("lineId")
+    ],
+    foreignKeys = [
+        ForeignKey(
+            entity = DBBusStop::class,
+            parentColumns = ["node"],
+            childColumns = ["busStopId"]
+        ),
+        ForeignKey(
+            entity = DBLine::class,
+            parentColumns = ["line","direction"],
+            childColumns = ["lineId","directionId"]
+        )
+    ]
+)
+data class DBBusStopLineCrossRef(
+
+    val busStopId: String,
+    val lineId: String,
+    val directionId: String
+)
+
 @Entity
 data class DBStopFavourite(
     @PrimaryKey
     val busStopId: String,
     val fname: String?
-){
+) {
     fun toUI() = UIStopFavourite(busStopId, fname)
-    fun toDomain() = StopFavourite(busStopId,fname)
+    fun toDomain() = StopFavourite(busStopId, fname)
+}
+
+
+data class DBBusStopWithLines(
+    @Embedded
+    val busStop: DBBusStop,
+
+   /* @Relation(
+        parentColumn = "node",
+        entityColumn = "line",
+        associateBy = Junction(
+            DBBusStopLineCrossRef::class,
+            parentColumn = "busStopId",
+            entityColumn = "lineId"
+        )
+    )*/
+    @Embedded
+    val crossRef: DBBusStopLineCrossRef?,
+
+    @Embedded
+    val busLine: DBLine?
+
+//    val busLines: List<DBLine>
+) {
+    fun toDomain() = BusStop(
+        busStop.node,
+        busStop.geometry.toDomain(),
+        busStop.name,
+        busStop.wifi
+    )
 }
 
 data class DBBusAndStopFavourite
     (
     @Embedded
     val busStop: DBBusStop,
-    @Relation(parentColumn = "node",
-        entityColumn = "busStopId")
-    val dbStopFavourite: DBStopFavourite?=null
-){
-    fun toUI() = Pair(busStop.toUI(),dbStopFavourite?.toUI())
+    @Relation(
+        parentColumn = "node",
+        entityColumn = "busStopId"
+    )
+    val dbStopFavourite: DBStopFavourite? = null
+) {
+    fun toUI() = Pair(busStop.toUI(), dbStopFavourite?.toUI())
     fun toDomain() = Pair(busStop.toDomain(), dbStopFavourite?.toDomain())
 }
 
-data class DBGeometry(val type: String, val latitude: Double, val longitude: Double)
-{
-    fun toUI() = UIGeometry(type, LatLng(latitude,longitude))
-    fun toDomain() = Geometry(type, listOf(longitude,latitude))
+data class DBGeometry(val type: String, val latitude: Double, val longitude: Double) {
+    fun toUI() = UIGeometry(type, LatLng(latitude, longitude))
+    fun toDomain() = Geometry(type, listOf(longitude, latitude))
 }
 
 @Entity
@@ -79,7 +147,7 @@ data class DBToken(
     val accessToken: String,
     val tokenSecExpiration: Int,
     val timeStamp: Long
-){
-    fun toUI() = UIToken(accessToken,tokenSecExpiration,timeStamp)
-    fun toDomain() = Token(accessToken,tokenSecExpiration,timeStamp)
+) {
+    fun toUI() = UIToken(accessToken, tokenSecExpiration, timeStamp)
+    fun toDomain() = Token(accessToken, tokenSecExpiration, timeStamp)
 }

@@ -10,51 +10,55 @@ import org.json.JSONArray
 import org.json.JSONException
 
 
-
-
-object ServerMapper
-{
-    inline fun <reified T> parseDataServerResponse(data: String): Either<Failure, T>
-    {
+object ServerMapper {
+    inline fun <reified T> parseDataServerResponse(data: String): Either<Failure, T> {
         return try {
-            val dataServer: T = Gson().fromJson(data, object : TypeToken<T>(){}.type)
+            val dataServer: T = Gson().fromJson(data, object : TypeToken<T>() {}.type)
             Either.Right(dataServer)
-        }catch (e: JsonSyntaxException){
+        } catch (e: JsonSyntaxException) {
             Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
         }
     }
 
-    inline fun <reified T> parseArriveServerResponse(data: String): Either<Failure,T>
-    {
+
+    inline fun <reified T> parseArriveServerResponse(data: String): Either<Failure, T> {
         return try {
 
             val jsonData = JSONArray(data).getJSONObject(0).getString("Arrive")
             parseDataServerResponse(jsonData)
-        }catch (e: JsonSyntaxException){
+        } catch (e: JsonSyntaxException) {
             Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
         }
     }
 
 
-    inline fun <reified T> parseItemServerResponse(data: String): Either<Failure,T>
-    {
+    inline fun <reified T> parseItemServerResponse(data: String): Either<Failure, T> {
         return try {
 
             val jsonData = JSONArray(data).getJSONObject(0).getString("item")
             parseDataServerResponse(jsonData)
-        }catch (e: JsonSyntaxException){
+        } catch (e: JsonSyntaxException) {
             Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
         }
     }
 
 
-    inline fun <reified T> parseDataServerResponseFirst(data: String): Either<Failure,T>
-    {
+    inline fun <reified T> parseDataServerResponseFirst(data: String): Either<Failure, T> {
         return try {
 
             val arrayList = JSONArray(data).getString(0)
             parseDataServerResponse<T>(arrayList)
-        }catch (e: JSONException){
+        } catch (e: JSONException) {
+            Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
+        }
+    }
+
+    inline fun <reified T> parseDataLineServerResponse(data: String): Either<Failure, T> {
+        return try {
+            val jsonData = JSONArray(data).getJSONObject(0).getJSONArray("stops").getJSONObject(0)
+                .optString("dataLine")
+            parseDataServerResponse(jsonData)
+        } catch (e: JsonSyntaxException) {
             Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
         }
     }

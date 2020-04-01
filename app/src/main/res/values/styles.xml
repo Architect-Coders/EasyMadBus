@@ -24,6 +24,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="SubtitleLine">
+        <item name="android:textSize">14sp</item>
+    </style>
+
 
 
 </resources>

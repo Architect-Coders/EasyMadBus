@@ -2,21 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:padding="@dimen/padding"
     android:minWidth="@dimen/minInfoWindowWidth">
 
 
-    <TextView
-        style="@style/TitleLine"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TitleBus"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:padding="@dimen/minPadding"
-        android:text="@string/loading"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/bus_error"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

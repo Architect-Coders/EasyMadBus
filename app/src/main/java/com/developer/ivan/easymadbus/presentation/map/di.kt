@@ -13,7 +13,7 @@ class BusMapFragmentModule {
     @Provides
     fun busMapFragmentViewModelProvider(
         busStops: GetBusStops,
-        accessToken: GetToken,
+        busStopDetail: GetStopDetail,
         stopTime: GetBusStopTime,
         busAndStopsFavourites: GetBusAndStopsFavourites,
         insertStopFavourite: InsertStopFavourite,
@@ -24,6 +24,7 @@ class BusMapFragmentModule {
         dispatcher: CoroutineDispatcher
     ): BusMapViewModel =
         BusMapViewModel(busStops,
+            busStopDetail,
             stopTime,
             busAndStopsFavourites,
             insertStopFavourite,
