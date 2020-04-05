@@ -59,9 +59,9 @@ class SwipeToDeleteCallback(
         val iconBottom: Int = iconTop + icon.getIntrinsicHeight()
 
         if (dX > 0) { // Swiping to the right
-            val iconLeft: Int = itemView.left + iconMargin + icon.getIntrinsicWidth()
-            val iconRight = itemView.left + iconMargin
-            icon.setBounds(0, 0, iconRight, iconBottom)
+            val iconLeft: Int = itemView.left + iconMargin
+            val iconRight = itemView.left + iconMargin + icon.getIntrinsicWidth()
+            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
             background.setBounds(
                 itemView.left, itemView.top,
                 itemView.left + dX.toInt() + backgroundCornerOffset, itemView.bottom

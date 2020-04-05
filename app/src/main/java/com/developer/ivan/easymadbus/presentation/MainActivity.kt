@@ -2,6 +2,9 @@ package com.developer.ivan.easymadbus.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.NavigationBottomUtil
 import com.developer.ivan.easymadbus.core.hide
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
     {
         const val ARG_BOTTOM_POSITION = "argBottomPosition"
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,21 +64,22 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
         navBottomUtil.destroy()
     }
 
-    override fun onClickOnMap() {
+    override fun onClickOnMap(currentFragment: Fragment?) {
         mBottomPosition = R.id.mapFragment
         frame_host_map_wrapper.show()
         frame_host_favourite_wrapper.hide()
         frame_host_notification_wrapper.hide()
     }
 
-    override fun onClickOnFavourite() {
+    override fun onClickOnFavourite(currentFragment: Fragment?) {
         mBottomPosition = R.id.favouriteFragment
+        currentFragment?.onResume()
         frame_host_map_wrapper.hide()
         frame_host_favourite_wrapper.show()
         frame_host_notification_wrapper.hide()
     }
 
-    override fun onClickOnNotification() {
+    override fun onClickOnNotification(currentFragment: Fragment?) {
         mBottomPosition = R.id.notificationFragment
         frame_host_map_wrapper.hide()
         frame_host_favourite_wrapper.hide()

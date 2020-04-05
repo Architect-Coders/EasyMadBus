@@ -11,11 +11,11 @@ import com.developer.ivan.easymadbus.presentation.models.toUIStopFavourite
 import com.developer.ivan.testshared.arrivesMock
 import com.developer.ivan.testshared.busStopsMock
 import com.developer.ivan.testshared.stopFavouriteMock
+import com.developer.ivan.usecases.DeleteStopFavourite
 import com.developer.ivan.usecases.GetBusAndStopsFavourites
 import com.developer.ivan.usecases.GetBusStopTime
 import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -43,12 +43,20 @@ class FavouriteViewModelTest {
     @Mock
     private lateinit var busAndStopsFavourites: GetBusAndStopsFavourites
 
+    @Mock
+    private lateinit var deleteStopFavourite: DeleteStopFavourite
+
     private lateinit var viewModel: FavouriteViewModel
 
     @Before
     fun setUp() {
         viewModel =
-            FavouriteViewModel(stopTime, busAndStopsFavourites, coroutinesTestRule.testDispatcher)
+            FavouriteViewModel(
+                stopTime,
+                busAndStopsFavourites,
+                deleteStopFavourite,
+                coroutinesTestRule.testDispatcher
+            )
     }
 
     @Test

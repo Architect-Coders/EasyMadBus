@@ -145,4 +145,7 @@ class FavouriteFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
         mAdapter.addItem(item, position)
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+    }
 }

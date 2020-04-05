@@ -2,6 +2,7 @@ package com.developer.ivan.easymadbus.framework
 
 import android.app.Application
 import android.os.Bundle
+import android.util.DisplayMetrics
 import com.developer.ivan.domain.Constants
 import com.developer.ivan.easymadbus.presentation.map.BusInfoWindow
 import com.developer.ivan.easymadbus.presentation.map.ClusterItem
@@ -12,8 +13,11 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
+
 
 class MapManager(
     private val application: Application,
@@ -24,6 +28,8 @@ class MapManager(
 ) : OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private var _mMap: GoogleMap? = null
+
+    var latLngBounds: LatLngBounds? = null
 
     private var mClusterManager: ClusterManager<UIBusStop>? = null
 
@@ -54,7 +60,9 @@ class MapManager(
         mClusterManager?.renderer =
             ClusterItem(application.applicationContext, _mMap, mClusterManager!!)
 
+
         _mMap?.setOnCameraIdleListener(mClusterManager)
+
     }
 
     private fun configureMap() {

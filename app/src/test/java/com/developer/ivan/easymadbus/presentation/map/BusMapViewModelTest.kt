@@ -46,6 +46,9 @@ class BusMapViewModelTest {
     lateinit var busAndStopsFavourites: GetBusAndStopsFavourites
 
     @Mock
+    lateinit var busStopDetail: GetStopDetail
+
+    @Mock
     lateinit var insertStopFavourite: InsertStopFavourite
 
     @Mock
@@ -68,6 +71,7 @@ class BusMapViewModelTest {
     fun setUp() {
         viewModel = BusMapViewModel(
             busStops,
+            busStopDetail,
             stopTime,
             busAndStopsFavourites,
             insertStopFavourite,
@@ -185,15 +189,12 @@ class BusMapViewModelTest {
         val expectedBusStopsAndFavourites =
             Either.Right(listOf(Pair(busStopsMock[0].copy("1"), stopFavouriteMock.copy("1"))))
 
-        val expectedScreenState = BusStopScreenState.ShowBusStopInfo(
-            markId,
-            Pair(
-                expectedBusStopsAndFavourites.b.first().first.toUIBusStop(),
-                expectedBusStopsAndFavourites.b.first().second.toUIStopFavourite()
-            ),
-            expectedArrives.b.map { it.toUIArrive() }
-        )
-
+        val expectedBusLines =
+            Either.Right(
+                busStopsMock[0].copy(
+                    "1",
+                    lines = linesMock.mapIndexed { index, item -> item.copy(line = index.toString()) })
+            )
 
 
         coroutinesTestRule.testDispatcher.runBlockingTest {
@@ -202,6 +203,7 @@ class BusMapViewModelTest {
 
             doReturn(expectedArrives).whenever(stopTime).execute(any())
             doReturn(expectedBusStopsAndFavourites).whenever(busAndStopsFavourites).execute(any())
+            doReturn(expectedBusLines).whenever(busStopDetail).execute(any())
 
             viewModel.clickInMark(markId, stopId)
 
@@ -210,7 +212,7 @@ class BusMapViewModelTest {
                     BusStopScreenState.ShowBusStopInfo(
                         markId,
                         Pair(
-                            expectedBusStopsAndFavourites.b.first().first.toUIBusStop(),
+                            expectedBusLines.b.toUIBusStop(),
                             expectedBusStopsAndFavourites.b.first().second.toUIStopFavourite()
                         ),
                         expectedArrives.b.map { it.toUIArrive() }
@@ -223,11 +225,12 @@ class BusMapViewModelTest {
     }
 
     @Test
-    fun `clickInInfoWindow insert a new stop favourite if UIStopFavourite is null and update observer`(){
+    fun `clickInInfoWindow insert a new stop favourite if UIStopFavourite is null and update observer`() {
 
         val myFavorite = Either.Right(stopFavouriteMock.copy("1"))
+        val lines = Either.Right(linesMock)
         val myMarkId = "-1"
-        val busData = Pair<UIBusStop, UIStopFavourite?>(busStopsMock[0].toUIBusStop(),null)
+        val busData = Pair<UIBusStop, UIStopFavourite?>(busStopsMock[0].toUIBusStop(), null)
 
 
         coroutinesTestRule.testDispatcher.runBlockingTest {
@@ -236,25 +239,30 @@ class BusMapViewModelTest {
 
             doReturn(myFavorite).whenever(insertStopFavourite).execute(any())
 
-            viewModel.clickInInfoWindow(myMarkId,busData)
-            verify(observer).onChanged(refEq((
-                    BusStopScreenState.ShowBusStopInfo(
-                        myMarkId,
-                        busData.copy(busData.first,myFavorite.b.toUIStopFavourite()),
-                        busData.first.lines.flatMap { line -> line.second })
-                    )
-            ))
+            viewModel.clickInInfoWindow(myMarkId, busData)
+            verify(observer).onChanged(
+                refEq(
+                    (
+                            BusStopScreenState.ShowBusStopInfo(
+                                myMarkId,
+                                busData.copy(busData.first, myFavorite.b.toUIStopFavourite()),
+                                busData.first.lines.flatMap { line -> line.arrives })
+                            )
+                )
+            )
         }
 
     }
 
     @Test
-    fun `clickInInfoWindow delete an existing favourite if UIStopFavourite is != null and update observer`(){
+    fun `clickInInfoWindow delete an existing favourite if UIStopFavourite is != null and update observer`() {
 
         val myFavorite = Either.Right(stopFavouriteMock.copy("1"))
         val myMarkId = "-1"
-        val busData = Pair<UIBusStop, UIStopFavourite?>(busStopsMock[0].toUIBusStop(),
-            stopFavouriteMock.toUIStopFavourite())
+        val busData = Pair<UIBusStop, UIStopFavourite?>(
+            busStopsMock[0].toUIBusStop(),
+            stopFavouriteMock.toUIStopFavourite()
+        )
 
 
         coroutinesTestRule.testDispatcher.runBlockingTest {
@@ -263,14 +271,17 @@ class BusMapViewModelTest {
 
             doReturn(myFavorite).whenever(deleteStopFavourite).execute(any())
 
-            viewModel.clickInInfoWindow(myMarkId,busData)
-            verify(observer).onChanged(refEq((
-                    BusStopScreenState.ShowBusStopInfo(
-                        myMarkId,
-                        busData.copy(busData.first,null),
-                        busData.first.lines.flatMap { line -> line.second })
-                    )
-            ))
+            viewModel.clickInInfoWindow(myMarkId, busData)
+            verify(observer).onChanged(
+                refEq(
+                    (
+                            BusStopScreenState.ShowBusStopInfo(
+                                myMarkId,
+                                busData.copy(busData.first, null),
+                                busData.first.lines.flatMap { line -> line.arrives })
+                            )
+                )
+            )
         }
 
     }
