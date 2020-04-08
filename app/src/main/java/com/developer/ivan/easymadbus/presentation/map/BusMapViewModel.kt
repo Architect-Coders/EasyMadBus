@@ -4,6 +4,7 @@ import android.Manifest
 import androidx.lifecycle.*
 import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.core.BaseViewModel
+import com.developer.ivan.easymadbus.framework.AndroidPermissionChecker
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 import com.developer.ivan.easymadbus.presentation.models.*
 import com.developer.ivan.usecases.*

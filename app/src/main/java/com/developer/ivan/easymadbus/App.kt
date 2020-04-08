@@ -20,6 +20,7 @@ class App : Application() {
             .create(this)
 
         database = Room.databaseBuilder(this, Database::class.java, "db").build()
+
         super.onCreate()
     }
 }

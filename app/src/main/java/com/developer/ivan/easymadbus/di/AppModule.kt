@@ -9,6 +9,7 @@ import com.developer.ivan.domain.Constants
 import com.developer.ivan.easymadbus.data.db.Database
 import com.developer.ivan.easymadbus.data.server.ServerMapper
 import com.developer.ivan.easymadbus.framework.ApiService
+import com.developer.ivan.easymadbus.framework.AndroidPermissionChecker
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 import com.developer.ivan.easymadbus.framework.datasource.PlayServicesLocationDataSource
 import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
@@ -79,7 +80,7 @@ class AppModule {
 
     @Provides
     fun permisionCheckerProvider(app: Application): PermissionChecker =
-        PermissionChecker(app)
+        AndroidPermissionChecker(app)
 
     @Singleton
     @Provides

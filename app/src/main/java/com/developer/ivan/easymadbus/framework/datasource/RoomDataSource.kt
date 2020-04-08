@@ -22,7 +22,7 @@ class RoomDataSource(db: Database) : LocalDataSource {
     override suspend fun getBusStops(): List<BusStop> =
         withContext(Dispatchers.IO) { busStopDao.getAllBusStops().map { it.toDomain() } }
 
-    override suspend fun getBusStopWithLines(busStop: String): BusStop =
+    override suspend fun getBusStopWithLines(busStop: String): BusStop? =
         withContext(Dispatchers.IO) {
             val busStopWithLines = busStopDao.getBusStopWithLines(busStop)
 

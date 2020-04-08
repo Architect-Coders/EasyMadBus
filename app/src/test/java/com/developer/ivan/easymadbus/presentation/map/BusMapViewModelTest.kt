@@ -5,7 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.framework.CoroutinesMainDispatcherRule
-import com.developer.ivan.easymadbus.framework.PermissionChecker
+import com.developer.ivan.easymadbus.framework.AndroidPermissionChecker
 import com.developer.ivan.easymadbus.presentation.map.BusMapViewModel.BusStopScreenState
 import com.developer.ivan.easymadbus.presentation.models.*
 import com.developer.ivan.testshared.*
@@ -61,7 +61,7 @@ class BusMapViewModelTest {
     lateinit var fineLocation: GetFineLocation
 
     @Mock
-    lateinit var permissionChecker: PermissionChecker
+    lateinit var permissionChecker: AndroidPermissionChecker
 
 
     private lateinit var viewModel: BusMapViewModel

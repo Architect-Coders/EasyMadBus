@@ -29,8 +29,6 @@ class MapManager(
     GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private var _mMap: GoogleMap? = null
 
-    var latLngBounds: LatLngBounds? = null
-
     private var mClusterManager: ClusterManager<UIBusStop>? = null
 
     companion object {

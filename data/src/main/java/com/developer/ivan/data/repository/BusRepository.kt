@@ -109,7 +109,11 @@ class BusRepository(
         return with(localDataSource) {
 
             if (getCountLines(busStop) > 0) {
-                Either.Right(getBusStopWithLines(busStop))
+                val busStop = getBusStopWithLines(busStop)
+                if(busStop!=null)
+                    Either.Right(busStop)
+                else
+                    Either.Left(Failure.NullResult)
             } else {
 
                 val response = remoteDataSource.getLines(

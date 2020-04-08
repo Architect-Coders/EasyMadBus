@@ -8,7 +8,7 @@ import com.developer.ivan.domain.Token
 interface LocalDataSource
 {
     suspend fun getBusStops(): List<BusStop>
-    suspend fun getBusStopWithLines(busStop: String): BusStop
+    suspend fun getBusStopWithLines(busStop: String): BusStop?
     suspend fun getBusStopById(busStop: String): BusStop?
     suspend fun getCountBusStops(): Int
     suspend fun getCountLines(busStop: String): Int

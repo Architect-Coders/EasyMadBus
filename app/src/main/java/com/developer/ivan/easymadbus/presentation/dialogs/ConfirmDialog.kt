@@ -44,5 +44,6 @@ class ConfirmDialog : DialogFragment() {
             .setMessage(context?.getString(R.string.delete_message, mItem.first.name))
             .setPositiveButton(R.string.yes) { _, _ -> mListener?.onConfirm(mItem) }
             .setNegativeButton(R.string.no) { _, _ -> mListener?.onCancel(mItem, mPosition) }
+            .setOnDismissListener { mListener?.onCancel(mItem,mPosition) }
             .create()
 }

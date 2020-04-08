@@ -1,5 +1,6 @@
 package com.developer.ivan.easymadbus.presentation.map
 
+import com.developer.ivan.easymadbus.framework.AndroidPermissionChecker
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 import com.developer.ivan.usecases.*
 import dagger.Module
