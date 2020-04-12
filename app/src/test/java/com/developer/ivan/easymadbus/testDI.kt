@@ -40,6 +40,7 @@ class FakeRemoteDataSource : RemoteDataSource {
     lateinit var token: Token
 
     var busStops: List<BusStop> = emptyList()
+    var lines: List<Line> = emptyList()
 
     var arrives: List<Arrive> = emptyList()
     var incidents: List<Incident> = emptyList()
@@ -54,7 +55,7 @@ class FakeRemoteDataSource : RemoteDataSource {
     override suspend fun getLines(
         headers: Map<String, String>,
         busStop: String
-    ): Either<Failure, List<Line>> = Either.Right(busStops.find { it.node==busStop }?.lines ?: listOf())
+    ): Either<Failure, List<Line>> = Either.Right(lines)
 
     override suspend fun getArrives(
         busStop: String,
@@ -105,8 +106,13 @@ class FakeLocalDataSource : LocalDataSource {
         this.token = token
     }
 
-    override suspend fun getFavourites(id: Int?): List<StopFavourite> =
-        busStopsFavourite
+    override suspend fun getFavourites(id: Int?): List<StopFavourite>{
+        return if(id!=null)
+            busStopsFavourite.filter { it.busStopId==id.toString() }
+        else
+            busStopsFavourite
+    }
+
 
     override suspend fun getFavouritesAndBusStops(id: String?): List<Pair<BusStop, StopFavourite?>> {
 
@@ -117,11 +123,13 @@ class FakeLocalDataSource : LocalDataSource {
                     busStopsFavourite.find { it.busStopId == id })
             )
         } else {
-            busStops.map { it.copy(lines = lines) }.map { element ->
-                Pair(
-                    element,
-                    busStopsFavourite.find { element.node == it.busStopId })
-            }
+            busStops.filter { it.node in busStopsFavourite.map { it.busStopId } }
+                .map { it.copy(lines = lines) }
+                .map { element ->
+                    Pair(
+                        element,
+                        busStopsFavourite.find { element.node == it.busStopId })
+                }
         }
     }
 

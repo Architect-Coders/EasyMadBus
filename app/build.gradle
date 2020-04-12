@@ -8,6 +8,9 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
+    kapt {
+        generateStubs = true
+    }
     defaultConfig {
         applicationId "com.developer.ivan.easymadbus"
         minSdkVersion 22
@@ -22,15 +25,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        String sharedTestDir = 'src/testShared/java'
-        test {
-            java.srcDir sharedTestDir
-        }
-        androidTest {
-            java.srcDir sharedTestDir
-        }
-    }
+
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -42,13 +37,6 @@ android {
 
 }
 
-android.applicationVariants.all { variant ->
-    if (variant.buildType.name == "debug") {
-        def aptOutputDir = new File(buildDir, "generated/source/apt/${variant.unitTestVariant.dirName}")
-        variant.unitTestVariant.addJavaSourceFoldersToModel(aptOutputDir)
-        assembleDebug.finalizedBy('assembleDebugUnitTest')
-    }
-}
 
 dependencies {
 
@@ -79,7 +67,11 @@ dependencies {
     implementation mainApplication.gson
     implementation mainApplication.scalars
     implementation mainApplication.dagger
+    testImplementation mainApplication.dagger
+    androidTestImplementation mainApplication.dagger
     kapt   mainApplication.dagger_compiler
+    kaptTest    mainApplication.dagger_compiler
+    kaptAndroidTest    mainApplication.dagger_compiler
 
     kapt mainApplication.glide_compiler
 
@@ -97,5 +89,4 @@ dependencies {
 
     testImplementation test.values()
     testImplementation androidTest.values()
-    kaptAndroidTest mainApplication.dagger_compiler
 }

@@ -88,7 +88,6 @@ class BusMapViewModelTest {
     fun `fusedLocation requests coarse location perm if it is not granted before`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
 
-            val expectedLocate = Either.Right(locateMock.copy(0.1, 0.1))
             viewModel.busState.observeForever(observer)
             whenever(permissionChecker.check(Manifest.permission.ACCESS_COARSE_LOCATION)).thenReturn(
                 false
@@ -228,7 +227,6 @@ class BusMapViewModelTest {
     fun `clickInInfoWindow insert a new stop favourite if UIStopFavourite is null and update observer`() {
 
         val myFavorite = Either.Right(stopFavouriteMock.copy("1"))
-        val lines = Either.Right(linesMock)
         val myMarkId = "-1"
         val busData = Pair<UIBusStop, UIStopFavourite?>(busStopsMock[0].toUIBusStop(), null)
 

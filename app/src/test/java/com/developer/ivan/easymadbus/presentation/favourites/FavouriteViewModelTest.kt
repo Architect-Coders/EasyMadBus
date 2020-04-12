@@ -21,6 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -115,6 +116,21 @@ class FavouriteViewModelTest {
 
             verify(stopTime, times(busAndStops.size)).execute(any())
 
+        }
+
+    }
+
+    @Test
+    fun `onSwipedItem observer calls ShowConfirmDialogDelete`(){
+
+        val item = Pair(busStopsMock[0].toUIBusStop(), stopFavouriteMock.toUIStopFavourite())
+
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            viewModel.favouriteState.observeForever(observer)
+
+            viewModel.onSwipedItem(item, 0)
+
+            verify(observer).onChanged(refEq(FavouriteViewModel.FavouriteScreenState.ShowConfirmDialogDelete(item, 0)))
         }
 
     }
