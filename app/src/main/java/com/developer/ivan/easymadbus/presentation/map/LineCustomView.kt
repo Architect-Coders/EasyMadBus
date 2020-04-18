@@ -5,8 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.annotation.AttrRes
-import androidx.annotation.Size
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.fromHTML
 import com.developer.ivan.easymadbus.presentation.models.UILine
@@ -60,7 +58,7 @@ class LineCustomView @JvmOverloads constructor(
 
     fun setLine(line: UILine) = line.apply {
 
-        txtLine?.text = context.getString(R.string.line_n, label)
+        txtLine?.text = label
 
         if (arrives.size==2) {
 
@@ -120,7 +118,7 @@ class EstimatedCustomView @JvmOverloads constructor(
     }
 
     fun setTimeDistance(minFreq: String, maxFreq: String) {
-        txtEstimated?.text = context.getString(R.string.estimated_time,minFreq,maxFreq).fromHTML()
+        txtEstimated?.text = context.getString(R.string.time_error_estimated_time,minFreq,maxFreq).fromHTML()
     }
 
 }

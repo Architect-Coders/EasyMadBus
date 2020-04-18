@@ -1,67 +1,84 @@
 package com.developer.ivan.easymadbus.presentation.favourites.detail
 
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.ItemTouchHelper
+import com.developer.ivan.domain.Constants.Args.ARG_FAVOURITE
 import com.developer.ivan.domain.Failure
+import com.developer.ivan.domain.empty
 import com.developer.ivan.easymadbus.App
-
 import com.developer.ivan.easymadbus.R
-import com.developer.ivan.easymadbus.core.*
-import com.developer.ivan.easymadbus.presentation.adapters.FavouritesAdapter
-import com.developer.ivan.easymadbus.presentation.adapters.SwipeToDeleteCallback
-import com.developer.ivan.easymadbus.presentation.dialogs.ConfirmDialog
-import com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragmentComponent
-import com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragmentModule
-import com.developer.ivan.easymadbus.presentation.favourites.FavouriteViewModel
+import com.developer.ivan.easymadbus.core.getViewModel
+import com.developer.ivan.easymadbus.core.inflateFragment
+import com.developer.ivan.easymadbus.framework.MapManager
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
-import kotlinx.android.synthetic.main.fragment_favourite.*
+import com.google.android.gms.maps.MapView
+import kotlinx.android.synthetic.main.fragment_detail_favourite.*
 
 
-class FavouriteDetailFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
+class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
 
-    private val mViewModel: FavouriteViewModel by lazy {
-        getViewModel { component.favouriteViewModel }
+    private val mViewModel: FavouriteDetailViewModel by lazy {
+        getViewModel { component.favouriteDetailViewModel }
     }
 
-    private lateinit var mAdapter: FavouritesAdapter
+    private var mapManager: MapManager? = null
 
-    private lateinit var component: FavouriteFragmentComponent
+
+    private lateinit var component: FavouriteDetailComponent
+
+    private lateinit var data: Pair<UIBusStop, UIStopFavourite>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        data = arguments?.getSerializable(ARG_FAVOURITE) as Pair<UIBusStop, UIStopFavourite>
         component = ((requireActivity().application) as App).component.plus(
-            FavouriteFragmentModule()
+            FavouriteDetailFragmentModule(data)
         )
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = container?.inflateFragment(R.layout.fragment_favourite)
+    ): View? = container?.inflateFragment(R.layout.fragment_detail_favourite)?.apply {
+        findViewById<MapView>(R.id.mapDetail)?.let { mapView ->
+            mapManager =
+                MapManager(
+                    requireActivity().application,
+                    mapView,
+                    MapManager.MapConfiguration(isMarkerClickEnable = false)
+                ).apply { onCreate(savedInstanceState,listOf(data.first)) }
+
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initStates()
-        initUI()
         initListeners()
 
 
     }
 
+    private fun initListeners() {
+        mapManager?.setMapReadyListener(this)
+
+        swipeRefresh.setOnRefreshListener {
+            mViewModel.obtainLineInfo()
+        }
+    }
+
+
     private fun initStates() {
-        mViewModel.favouriteState.observe(viewLifecycleOwner, Observer {
+        mViewModel.favouriteDetailState.observe(viewLifecycleOwner, Observer {
             renderFavouriteState(it)
         })
 
@@ -70,85 +87,95 @@ class FavouriteDetailFragment : Fragment(), ConfirmDialog.OnActionElementsListen
         })
     }
 
-    private fun initUI() {
-        val icon = ContextCompat.getDrawable(
-            this.requireContext(),
-            R.drawable.ic_delete
-        )
-        val background = ColorDrawable(Color.RED)
-        mAdapter = FavouritesAdapter()
-        rcvFavourites.adapter = mAdapter
-
-        icon?.let {
-            val touchHelper =
-                ItemTouchHelper(SwipeToDeleteCallback(it, background, mAdapter, ::handleOnSwipe))
-            touchHelper.attachToRecyclerView(rcvFavourites)
-        }
-
-    }
-
-    private fun initListeners() {
-        swipeRefresh.setOnRefreshListener {
-            mViewModel.obtainInfo()
-        }
-    }
-
     private fun handleFailure(failure: Failure?) {
-        swipeRefresh.isRefreshing = false
+
+        swipeRefresh.isRefreshing=false
     }
 
-    private fun handleOnSwipe(item: Pair<UIBusStop, UIStopFavourite>, position: Int) {
-        mViewModel.onSwipedItem(item, position)
-    }
 
-    private fun renderFavouriteState(state: FavouriteViewModel.FavouriteScreenState?) {
-        swipeRefresh.isRefreshing = false
-        when (state) {
-            is FavouriteViewModel.FavouriteScreenState.ShowBusStopFavouriteInfo -> {
-                progressBar.hide()
-                mAdapter.updateItems(state.busData)
-            }
-            is FavouriteViewModel.FavouriteScreenState.ShowBusStopFavouriteLine -> {
-                progressBar.hide()
-
-                mAdapter.updateItem(state.busData)
-            }
-            is FavouriteViewModel.FavouriteScreenState.Loading -> {
-                progressBar.show()
-            }
-            is FavouriteViewModel.FavouriteScreenState.ShowConfirmDialogDelete -> {
-                fragmentManager?.let { frm ->
-                    val dialog = ConfirmDialog.newInstance(state.busData, state.position)
-                    dialog.mListener = this
-                    dialog.show(frm, "dialog")
-                }
-            }
-            is FavouriteViewModel.FavouriteScreenState.ShowItemDeleted -> {
-                Toast.makeText(
-                    context,
-                    context?.getString(R.string.deleted_item, state.busData.first.name),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+    private fun renderFavouriteState(state: FavouriteDetailViewModel.FavouriteDetailScreenState?) {
+        when(state)
+        {
+            FavouriteDetailViewModel.FavouriteDetailScreenState.Loading -> {}
+            is FavouriteDetailViewModel.FavouriteDetailScreenState.ShowBusData -> renderBusData(state.busData)
+            is FavouriteDetailViewModel.FavouriteDetailScreenState.ShowBusLine -> renderBusLines(state.busData)
+            null -> {}
         }
     }
+
+    private fun renderBusLines(busData: UIBusStop){
+
+        swipeRefresh.isRefreshing=false
+
+        lines.removeAllViews()
+
+        busData.lines.forEach {line->
+            lines.addView(LineDetailCustomView(requireContext()).apply {
+                setLineDetail(
+                    line
+                )
+            })
+        }
+    }
+
+    private fun renderBusData(busData: Pair<UIBusStop, UIStopFavourite>) {
+
+        swipeRefresh.isRefreshing=false
+
+        busData.first.lines.forEach {line->
+            lines.addView(LineDetailCustomView(requireContext()).apply {
+                setLineDetail(
+                    line
+                )
+            })
+        }
+
+
+        txtTitleDetail.text = busData.first.name
+        txtSubtitleDetail.text = if(busData.first.name!=busData.second.name) busData.second.name else String.empty
+    }
+
 
     override fun onResume() {
         super.onResume()
-        mViewModel.obtainInfo()
+        mapManager?.onResume()
+    }
 
+    override fun onPause() {
+        super.onPause()
+        mapManager?.onPause()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapManager?.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapManager?.onStop()
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mapManager?.onDestroy()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapManager?.onLowMemory()
+    }
+
+
+    override fun onMapReadyCallback() {
+        mapManager?.moveToLocation(data.first.position)
 
     }
 
-    override fun onConfirm(item: Pair<UIBusStop, UIStopFavourite>) {
-        mViewModel.deleteItem(item)
-    }
 
-    override fun onCancel(item: Pair<UIBusStop, UIStopFavourite>, position: Int) {
-        mAdapter.addItem(item, position)
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-    }
 }

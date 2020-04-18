@@ -3,6 +3,7 @@ package com.developer.ivan.easymadbus.presentation.favourites
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.developer.ivan.easymadbus.FakeLocalDataSource
+import com.developer.ivan.easymadbus.FakeNetworkDataSource
 import com.developer.ivan.easymadbus.FakeRemoteDataSource
 import com.developer.ivan.easymadbus.di.DaggerEasyMadBusTestComponent
 import com.developer.ivan.easymadbus.di.EasyMadBusTestComponent
@@ -11,6 +12,8 @@ import com.developer.ivan.easymadbus.presentation.models.toUIBusStop
 import com.developer.ivan.easymadbus.presentation.models.toUILine
 import com.developer.ivan.easymadbus.presentation.models.toUIStopFavourite
 import com.developer.ivan.testshared.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.refEq
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.Assert.assertFalse
@@ -30,6 +33,8 @@ class FavouriteIntegrationsTest {
 
     private lateinit var remoteDataSource: FakeRemoteDataSource
 
+    private lateinit var networkDataSource: FakeNetworkDataSource
+
 
     @get:Rule
     var coroutinesTestRule = CoroutinesMainDispatcherRule()
@@ -47,12 +52,12 @@ class FavouriteIntegrationsTest {
 
     @Before
     fun onSetup() {
-        component = DaggerEasyMadBusTestComponent
-            .create()
+        component = DaggerEasyMadBusTestComponent.create()
 
         mViewModel = component.plus(FavouriteFragmentModule()).favouriteViewModel
         localDataSource = component.localDataSource as FakeLocalDataSource
         remoteDataSource = component.remoteDataSource as FakeRemoteDataSource
+        networkDataSource = component.networkDataSource as FakeNetworkDataSource
 
         initSources()
 //        (remoteDataSource as FakeRemoteDataSource).busStops = busStopsMock
@@ -67,6 +72,9 @@ class FavouriteIntegrationsTest {
         remoteDataSource.arrives = arrivesMock
         remoteDataSource.token = tokenMock
         remoteDataSource.lines = linesMock
+
+        networkDataSource.connected = true
+
 
     }
 
@@ -109,7 +117,7 @@ class FavouriteIntegrationsTest {
         }
 
         val expectedResult =
-            Pair(busExpected, stopFavouriteMock.toUIStopFavourite())
+            listOf(Pair(busExpected, stopFavouriteMock.toUIStopFavourite()))
 
 
         coroutinesTestRule.testDispatcher.runBlockingTest {
@@ -119,7 +127,27 @@ class FavouriteIntegrationsTest {
 
             verify(observer).onChanged(
                 refEq(
-                    FavouriteViewModel.FavouriteScreenState.ShowBusStopFavouriteLine(expectedResult)
+                    FavouriteViewModel.FavouriteScreenState.ShowBusStopFavouriteInfo(expectedResult)
+                )
+            )
+        }
+
+    }
+    @Test
+    fun `obtainInfo show data from db without connectivity`() {
+
+        networkDataSource.connected = false
+        val expectedResult = listOf(Pair(busStopsMock[0].apply { lines= linesMock }.toUIBusStop(),stopFavouriteMock.toUIStopFavourite()))
+
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            mViewModel.favouriteState.observeForever(observer)
+
+            mViewModel.obtainInfo()
+
+
+            verify(observer).onChanged(
+                refEq(
+                    FavouriteViewModel.FavouriteScreenState.ShowBusStopFavouriteInfo(expectedResult)
                 )
             )
         }
@@ -144,7 +172,6 @@ class FavouriteIntegrationsTest {
         }
 
     }
-
 
 }
 

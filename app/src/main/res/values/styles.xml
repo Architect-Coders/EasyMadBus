@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -26,6 +26,21 @@
 
     <style name="SubtitleLine">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TitleDetail" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SubtitleDetail" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AdviceMessage" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:padding">@dimen/padding</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:background">@drawable/bg_dotted_rectangle</item>
     </style>
 
 

@@ -20,6 +20,10 @@ object Constants {
         const val TOKEN_ID=999
     }
 
+    object Args {
+        const val ARG_FAVOURITE = "argFavourite"
+    }
+
 
 
 

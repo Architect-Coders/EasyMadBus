@@ -1,6 +1,7 @@
 package com.developer.ivan.data.repository
 
 import com.developer.ivan.data.datasources.LocalDataSource
+import com.developer.ivan.data.datasources.NetworkDataSource
 import com.developer.ivan.domain.*
 
 interface IBusRepository {
@@ -35,8 +36,10 @@ interface IBusRepository {
 
 class BusRepository(
     private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource
+    private val localDataSource: LocalDataSource,
+    private val networkDataSource: NetworkDataSource
 ) : IBusRepository {
+
     override suspend fun login(
         email: String,
         password: String,
@@ -46,7 +49,7 @@ class BusRepository(
 
 
         val token = localDataSource.getToken()
-        return if (token != null && !token.isExpired()) {
+        return if (token != null && (!token.isExpired() || !networkDataSource.isConnected())) {
             Either.Right(token)
         } else {
             val response = remoteDataSource.getLogin(
@@ -110,7 +113,7 @@ class BusRepository(
 
             if (getCountLines(busStop) > 0) {
                 val busStop = getBusStopWithLines(busStop)
-                if(busStop!=null)
+                if (busStop != null)
                     Either.Right(busStop)
                 else
                     Either.Left(Failure.NullResult)

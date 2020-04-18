@@ -10,8 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.developer.ivan.domain.Constants.Args.ARG_FAVOURITE
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.App
 
@@ -30,6 +34,8 @@ class FavouriteFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
     private val mViewModel: FavouriteViewModel by lazy {
         getViewModel { component.favouriteViewModel }
     }
+
+    private lateinit var navController: NavController
 
     private lateinit var mAdapter: FavouritesAdapter
 
@@ -50,8 +56,10 @@ class FavouriteFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initStates()
+        navController = view.findNavController()
+
         initUI()
+        initStates()
         initListeners()
 
 
@@ -65,6 +73,12 @@ class FavouriteFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
         mViewModel.failure.observe(viewLifecycleOwner, Observer {
             handleFailure(it)
         })
+
+        mViewModel.navigation.observe(viewLifecycleOwner, EventObserver {
+
+            navController.navigate(R.id.action_favouriteFragment_to_favouriteDetailFragment,
+                bundleOf(ARG_FAVOURITE to it))
+        })
     }
 
     private fun initUI() {
@@ -73,7 +87,7 @@ class FavouriteFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
             R.drawable.ic_delete
         )
         val background = ColorDrawable(Color.RED)
-        mAdapter = FavouritesAdapter()
+        mAdapter = FavouritesAdapter(::clickOnFavourite)
         rcvFavourites.adapter = mAdapter
 
         icon?.let {
@@ -82,6 +96,10 @@ class FavouriteFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
             touchHelper.attachToRecyclerView(rcvFavourites)
         }
 
+    }
+
+    private fun clickOnFavourite(pair: Pair<UIBusStop, UIStopFavourite>) {
+        mViewModel.onClickOnFavourite(pair)
     }
 
     private fun initListeners() {
@@ -145,7 +163,4 @@ class FavouriteFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
         mAdapter.addItem(item, position)
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-    }
 }

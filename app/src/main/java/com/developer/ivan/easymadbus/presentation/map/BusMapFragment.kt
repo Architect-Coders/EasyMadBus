@@ -16,12 +16,13 @@ import com.developer.ivan.easymadbus.framework.MapManager
 import com.developer.ivan.easymadbus.framework.PermissionRequester
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
+import com.developer.ivan.usecases.GetCoarseLocation
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_map.*
 
 
-class BusMapFragment : Fragment() {
+class BusMapFragment : Fragment(), MapManager.OnMapReady, MapManager.OnMapEvent {
 
     private var mapManager: MapManager? = null
     private lateinit var component: BusMapFragmentComponent
@@ -44,34 +45,13 @@ class BusMapFragment : Fragment() {
                 mapManager =
                     MapManager(
                         requireActivity().application,
-                        mapView,
-                        ::handleMapReady,
-                        ::handleMarkClick,
-                        ::handleInfoWindowClick
+                        mapView
                     ).apply { onCreate(savedInstanceState) }
 
             }
         }
     }
 
-    private fun handleMarkClick(markId: String, stopId: String) {
-        mViewModel.clickInMark(markId, stopId)
-    }
-
-    private fun handleInfoWindowClick(markId: String, busData: Pair<UIBusStop, UIStopFavourite?>) {
-        mViewModel.clickInInfoWindow(markId, busData)
-    }
-
-
-    private fun handleMapReady() {
-        mViewModel.busStops()
-        mViewModel.fusedLocation()
-    }
-
-    private fun setPoints(listPoints: List<UIBusStop>) {
-
-        mapManager?.addPoints(listPoints)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,6 +80,10 @@ class BusMapFragment : Fragment() {
             mViewModel.fineLocation()
 
         }
+
+        mapManager?.setMapEventsListener(this)
+        mapManager?.setMapReadyListener(this)
+
     }
 
     private fun handleFailure(failure: Failure?) {
@@ -110,6 +94,9 @@ class BusMapFragment : Fragment() {
                mapManager?.findMarker(failure.markId)?.let {marker->
                     mViewModel.updateMarkerError(marker)
                 }
+            }
+            is GetCoarseLocation.NoLocation -> {
+                mapManager?.moveToDefaultLocation()
             }
             else-> Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
 
@@ -209,5 +196,24 @@ class BusMapFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+    }
+
+
+    private fun setPoints(listPoints: List<UIBusStop>) {
+
+        mapManager?.addPoints(listPoints)
+    }
+
+    override fun onMapReadyCallback() {
+        mViewModel.busStops()
+        mViewModel.fusedLocation()
+    }
+
+    override fun onMarkerClick(marker: String, snippet: String) {
+        mViewModel.clickInMark(marker, snippet)
+    }
+
+    override fun onInfoWindowClick(markerId: String, data: Pair<UIBusStop, UIStopFavourite?>) {
+        mViewModel.clickInInfoWindow(markerId, data)
     }
 }

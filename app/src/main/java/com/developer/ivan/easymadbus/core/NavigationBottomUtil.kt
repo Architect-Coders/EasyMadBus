@@ -4,20 +4,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.developer.ivan.easymadbus.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class NavigationBottomUtil(activity: AppCompatActivity) {
-    private val mNavHostMap by lazy { activity.supportFragmentManager.findFragmentById(R.id.nav_host_map) }
-    private val mNavHostFavorite by lazy { activity.supportFragmentManager.findFragmentById(R.id.nav_host_favourite) }
-    private val mNavHostNotification by lazy { activity.supportFragmentManager.findFragmentById(R.id.nav_host_notification) }
+    private val mNavHostMap by lazy {
+        activity.supportFragmentManager.findFragmentById(R.id.nav_host_map) as NavHostFragment }
+    private val mNavHostFavorite by lazy {
+        activity.supportFragmentManager.findFragmentById(R.id.nav_host_favourite) as NavHostFragment }
+    private val mNavHostNotification by lazy {
+        activity.supportFragmentManager.findFragmentById(R.id.nav_host_notification) as NavHostFragment }
 
-    private val mNavControllerMap by lazy { activity.findNavController(R.id.nav_host_map) }
-    private val mNavControllerFavourite by lazy { activity.findNavController(R.id.nav_host_favourite) }
-    private val mNavControllerNotification by lazy { activity.findNavController(R.id.nav_host_notification) }
-    private var mCurrentNavHost: NavController? = null
+    private val mNavControllerMap by lazy { mNavHostMap.navController }
+    private val mNavControllerFavourite by lazy { mNavHostFavorite.navController }
+    private val mNavControllerNotification by lazy { mNavHostNotification.navController }
+    var mCurrentNavHost: NavController? = null
 
 
     interface IBottomNavigation {
@@ -36,40 +40,40 @@ class NavigationBottomUtil(activity: AppCompatActivity) {
             {
                 when (it.itemId) {
                     R.id.mapFragment -> {
+                        mCurrentNavHost = mNavControllerMap
                         val appBarConfiguration = AppBarConfiguration(setOf(R.id.mapFragment))
                         setupActionBarWithNavController(mNavControllerMap, appBarConfiguration)
-                        mCurrentNavHost = mNavControllerMap
                         mListener?.onClickOnMap(
-                            mNavHostMap?.childFragmentManager?.fragments?.getOrNull(
+                            mNavHostMap.childFragmentManager.fragments.getOrNull(
                                 0
                             )
                         )
                         true
                     }
                     R.id.favouriteFragment -> {
+                        mCurrentNavHost = mNavControllerFavourite
                         val appBarConfiguration = AppBarConfiguration(setOf(R.id.favouriteFragment))
                         setupActionBarWithNavController(
                             mNavControllerFavourite,
                             appBarConfiguration
                         )
-                        mCurrentNavHost = mNavControllerFavourite
                         mListener?.onClickOnFavourite(
-                            mNavHostFavorite?.childFragmentManager?.fragments?.getOrNull(
+                            mNavHostFavorite.childFragmentManager.fragments.getOrNull(
                                 0
                             )
                         )
                         true
                     }
                     R.id.notificationFragment -> {
+                        mCurrentNavHost = mNavControllerNotification
                         val appBarConfiguration =
                             AppBarConfiguration(setOf(R.id.notificationFragment))
                         setupActionBarWithNavController(
                             mNavControllerNotification,
                             appBarConfiguration
                         )
-                        mCurrentNavHost = mNavControllerNotification
                         mListener?.onClickOnNotification(
-                            mNavHostNotification?.childFragmentManager?.fragments?.getOrNull(
+                            mNavHostNotification.childFragmentManager.fragments.getOrNull(
                                 0
                             )
                         )
@@ -84,6 +88,7 @@ class NavigationBottomUtil(activity: AppCompatActivity) {
     fun backPressed() {
         mCurrentNavHost?.navigateUp()
     }
+
 
     fun setupBottomNav(navView: BottomNavigationView, listener: IBottomNavigation) {
         this.mListener = listener

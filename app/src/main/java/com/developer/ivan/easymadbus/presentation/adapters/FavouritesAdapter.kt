@@ -84,7 +84,7 @@ class SwipeToDeleteCallback(
 
 }
 
-class FavouritesAdapter :
+class FavouritesAdapter(val onClick: (Pair<UIBusStop,UIStopFavourite>)->Unit) :
     RecyclerView.Adapter<FavouritesAdapter.FavouriteViewHolder>() {
 
 
@@ -126,7 +126,7 @@ class FavouritesAdapter :
         notifyItemRemoved(position)
     }
 
-    class FavouriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class FavouriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun onBind(item: Pair<UIBusStop, UIStopFavourite>) {
 
@@ -143,6 +143,7 @@ class FavouritesAdapter :
                         setFixedSize(context.getValueInDP(60))
                     })
                 }
+                setOnClickListener { onClick.invoke(item) }
 
                 lyLineContainer
             }

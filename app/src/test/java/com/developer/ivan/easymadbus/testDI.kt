@@ -2,10 +2,15 @@ package com.developer.ivan.easymadbus
 
 import com.developer.ivan.data.datasources.LocalDataSource
 import com.developer.ivan.data.datasources.LocationDataSource
+import com.developer.ivan.data.datasources.NetworkDataSource
 import com.developer.ivan.data.repository.RemoteDataSource
 import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 
+class FakeNetworkDataSource(var connected: Boolean=true): NetworkDataSource{
+    override fun isConnected(): Boolean = connected
+
+}
 class FakePermissionChecker : PermissionChecker {
     var permissionGranted = true
 
@@ -81,7 +86,7 @@ class FakeLocalDataSource : LocalDataSource {
     override suspend fun getBusStops(): List<BusStop> = busStops
 
     override suspend fun getBusStopWithLines(busStop: String): BusStop? =
-        busStops.find { it.node == busStop }?.copy(lines = lines)
+        busStops.find { it.node == busStop }
 
     override suspend fun getBusStopById(busStop: String): BusStop? =
         busStops.find { it.node == busStop }

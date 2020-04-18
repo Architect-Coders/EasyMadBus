@@ -46,17 +46,4 @@ class NotificationsViewModel(
             IncidentsScreenState.ShowIncidents(incidents.map { it.toUIIncident() })
 
     }
-
-    @Suppress("UNCHECKED_CAST")
-    class FavouriteViewModelFactory(
-        private val accessToken: GetToken,
-        private val incidents: GetIncidents
-    ) :
-        ViewModelProvider.NewInstanceFactory() {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return NotificationsViewModel(
-                incidents
-            ) as T
-        }
-    }
 }

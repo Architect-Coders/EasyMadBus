@@ -15,16 +15,16 @@ import kotlinx.coroutines.withContext
 
 interface BaseViewModel
 {
-    val _failure: MutableLiveData<Failure>
-        get() = MutableLiveData<Failure>()
+    val mutableFailure: MutableLiveData<Failure>
+        get() = MutableLiveData()
     val failure: LiveData<Failure>
-        get() = _failure
+        get() = mutableFailure
 
     suspend fun handleFailure(failure: Failure)
 
-    class BaseViewModelImpl(): BaseViewModel{
+    class BaseViewModelImpl: BaseViewModel{
         override suspend fun handleFailure(failure: Failure) {
-            _failure.postValue(failure)
+            mutableFailure.postValue(failure)
         }
 
     }
