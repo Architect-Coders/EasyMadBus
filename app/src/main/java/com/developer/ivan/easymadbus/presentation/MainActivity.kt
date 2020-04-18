@@ -1,16 +1,16 @@
 package com.developer.ivan.easymadbus.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.NavigationBottomUtil
 import com.developer.ivan.easymadbus.core.hide
 import com.developer.ivan.easymadbus.core.show
 import kotlinx.android.synthetic.main.activity_main.*
 import org.intellij.lang.annotations.Identifier
+
 
 class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation {
 
@@ -28,10 +28,11 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
 
         navBottomUtil = NavigationBottomUtil(this)
 
-        setSupportActionBar(toolbar)
+
         setupBottomNavigationItems()
 
 
@@ -45,6 +46,11 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
 
     override fun onBackPressed() {
         navBottomUtil.backPressed()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return (navBottomUtil.mCurrentNavHost?.navigateUp() ?: false
+                || super.onSupportNavigateUp())
     }
 
     private fun setupBottomNavigationItems() {
@@ -85,6 +91,8 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
         frame_host_favourite_wrapper.hide()
         frame_host_notification_wrapper.show()
     }
+
+
 
 
 }

@@ -8,5 +8,7 @@
     <dimen name="progressSmallSizeIcon">30dp</dimen>
     <dimen name="minInfoWindowWidth">400dp</dimen>
     <dimen name="minElevation">4dp</dimen>
+    <dimen name="headerDetailSize">200dp</dimen>
+
 
 </resources>

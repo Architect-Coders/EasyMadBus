@@ -9,5 +9,19 @@
         android:id="@+id/favouriteFragment"
         android:name="com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragment"
         android:label="FavouriteFragment"
-        tools:layout="@layout/fragment_favourite" />
+        tools:layout="@layout/fragment_favourite" >
+        <action
+            android:id="@+id/action_favouriteFragment_to_favouriteDetailFragment"
+            app:destination="@id/favouriteDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouriteDetailFragment"
+        android:name="com.developer.ivan.easymadbus.presentation.favourites.detail.FavouriteDetailFragment"
+        android:label="@string/stop_detail"
+        tools:layout="@layout/fragment_detail_favourite">
+        <argument
+            android:name="data"
+            app:argType="android.os.Bundle" />
+    </fragment>
 </navigation>

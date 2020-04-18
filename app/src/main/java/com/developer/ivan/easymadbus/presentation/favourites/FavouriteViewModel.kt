@@ -1,10 +1,12 @@
 package com.developer.ivan.easymadbus.presentation.favourites
 
+import android.content.Intent
 import androidx.lifecycle.*
 import com.developer.ivan.domain.Arrive
 import com.developer.ivan.domain.Either
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.core.BaseViewModel
+import com.developer.ivan.easymadbus.core.Event
 import com.developer.ivan.easymadbus.presentation.models.*
 import com.developer.ivan.usecases.DeleteStopFavourite
 import com.developer.ivan.usecases.GetBusAndStopsFavourites
@@ -41,9 +43,14 @@ class FavouriteViewModel(
 
     }
 
+
     private val _favouriteState = MutableLiveData<FavouriteScreenState>()
     val favouriteState: LiveData<FavouriteScreenState>
         get() = _favouriteState
+
+    private val _navigationToDetail = MutableLiveData<Event<Pair<UIBusStop, UIStopFavourite>>>()
+    val navigation: LiveData<Event<Pair<UIBusStop, UIStopFavourite>>>
+        get() = _navigationToDetail
 
     suspend fun getStopsTimes(
         favouritesUI: List<Pair<UIBusStop, UIStopFavourite>>,
@@ -69,6 +76,12 @@ class FavouriteViewModel(
 
     fun onSwipedItem(item: Pair<UIBusStop, UIStopFavourite>, position: Int) {
         _favouriteState.value = FavouriteScreenState.ShowConfirmDialogDelete(item, position)
+
+    }
+
+    fun onClickOnFavourite(item: Pair<UIBusStop, UIStopFavourite>) {
+
+        _navigationToDetail.value = Event(item)
 
     }
 
@@ -102,6 +115,7 @@ class FavouriteViewModel(
     fun obtainInfo() {
 
         _favouriteState.value = FavouriteScreenState.Loading
+        val uiResult: MutableList<Pair<UIBusStop, UIStopFavourite>?> = mutableListOf()
 
 
         viewModelScope.launch(dispatcher) {
@@ -111,26 +125,29 @@ class FavouriteViewModel(
                     response.filter { it.second != null }
                         .map {
                             Pair(it.first.toUIBusStop(), it.second!!.toUIStopFavourite())
-                        }.let { list ->
-                            _favouriteState.value = (
-                                    FavouriteScreenState.ShowBusStopFavouriteInfo(
-                                        list
-                                    )
-                                    )
+                        }.also { list ->
+
 
                             getStopsTimes(list, viewModelScope).awaitAll()
-                                .forEach { arrives ->
+                                .forEachIndexed { index, arrives ->
 
-                                    arrives.fold(::handleFailure) { result ->
+                                    arrives.fold({
+                                        uiResult += list[index]
+                                        Unit
+                                    }) { result ->
 
-                                        handleShowLine(list, result)?.let {
-                                            _favouriteState.value =
-                                                FavouriteScreenState.ShowBusStopFavouriteLine(it)
-                                        }
+                                        uiResult += handleShowLine(list, result)
                                         Unit
                                     }
 
+                                }.also {
+                                    _favouriteState.value = (
+                                            FavouriteScreenState.ShowBusStopFavouriteInfo(
+                                                uiResult.filterNotNull()
+                                            )
+                                            )
                                 }
+
                         }
                 }
 

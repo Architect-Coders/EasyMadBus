@@ -1,9 +1,11 @@
 package com.developer.ivan.easymadbus.di
 
 import android.app.Application
+import android.net.Network
 import androidx.room.Room
 import com.developer.ivan.data.datasources.LocalDataSource
 import com.developer.ivan.data.datasources.LocationDataSource
+import com.developer.ivan.data.datasources.NetworkDataSource
 import com.developer.ivan.data.repository.RemoteDataSource
 import com.developer.ivan.domain.Constants
 import com.developer.ivan.easymadbus.data.db.Database
@@ -11,6 +13,7 @@ import com.developer.ivan.easymadbus.data.server.ServerMapper
 import com.developer.ivan.easymadbus.framework.ApiService
 import com.developer.ivan.easymadbus.framework.AndroidPermissionChecker
 import com.developer.ivan.easymadbus.framework.PermissionChecker
+import com.developer.ivan.easymadbus.framework.datasource.AndroidNetworkDataSource
 import com.developer.ivan.easymadbus.framework.datasource.PlayServicesLocationDataSource
 import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
 import com.developer.ivan.easymadbus.framework.datasource.RoomDataSource
@@ -75,6 +78,10 @@ class AppModule {
     @Provides
     fun locationDataSourceProvider(app: Application): LocationDataSource =
         PlayServicesLocationDataSource(app)
+
+    @Provides
+    fun networkDataSourceProvider(app: Application): NetworkDataSource =
+        AndroidNetworkDataSource(app)
 
 
 

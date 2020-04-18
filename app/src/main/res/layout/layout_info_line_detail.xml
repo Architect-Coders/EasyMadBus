@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/minInfoWindowWidth">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txtLine"
+        style="@style/TitleBus"
+        android:textSize="22sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLength="30"
+        android:maxLines="2"
+        android:layout_marginTop="@dimen/margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:backgroundTint="@color/color_primary_alpha_20"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/txtLine"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.developer.ivan.easymadbus.presentation.favourites.detail.DirectionCustomView
+        android:id="@+id/directions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator"
+        app:startDirection="@string/app_name" />
+
+    <TextView
+        android:id="@+id/labelFirstBus"
+        style="@style/TitleBus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/first_bus"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/directions" />
+
+    <TextView
+        android:id="@+id/labelSecondBus"
+        style="@style/TitleBus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/second_bus"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/labelFirstBus"
+        app:layout_constraintTop_toBottomOf="@+id/directions" />
+
+    <LinearLayout
+        android:id="@+id/lyArriveContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labelFirstBus" />
+
+    <TextView
+        style="@style/AdviceMessage"
+        android:id="@+id/txtFrequency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lyArriveContainer" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

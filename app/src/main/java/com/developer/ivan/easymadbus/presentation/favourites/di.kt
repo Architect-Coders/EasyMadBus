@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
 import kotlinx.coroutines.CoroutineDispatcher
+import javax.inject.Singleton
 
 
 @Module
@@ -21,6 +22,7 @@ class FavouriteFragmentModule {
         dispatcher: CoroutineDispatcher
 
     ): FavouriteViewModel = FavouriteViewModel(stopTime, busAndStopsFavourites,deleteStopFavourite,dispatcher)
+
 }
 
 @Subcomponent(modules = [(FavouriteFragmentModule::class)])

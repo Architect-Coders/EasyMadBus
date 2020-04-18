@@ -8,12 +8,17 @@
     <string name="lines">Lines: \n\n%s</string>
     <string name="empty">----</string>
     <string name="valid_from">Valid from <b>%1$s</b> until <b>%2$s</b></string>
-    <string name="line_n">%1$s</string>
-    <string name="estimated_time">It was not possible to recover the data, the arrival frequency is between <b>%1$s min</b> and <b>%2$s min</b></string>
+    <string name="line_n">Line %1$s</string>
+    <string name="time_error_estimated_time">It was not possible to recover the data, the arrival frequency is between <b>%1$s min</b> and <b>%2$s min</b></string>
+    <string name="estimated_time">The arrival frequency is between <b>%1$s min</b> and <b>%2$s min</b></string>
+
     <string name="delete_message">Are you sure you want to delete %1$s?</string>
     <string name="deleted_item">%1$s has been deleted success!</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="first_bus">First bus</string>
+    <string name="second_bus">Second bus</string>
+    <string name="stop_detail">Favourite detail</string>
 
     <!--    ERRORS  -->
     <string name="bus_error">There has been a problem retrieving the data. Please check your internet connection and try again</string>
