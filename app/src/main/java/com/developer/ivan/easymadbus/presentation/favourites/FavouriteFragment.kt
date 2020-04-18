@@ -4,6 +4,7 @@ package com.developer.ivan.easymadbus.presentation.favourites
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -110,6 +111,7 @@ class FavouriteFragment : Fragment(), ConfirmDialog.OnActionElementsListener {
 
     private fun handleFailure(failure: Failure?) {
         swipeRefresh.isRefreshing = false
+        Log.e("Failure",failure.toString())
     }
 
     private fun handleOnSwipe(item: Pair<UIBusStop, UIStopFavourite>, position: Int) {

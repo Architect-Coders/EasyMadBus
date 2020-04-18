@@ -32,7 +32,7 @@ class ConfirmDialog : DialogFragment() {
                 }
             }
     }
-
+    @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mItem = arguments?.getSerializable(ARG_ITEM) as Pair<UIBusStop, UIStopFavourite>

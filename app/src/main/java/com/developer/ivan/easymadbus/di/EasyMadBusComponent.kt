@@ -1,6 +1,7 @@
 package com.developer.ivan.easymadbus.di
 
 import android.app.Application
+import android.hardware.usb.UsbEndpoint
 import com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragmentComponent
 import com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragmentModule
 import com.developer.ivan.easymadbus.presentation.favourites.detail.FavouriteDetailComponent
@@ -12,6 +13,7 @@ import com.developer.ivan.easymadbus.presentation.notifications.NotificationsFra
 import com.developer.ivan.easymadbus.presentation.notifications.NotificationsFragmentModule
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -25,6 +27,7 @@ interface EasyMadBusComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance app: Application): EasyMadBusComponent
+        fun create(@BindsInstance app: Application,
+                   @BindsInstance @Named("endpoint") endpoint: String): EasyMadBusComponent
     }
 }

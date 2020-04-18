@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.presentation.favourites.detail
+package com.developer.ivan.easymadbus.presentation.favourites.detail.customviews
 
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable

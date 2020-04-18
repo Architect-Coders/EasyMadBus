@@ -8,10 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.developer.ivan.domain.StopFavourite
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.getValueInDP
-import com.developer.ivan.easymadbus.presentation.map.LineCustomView
+import com.developer.ivan.easymadbus.presentation.map.customviews.LineCustomView
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import kotlinx.android.synthetic.main.item_favourite.view.*
@@ -122,7 +121,7 @@ class FavouritesAdapter(val onClick: (Pair<UIBusStop,UIStopFavourite>)->Unit) :
     }
 
     fun deleteItem(position: Int) {
-        this.items = this.items.filterIndexed { index, pair -> index != position }
+        this.items = this.items.filterIndexed { index, _ -> index != position }
         notifyItemRemoved(position)
     }
 
@@ -138,7 +137,10 @@ class FavouritesAdapter(val onClick: (Pair<UIBusStop,UIStopFavourite>)->Unit) :
 
                 item.first.lines.forEach {
 
-                    lyLineContainer.addView(LineCustomView(context).apply {
+                    lyLineContainer.addView(
+                        LineCustomView(
+                            context
+                        ).apply {
                         setLine(it)
                         setFixedSize(context.getValueInDP(60))
                     })

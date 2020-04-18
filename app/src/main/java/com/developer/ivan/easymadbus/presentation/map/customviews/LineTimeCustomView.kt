@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.presentation.map
+package com.developer.ivan.easymadbus.presentation.map.customviews
 
 import android.content.Context
 import android.util.AttributeSet

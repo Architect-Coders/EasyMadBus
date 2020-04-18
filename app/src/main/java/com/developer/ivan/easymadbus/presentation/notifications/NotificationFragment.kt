@@ -2,6 +2,7 @@ package com.developer.ivan.easymadbus.presentation.notifications
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -68,7 +69,7 @@ class NotificationFragment : Fragment() {
     }
 
     private fun handleFailure(failure: Failure?) {
-
+        Log.e("Failure",failure.toString())
     }
 
     private fun renderFavouriteState(state: NotificationsViewModel.IncidentsScreenState?) {

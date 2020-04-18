@@ -93,4 +93,9 @@ dependencies {
 
     testImplementation test.values()
     testImplementation androidTest.values()
+
+    androidTestImplementation androidX.expresso
+    androidTestImplementation androidX.expresso_contrib
+    androidTestImplementation androidX.expresso_contrib
+    androidTestImplementation androidX.junit_ktx_test
 }

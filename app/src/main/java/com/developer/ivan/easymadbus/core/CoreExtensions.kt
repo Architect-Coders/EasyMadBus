@@ -45,6 +45,7 @@ fun String.fromHTML() =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this,Html.FROM_HTML_MODE_LEGACY)
     } else {
+        @Suppress("DEPRECATION")
         Html.fromHtml(this)
     }
 

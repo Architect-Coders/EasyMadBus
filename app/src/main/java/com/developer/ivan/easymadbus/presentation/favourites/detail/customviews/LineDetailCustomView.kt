@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.presentation.favourites.detail
+package com.developer.ivan.easymadbus.presentation.favourites.detail.customviews
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.hide
-import com.developer.ivan.easymadbus.presentation.map.LineCustomView
-import com.developer.ivan.easymadbus.presentation.map.TimeDistanceCustomView
+import com.developer.ivan.easymadbus.presentation.map.customviews.LineCustomView
+import com.developer.ivan.easymadbus.presentation.map.customviews.TimeDistanceCustomView
 import com.developer.ivan.easymadbus.presentation.models.UILine
 import kotlinx.android.synthetic.main.layout_info_line_detail.view.*
 
@@ -37,7 +37,10 @@ class LineDetailCustomView @JvmOverloads constructor(
 
 
         if (line.arrives.size >= 2) {
-            lyArriveContainer.addView(TimeDistanceCustomView(context).apply {
+            lyArriveContainer.addView(
+                TimeDistanceCustomView(
+                    context
+                ).apply {
                 setTimeDistance(
                     line.arrives[0].estimateArrive / LineCustomView.MINUTES,
                     line.arrives[1].estimateArrive / LineCustomView.MINUTES

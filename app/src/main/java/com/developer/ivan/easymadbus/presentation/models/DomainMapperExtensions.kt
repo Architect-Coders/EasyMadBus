@@ -61,17 +61,3 @@ fun Arrive.toUIArrive() = UIArrive(line, stop, estimateArrive, distanceBus, time
 
 fun Geometry.toUIGeometry() = UIGeometry(type, LatLng(coordinates[1], coordinates[0]))
 fun Geometry.toDBGeometry() = DBGeometry(type, coordinates[1], coordinates[0])
-
-object DomainMappertoUI
-{
-    fun showBusStopInfo(markId: String, favourite: List<Pair<BusStop,StopFavourite?>>, listArrives: List<Arrive>): BusMapViewModel.BusStopScreenState = BusMapViewModel.BusStopScreenState.ShowBusStopInfo(
-            markId,
-            Pair(
-                favourite.first().first.toUIBusStop(),
-                favourite.first().second?.toUIStopFavourite()
-            ),
-            listArrives.map { it.toUIArrive() })
-
-
-
-}

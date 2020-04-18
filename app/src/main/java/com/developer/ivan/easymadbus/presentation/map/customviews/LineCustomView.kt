@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.presentation.map
+package com.developer.ivan.easymadbus.presentation.map.customviews
 
 import android.content.Context
 import android.util.AttributeSet
@@ -62,7 +62,10 @@ class LineCustomView @JvmOverloads constructor(
 
         if (arrives.size==2) {
 
-            timeDistance.addView(TimeDistanceCustomView(context).apply {
+            timeDistance.addView(
+                TimeDistanceCustomView(
+                    context
+                ).apply {
                 setTimeDistance(
                     arrives[0].estimateArrive / MINUTES,
                     arrives[1].estimateArrive / MINUTES
@@ -70,7 +73,10 @@ class LineCustomView @JvmOverloads constructor(
             })
 
         }else{
-            timeDistance.addView(EstimatedCustomView(context).apply {
+            timeDistance.addView(
+                EstimatedCustomView(
+                    context
+                ).apply {
                 setTimeDistance(line.minFreq,line.maxFreq)
             })
         }

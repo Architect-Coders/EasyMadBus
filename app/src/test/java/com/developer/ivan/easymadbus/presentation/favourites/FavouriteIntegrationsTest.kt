@@ -60,7 +60,6 @@ class FavouriteIntegrationsTest {
         networkDataSource = component.networkDataSource as FakeNetworkDataSource
 
         initSources()
-//        (remoteDataSource as FakeRemoteDataSource).busStops = busStopsMock
     }
 
     private fun initSources() {

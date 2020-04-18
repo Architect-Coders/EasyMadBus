@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.presentation.map
+package com.developer.ivan.easymadbus.presentation.map.customviews
 
 import android.content.Context
 import com.developer.ivan.easymadbus.R
@@ -15,13 +15,16 @@ class ClusterItem(
     clusterManager: ClusterManager<UIBusStop>
 ) :
     DefaultClusterRenderer<UIBusStop>(context, map, clusterManager) {
+
+    private val defaultPadding = 6
+
     private val mClusterIconGenerator =
         IconGenerator(context)
-
     val drawable = context?.getDrawable(R.drawable.ic_marker)
+
     private val bitmap = mClusterIconGenerator.apply {
         setBackground(drawable)
-        setContentPadding(6,6,6,6)
+        setContentPadding(defaultPadding,defaultPadding,defaultPadding,defaultPadding)
     }.makeIcon()
     private val markerDescriptor =
         BitmapDescriptorFactory.fromBitmap(bitmap)

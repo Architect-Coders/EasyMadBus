@@ -3,8 +3,8 @@ package com.developer.ivan.easymadbus.framework
 import android.app.Application
 import android.os.Bundle
 import com.developer.ivan.domain.Constants
-import com.developer.ivan.easymadbus.presentation.map.BusInfoWindow
-import com.developer.ivan.easymadbus.presentation.map.ClusterItem
+import com.developer.ivan.easymadbus.presentation.map.customviews.BusInfoWindow
+import com.developer.ivan.easymadbus.presentation.map.customviews.ClusterItem
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -87,7 +87,11 @@ class MapManager(
             mClusterManager?.setAnimation(false)
 
         mClusterManager?.renderer =
-            ClusterItem(application.applicationContext, _mMap, mClusterManager!!)
+            ClusterItem(
+                application.applicationContext,
+                _mMap,
+                mClusterManager!!
+            )
 
 
         _mMap?.setOnCameraIdleListener(mClusterManager)
@@ -96,7 +100,11 @@ class MapManager(
 
     private fun configureMap(mapConfiguration: MapConfiguration) {
         _mMap?.uiSettings?.isZoomControlsEnabled = false
-        _mMap?.setInfoWindowAdapter(BusInfoWindow(application))
+        _mMap?.setInfoWindowAdapter(
+            BusInfoWindow(
+                application
+            )
+        )
 
         if(mapConfiguration.isMarkerClickEnable){
             _mMap?.setOnMarkerClickListener(this)
@@ -162,6 +170,7 @@ class MapManager(
             true
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onInfoWindowClick(p0: Marker?) {
 
         p0?.let {

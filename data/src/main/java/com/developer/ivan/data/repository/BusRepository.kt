@@ -112,9 +112,9 @@ class BusRepository(
         return with(localDataSource) {
 
             if (getCountLines(busStop) > 0) {
-                val busStop = getBusStopWithLines(busStop)
-                if (busStop != null)
-                    Either.Right(busStop)
+                val stopWithLines = getBusStopWithLines(busStop)
+                if (stopWithLines != null)
+                    Either.Right(stopWithLines)
                 else
                     Either.Left(Failure.NullResult)
             } else {
@@ -149,8 +149,6 @@ class BusRepository(
         busStop: String
     ): Either<Failure, List<Arrive>> {
 
-//        ("Text_EstimationsRequired_YN","Y")
-//        "accessToken" to accessToken
 
         return remoteDataSource.getArrives(
             busStop,

@@ -7,7 +7,6 @@ import com.developer.ivan.data.datasources.NetworkDataSource
 
 class AndroidNetworkDataSource(val context: Context): NetworkDataSource {
     override fun isConnected(): Boolean {
-                var result: Boolean
                 val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
                 val networkCapabilities = connectivityManager.activeNetwork ?: return false

@@ -60,7 +60,7 @@ interface IRequest {
 
                         } catch (syntaxException: JsonSyntaxException) {
 
-                            Either.Left(Failure.JsonException(syntaxException.localizedMessage))
+                            Either.Left(Failure.JsonException(syntaxException.localizedMessage ?: String.empty))
 
                         }
                     }

@@ -34,12 +34,6 @@ class AppModule {
 
     @Provides
     @Singleton
-    @Named("endpoint")
-    fun endPointProvider() = Constants.EMTApi.ENDPOINT
-
-
-    @Provides
-    @Singleton
     fun okHttpProvider() = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)

@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.presentation.favourites.detail
+package com.developer.ivan.easymadbus.presentation.favourites.detail.customviews
 
 import android.content.Context
 import android.graphics.Shader
@@ -51,7 +51,8 @@ class DirectionCustomView @JvmOverloads constructor(
 
         imgDirection?.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_direction_right)?.let {
             TileDrawable(
-                it, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP)
+                it, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP
+            )
         })
     }
 

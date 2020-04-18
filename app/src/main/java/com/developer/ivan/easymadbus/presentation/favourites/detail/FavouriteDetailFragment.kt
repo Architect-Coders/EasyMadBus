@@ -2,6 +2,7 @@ package com.developer.ivan.easymadbus.presentation.favourites.detail
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +16,13 @@ import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.getViewModel
 import com.developer.ivan.easymadbus.core.inflateFragment
 import com.developer.ivan.easymadbus.framework.MapManager
+import com.developer.ivan.easymadbus.presentation.favourites.detail.customviews.LineDetailCustomView
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import com.google.android.gms.maps.MapView
 import kotlinx.android.synthetic.main.fragment_detail_favourite.*
 
-
+@Suppress("UNCHECKED_CAST")
 class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
 
     private val mViewModel: FavouriteDetailViewModel by lazy {
@@ -90,6 +92,7 @@ class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
     private fun handleFailure(failure: Failure?) {
 
         swipeRefresh.isRefreshing=false
+        Log.e("Failure",failure.toString())
     }
 
 
@@ -110,7 +113,10 @@ class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
         lines.removeAllViews()
 
         busData.lines.forEach {line->
-            lines.addView(LineDetailCustomView(requireContext()).apply {
+            lines.addView(
+                LineDetailCustomView(
+                    requireContext()
+                ).apply {
                 setLineDetail(
                     line
                 )
@@ -123,7 +129,10 @@ class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
         swipeRefresh.isRefreshing=false
 
         busData.first.lines.forEach {line->
-            lines.addView(LineDetailCustomView(requireContext()).apply {
+            lines.addView(
+                LineDetailCustomView(
+                    requireContext()
+                ).apply {
                 setLineDetail(
                     line
                 )
