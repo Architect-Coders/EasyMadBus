@@ -7,7 +7,7 @@ import com.developer.ivan.easymadbus.data.db.Database
 import com.developer.ivan.easymadbus.di.DaggerEasyMadBusComponent
 import com.developer.ivan.easymadbus.di.EasyMadBusComponent
 
-class App : Application() {
+open class App : Application() {
 
     lateinit var database: Database
         private set
@@ -16,12 +16,15 @@ class App : Application() {
         private set
 
     override fun onCreate() {
-        component = DaggerEasyMadBusComponent
-            .factory()
-            .create(this, Constants.EMTApi.ENDPOINT)
+        component = getAppComponent(Constants.EMTApi.ENDPOINT)
 
         database = Room.databaseBuilder(this, Database::class.java, "db").build()
 
         super.onCreate()
     }
+
+    open fun getAppComponent(url: String): EasyMadBusComponent =
+        DaggerEasyMadBusComponent
+            .factory()
+            .create(this, url)
 }

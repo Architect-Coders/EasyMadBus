@@ -15,13 +15,34 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.clustering.ClusterManager
 
+interface IMapManager : OnMapReadyCallback{
+    fun setMapReadyListener(listener: OnMapReady)
+    fun setMapEventsListener(listener: OnMapEvent)
+    fun moveToDefaultLocation()
+    fun moveToLocation(location: LatLng)
+    fun addPoints(items: List<UIBusStop>)
+    fun findMarker(markerId: String) : Marker?
+    fun onCreate(savedInstanceState: Bundle?, defaultPoints: List<UIBusStop> = emptyList())
+}
+
+interface OnMapReady{
+    fun onMapReadyCallback()
+
+}
+
+interface OnMapEvent{
+    fun onMarkerClick(marker: String, snippet: String)
+    fun onInfoWindowClick(markerId: String, data: Pair<UIBusStop, UIStopFavourite?>)
+
+
+}
 
 class MapManager(
     private val application: Application,
-    private val mapView: MapView?,
     private val mapConfiguration: MapConfiguration= MapConfiguration()
-) : OnMapReadyCallback,
-    GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+) :
+    GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener,
+    IMapManager{
 
     class MapConfiguration(
         val isMarkerClickEnable: Boolean=true,
@@ -38,34 +59,23 @@ class MapManager(
 
     private var mDefaultPoints = listOf<UIBusStop>()
 
-    interface OnMapReady{
-        fun onMapReadyCallback()
 
-    }
-
-    interface OnMapEvent{
-        fun onMarkerClick(marker: String, snippet: String)
-        fun onInfoWindowClick(markerId: String, data: Pair<UIBusStop, UIStopFavourite?>)
-    }
 
     companion object {
         const val DEFAULT_ZOOM = 15f
     }
 
-    fun setMapReadyListener(listener: OnMapReady){
+    override fun setMapReadyListener(listener: OnMapReady){
         mMapReadyListener = listener
     }
-    fun setMapEventsListener(listener: OnMapEvent){
+    override fun setMapEventsListener(listener: OnMapEvent){
         mMapEventListener = listener
     }
 
-    fun onCreate(savedInstanceState: Bundle?, defaultPoints: List<UIBusStop> = emptyList()) {
+    override fun onCreate(savedInstanceState: Bundle?, defaultPoints: List<UIBusStop>) {
 
         this.mDefaultPoints = defaultPoints
-        mapView?.apply {
-            onCreate(savedInstanceState)
-            getMapAsync(this@MapManager)
-        }
+
     }
 
     override fun onMapReady(p0: GoogleMap?) {
@@ -114,12 +124,12 @@ class MapManager(
 
     }
 
-    fun moveToDefaultLocation() {
+    override fun moveToDefaultLocation() {
 
         moveToLocation(LatLng(Constants.EMTApi.MADRID_LOC.lat, Constants.EMTApi.MADRID_LOC.lng))
     }
 
-    fun moveToLocation(location: LatLng) {
+    override fun moveToLocation(location: LatLng) {
         _mMap?.moveCamera(
             CameraUpdateFactory.newLatLngZoom(
                 location, DEFAULT_ZOOM
@@ -127,39 +137,14 @@ class MapManager(
         )
 
     }
-    fun addPoints(items: List<UIBusStop>) {
+    override fun addPoints(items: List<UIBusStop>) {
         items.forEach { mClusterManager?.addItem(it) }
         mClusterManager?.cluster()
     }
 
-    fun findMarker(markerId: String) =
+    override fun findMarker(markerId: String) =
         mClusterManager?.markerCollection?.markers?.find { it.id == markerId }
 
-    fun onResume() {
-        mapView?.onResume()
-    }
-
-    fun onPause() {
-        mapView?.onPause()
-    }
-
-    fun onStart() {
-        mapView?.onStart()
-    }
-
-    fun onStop() {
-        mapView?.onStop()
-    }
-
-
-    fun onDestroy() {
-        mapView?.onDestroy()
-        _mMap = null
-    }
-
-    fun onLowMemory() {
-        mapView?.onLowMemory()
-    }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
 

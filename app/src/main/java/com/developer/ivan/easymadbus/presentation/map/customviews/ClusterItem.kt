@@ -38,20 +38,4 @@ class ClusterItem(
 
 
 
-    private fun isInBounds(map: GoogleMap?,position: LatLng, latLngBounds: LatLngBounds?): Boolean? {
-        return (latLngBounds ?: map?.projection?.visibleRegion?.latLngBounds)?.contains(
-            position
-        )
-    }
-
-    override fun onClusterItemRendered(
-        clusterItem: UIBusStop,
-        marker: Marker
-    ) {
-        super.onClusterItemRendered(clusterItem, marker)
-
-    }
-
-
-
 }

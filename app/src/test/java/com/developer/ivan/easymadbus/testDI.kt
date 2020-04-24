@@ -1,11 +1,22 @@
 package com.developer.ivan.easymadbus
 
+import android.os.Bundle
+import android.util.Log
 import com.developer.ivan.data.datasources.LocalDataSource
 import com.developer.ivan.data.datasources.LocationDataSource
 import com.developer.ivan.data.datasources.NetworkDataSource
-import com.developer.ivan.data.repository.RemoteDataSource
+import com.developer.ivan.data.datasources.RemoteDataSource
 import com.developer.ivan.domain.*
+import com.developer.ivan.easymadbus.framework.IMapManager
+import com.developer.ivan.easymadbus.framework.OnMapEvent
+import com.developer.ivan.easymadbus.framework.OnMapReady
 import com.developer.ivan.easymadbus.framework.PermissionChecker
+import com.developer.ivan.easymadbus.presentation.models.UIBusStop
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+
+
 
 class FakeNetworkDataSource(var connected: Boolean=true): NetworkDataSource{
     override fun isConnected(): Boolean = connected
@@ -39,7 +50,8 @@ class FakeLocationDataSource: LocationDataSource{
     }
 
 }
-class FakeRemoteDataSource : RemoteDataSource {
+class FakeRemoteDataSource :
+    RemoteDataSource {
 
 
     lateinit var token: Token
@@ -152,4 +164,44 @@ class FakeLocalDataSource : LocalDataSource {
         this.busStopsFavourite -= favourite
     }
 
+}
+
+class FakeMapManager: IMapManager{
+
+    var mListenerMapReady: OnMapReady?=null
+    var mListenerMapEvents: OnMapEvent?=null
+
+    val mData : MutableList<UIBusStop> = mutableListOf()
+
+    override fun setMapReadyListener(listener: OnMapReady) {
+        mListenerMapReady = listener
+    }
+
+    override fun setMapEventsListener(listener: OnMapEvent) {
+        mListenerMapEvents = listener
+    }
+
+    override fun moveToDefaultLocation() {
+        Log.i("Map", "Move to default location "+Constants.EMTApi.MADRID_LOC.toString())
+    }
+
+    override fun moveToLocation(location: LatLng) {
+        Log.i("Map", "Move to location $location")
+    }
+
+    override fun addPoints(items: List<UIBusStop>) {
+        mData.addAll(items)
+    }
+
+    override fun findMarker(markerId: String): Marker? {
+        return null
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?, defaultPoints: List<UIBusStop>) {
+        addPoints(defaultPoints)
+    }
+
+    override fun onMapReady(p0: GoogleMap?) {
+        Log.i("Map", "Map ready! ")
+    }
 }

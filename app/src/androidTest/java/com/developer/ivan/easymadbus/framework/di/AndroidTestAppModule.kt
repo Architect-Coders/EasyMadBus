@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.di
+package com.developer.ivan.easymadbus.framework.di
 
 import android.app.Application
 import androidx.room.Room
@@ -25,8 +25,8 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class AppModule {
-
+class AndroidTestAppModule
+{
 
     @Provides
     @Singleton
@@ -55,7 +55,7 @@ class AppModule {
     @Provides
     @Singleton
     fun databaseProvider(app: Application) =
-        Room.databaseBuilder(app, Database::class.java, "db").build()
+        Room.databaseBuilder(app, Database::class.java, "db").allowMainThreadQueries().build()
 
     @Provides
     fun localDataSourceProvider(db: Database): LocalDataSource =
@@ -63,7 +63,8 @@ class AppModule {
 
     @Provides
     fun remoteDataSourceProvider(apiService: ApiService,
-                         serverMapper: ServerMapper): RemoteDataSource =
+                                 serverMapper: ServerMapper
+    ): RemoteDataSource =
         RetrofitDataSource(apiService,serverMapper)
 
     @Provides
@@ -84,6 +85,7 @@ class AppModule {
     @Provides
     fun dispatcherProvides(): CoroutineDispatcher = Dispatchers.Main
 
+    @Singleton
     @Provides
     fun mapManagerProvider(
         application: Application

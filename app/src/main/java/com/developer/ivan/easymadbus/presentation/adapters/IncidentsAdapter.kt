@@ -3,11 +3,9 @@ package com.developer.ivan.easymadbus.presentation.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.recyclerview.widget.RecyclerView
 import com.developer.ivan.easymadbus.R
-import com.developer.ivan.easymadbus.core.basicDiffUtil
 import com.developer.ivan.easymadbus.core.removeHTML
 import com.developer.ivan.easymadbus.presentation.models.UIIncident
 import kotlinx.android.synthetic.main.item_incident.view.*
@@ -16,9 +14,7 @@ import kotlin.properties.Delegates
 class IncidentsAdapter(items: List<UIIncident>) :
     RecyclerView.Adapter<IncidentsAdapter.IncidentViewHolder>() {
 
-    /*var items: List<UIIncident> by basicDiffUtil(items,
-        areItemsTheSame = { first, second -> first.title == second.title })*/
-    var items: List<UIIncident> by Delegates.observable(items, {_,_,_ ->
+    var items: List<UIIncident> by Delegates.observable(items, { _, _, _ ->
         notifyDataSetChanged()
     })
 
@@ -51,13 +47,11 @@ class IncidentsAdapter(items: List<UIIncident>) :
                         itemView.context.getString(
                             R.string.valid_from,
                             item.rssAfectaDesde,
-                             item.rssAfectaHasta )
+                            item.rssAfectaHasta
+                        )
                     )
                 }.toString()
 
-
-//                rcvLineContainer.adapter = adapter
-//                adapter.notifyDataSetChanged()
             }
         }
 

@@ -9,6 +9,7 @@ import com.developer.ivan.easymadbus.framework.CoroutinesMainDispatcherRule
 import com.developer.ivan.easymadbus.presentation.models.toUIBusStop
 import com.developer.ivan.easymadbus.presentation.models.toUIStopFavourite
 import com.developer.ivan.testshared.arrivesMock
+import com.developer.ivan.testshared.busStopsLinesArrivesMock
 import com.developer.ivan.testshared.busStopsMock
 import com.developer.ivan.testshared.stopFavouriteMock
 import com.developer.ivan.usecases.DeleteStopFavourite
@@ -63,7 +64,7 @@ class FavouriteViewModelTest {
     @Test
     fun `obtainInfo observer obtains the user's favourite list`() {
 
-        val busAndStops = listOf(Pair(busStopsMock[0], stopFavouriteMock))
+        val busAndStops = listOf(Pair(busStopsLinesArrivesMock[0], stopFavouriteMock))
         val busAndStopsUi = busAndStops.map {
             Pair(it.first.toUIBusStop(), it.second.toUIStopFavourite())
         }
@@ -74,7 +75,7 @@ class FavouriteViewModelTest {
 
             doReturn(Either.Right(busAndStops)).whenever(busAndStopsFavourites).execute(any())
 //            To prevent error
-            doReturn(Either.Right(mutableListOf<Deferred<Either<Failure, List<Arrive>>>>())).whenever(
+            doReturn(Either.Right(arrivesMock)).whenever(
                 stopTime
             ).execute(any())
 

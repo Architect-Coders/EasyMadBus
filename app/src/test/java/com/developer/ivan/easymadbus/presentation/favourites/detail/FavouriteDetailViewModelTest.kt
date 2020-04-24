@@ -2,12 +2,12 @@ package com.developer.ivan.easymadbus.presentation.favourites.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.developer.ivan.data.datasources.LocalDataSource
-import com.developer.ivan.data.repository.RemoteDataSource
 import com.developer.ivan.domain.Either
-import com.developer.ivan.easymadbus.FakeNetworkDataSource
 import com.developer.ivan.easymadbus.framework.CoroutinesMainDispatcherRule
-import com.developer.ivan.easymadbus.presentation.models.*
+import com.developer.ivan.easymadbus.presentation.models.convertToBusArrives
+import com.developer.ivan.easymadbus.presentation.models.toUIArrive
+import com.developer.ivan.easymadbus.presentation.models.toUIBusStop
+import com.developer.ivan.easymadbus.presentation.models.toUIStopFavourite
 import com.developer.ivan.testshared.arrivesMock
 import com.developer.ivan.testshared.busStopsMock
 import com.developer.ivan.testshared.linesMock
@@ -17,7 +17,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.refEq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule

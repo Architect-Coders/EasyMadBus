@@ -5,15 +5,13 @@ import androidx.lifecycle.Observer
 import com.developer.ivan.easymadbus.FakeLocalDataSource
 import com.developer.ivan.easymadbus.FakeNetworkDataSource
 import com.developer.ivan.easymadbus.FakeRemoteDataSource
-import com.developer.ivan.easymadbus.di.DaggerEasyMadBusTestComponent
-import com.developer.ivan.easymadbus.di.EasyMadBusTestComponent
+import com.developer.ivan.easymadbus.diTest.DaggerEasyMadBusTestComponent
+import com.developer.ivan.easymadbus.diTest.EasyMadBusTestComponent
 import com.developer.ivan.easymadbus.framework.CoroutinesMainDispatcherRule
 import com.developer.ivan.easymadbus.presentation.models.toUIBusStop
 import com.developer.ivan.easymadbus.presentation.models.toUILine
 import com.developer.ivan.easymadbus.presentation.models.toUIStopFavourite
 import com.developer.ivan.testshared.*
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.refEq
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.Assert.assertFalse
@@ -52,7 +50,8 @@ class FavouriteIntegrationsTest {
 
     @Before
     fun onSetup() {
-        component = DaggerEasyMadBusTestComponent.create()
+
+        component = DaggerEasyMadBusTestComponent.factory().create()
 
         mViewModel = component.plus(FavouriteFragmentModule()).favouriteViewModel
         localDataSource = component.localDataSource as FakeLocalDataSource

@@ -18,7 +18,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.developer.ivan.easymadbus.framework.UIRunner"
     }
     buildTypes {
         release {
@@ -38,6 +38,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 
 }
 
@@ -88,14 +89,21 @@ dependencies {
     implementation androidX.room
     implementation androidX.viewmodel
     implementation androidX.androidxCore
+    implementation mainApplication.okhttp
 
     kapt androidX.room_compiler
 
     testImplementation test.values()
     testImplementation androidTest.values()
+    androidTestImplementation androidTest.okhttp_idling
+    androidTestImplementation test.mockwebserver
+    androidTestImplementation mainApplication.okhttp
 
-    androidTestImplementation androidX.expresso
-    androidTestImplementation androidX.expresso_contrib
-    androidTestImplementation androidX.expresso_contrib
+
     androidTestImplementation androidX.junit_ktx_test
+    androidTestImplementation androidX.test_rules
+    androidTestImplementation androidTest.expresso
+    androidTestImplementation androidTest.expresso_contrib
+    androidTestImplementation androidTest.ui_automator
+    androidTestImplementation androidTest.expresso_intents
 }
