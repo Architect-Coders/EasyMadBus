@@ -5,17 +5,17 @@ import androidx.lifecycle.Observer
 import com.developer.ivan.domain.StopFavourite
 import com.developer.ivan.easymadbus.FakeLocalDataSource
 import com.developer.ivan.easymadbus.FakeRemoteDataSource
-import com.developer.ivan.easymadbus.di.DaggerEasyMadBusTestComponent
-import com.developer.ivan.easymadbus.di.EasyMadBusTestComponent
+import com.developer.ivan.easymadbus.diTest.DaggerEasyMadBusTestComponent
+import com.developer.ivan.easymadbus.diTest.EasyMadBusTestComponent
 import com.developer.ivan.easymadbus.framework.CoroutinesMainDispatcherRule
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import com.developer.ivan.easymadbus.presentation.models.toUIBusStop
 import com.developer.ivan.easymadbus.presentation.models.toUIStopFavourite
 import com.developer.ivan.testshared.*
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -50,9 +50,7 @@ class BusMapIntegrationsTest {
 
     @Before
     fun onSetup() {
-        component = DaggerEasyMadBusTestComponent
-            .create()
-
+        component = DaggerEasyMadBusTestComponent.factory().create()
         mViewModel = component.plus(BusMapFragmentModule()).busMapViewmodel
         localDataSource = component.localDataSource as FakeLocalDataSource
         remoteDataSource = component.remoteDataSource as FakeRemoteDataSource

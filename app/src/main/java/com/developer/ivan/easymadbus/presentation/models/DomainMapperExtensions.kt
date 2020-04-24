@@ -29,7 +29,7 @@ fun Line.toDBLine() = DBLine(
 )
 
 fun Line.toUILine() = UILine(
-    line, label, direction, maxFreq, minFreq, headerA, headerB
+    line, label, direction, maxFreq, minFreq, headerA, headerB, arrives.map { it.toUIArrive() }
 )
 
 fun StopFavourite.toUIStopFavourite() = UIStopFavourite(

@@ -11,20 +11,26 @@ import androidx.lifecycle.Observer
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.App
 import com.developer.ivan.easymadbus.R
-import com.developer.ivan.easymadbus.core.*
-import com.developer.ivan.easymadbus.framework.MapManager
+import com.developer.ivan.easymadbus.core.getViewModel
+import com.developer.ivan.easymadbus.core.hide
+import com.developer.ivan.easymadbus.core.inflateFragment
+import com.developer.ivan.easymadbus.core.show
+import com.developer.ivan.easymadbus.framework.IMapManager
+import com.developer.ivan.easymadbus.framework.OnMapEvent
+import com.developer.ivan.easymadbus.framework.OnMapReady
 import com.developer.ivan.easymadbus.framework.PermissionRequester
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import com.developer.ivan.usecases.GetCoarseLocation
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_map.*
 
 
-class BusMapFragment : Fragment(), MapManager.OnMapReady, MapManager.OnMapEvent {
+class BusMapFragment : Fragment(), OnMapReady, OnMapEvent {
 
-    private var mapManager: MapManager? = null
+    private var mapManager: IMapManager? = null
+    private var mapView: MapView? = null
     private lateinit var component: BusMapFragmentComponent
 
     private val mViewModel: BusMapViewModel by lazy { getViewModel { component.busMapViewmodel } }
@@ -33,20 +39,28 @@ class BusMapFragment : Fragment(), MapManager.OnMapReady, MapManager.OnMapEvent 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        component = ((requireActivity().application) as App).component.plus(BusMapFragmentModule())
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return container?.inflateFragment(R.layout.fragment_map)?.apply {
 
-            findViewById<MapView>(R.id.map)?.let { mapView ->
-                mapManager =
-                    MapManager(
-                        requireActivity().application,
-                        mapView
-                    ).apply { onCreate(savedInstanceState) }
+            mapView = findViewById(R.id.map)
+            mapView?.let { mapView ->
+
+
+                component =
+                    ((requireActivity().application) as App).component.plus(BusMapFragmentModule())
+
+                mapManager = component.mapManager.apply { onCreate(savedInstanceState) }
+
+                mapView.apply {
+                    onCreate(savedInstanceState)
+                    getMapAsync(mapManager)
+                }
+
 
             }
         }
@@ -88,17 +102,16 @@ class BusMapFragment : Fragment(), MapManager.OnMapReady, MapManager.OnMapEvent 
 
     private fun handleFailure(failure: Failure?) {
 
-        when(failure)
-        {
+        when (failure) {
             is BusMapViewModel.BusMarkError -> {
-               mapManager?.findMarker(failure.markId)?.let {marker->
+                mapManager?.findMarker(failure.markId)?.let { marker ->
                     mViewModel.updateMarkerError(marker)
                 }
             }
             is GetCoarseLocation.NoLocation -> {
                 mapManager?.moveToDefaultLocation()
             }
-            else-> Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+            else -> Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
 
         }
     }
@@ -161,28 +174,28 @@ class BusMapFragment : Fragment(), MapManager.OnMapReady, MapManager.OnMapEvent 
 
     override fun onResume() {
         super.onResume()
-        mapManager?.onResume()
+        mapView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapManager?.onPause()
+        mapView?.onPause()
     }
 
     override fun onStart() {
         super.onStart()
-        mapManager?.onStart()
+        mapView?.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapManager?.onStop()
+        mapView?.onStop()
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mapManager?.onDestroy()
+        mapView?.onDestroy()
     }
 
     override fun onDestroy() {
@@ -191,13 +204,8 @@ class BusMapFragment : Fragment(), MapManager.OnMapReady, MapManager.OnMapEvent 
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapManager?.onLowMemory()
+        mapView?.onLowMemory()
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
 
     private fun setPoints(listPoints: List<UIBusStop>) {
 

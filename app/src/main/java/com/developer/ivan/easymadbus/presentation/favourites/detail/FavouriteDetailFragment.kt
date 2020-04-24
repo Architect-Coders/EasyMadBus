@@ -15,7 +15,9 @@ import com.developer.ivan.easymadbus.App
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.getViewModel
 import com.developer.ivan.easymadbus.core.inflateFragment
+import com.developer.ivan.easymadbus.framework.IMapManager
 import com.developer.ivan.easymadbus.framework.MapManager
+import com.developer.ivan.easymadbus.framework.OnMapReady
 import com.developer.ivan.easymadbus.presentation.favourites.detail.customviews.LineDetailCustomView
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
@@ -23,13 +25,14 @@ import com.google.android.gms.maps.MapView
 import kotlinx.android.synthetic.main.fragment_detail_favourite.*
 
 @Suppress("UNCHECKED_CAST")
-class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
+class FavouriteDetailFragment : Fragment(), OnMapReady {
 
     private val mViewModel: FavouriteDetailViewModel by lazy {
         getViewModel { component.favouriteDetailViewModel }
     }
 
-    private var mapManager: MapManager? = null
+    private var mapManager: IMapManager? = null
+    private var mapView: MapView? = null
 
 
     private lateinit var component: FavouriteDetailComponent
@@ -50,14 +53,15 @@ class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = container?.inflateFragment(R.layout.fragment_detail_favourite)?.apply {
-        findViewById<MapView>(R.id.mapDetail)?.let { mapView ->
-            mapManager =
-                MapManager(
-                    requireActivity().application,
-                    mapView,
-                    MapManager.MapConfiguration(isMarkerClickEnable = false)
-                ).apply { onCreate(savedInstanceState,listOf(data.first)) }
+        mapView = findViewById(R.id.mapDetail)
 
+        mapView?.let { mapView ->
+            mapManager = component.mapManager.apply { onCreate(savedInstanceState,listOf(data.first)) }
+
+            mapView.apply {
+                onCreate(savedInstanceState)
+                getMapAsync(mapManager)
+            }
         }
     }
 
@@ -147,28 +151,28 @@ class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
 
     override fun onResume() {
         super.onResume()
-        mapManager?.onResume()
+        mapView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapManager?.onPause()
+        mapView?.onPause()
     }
 
     override fun onStart() {
         super.onStart()
-        mapManager?.onStart()
+        mapView?.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapManager?.onStop()
+        mapView?.onStop()
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mapManager?.onDestroy()
+        mapView?.onDestroy()
     }
 
     override fun onDestroy() {
@@ -177,7 +181,7 @@ class FavouriteDetailFragment : Fragment(), MapManager.OnMapReady {
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapManager?.onLowMemory()
+        mapView?.onLowMemory()
     }
 
 

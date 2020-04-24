@@ -1,9 +1,11 @@
-package com.developer.ivan.easymadbus.di
+package com.developer.ivan.easymadbus.diTest
 
 import com.developer.ivan.data.datasources.LocalDataSource
 import com.developer.ivan.data.datasources.LocationDataSource
 import com.developer.ivan.data.datasources.NetworkDataSource
-import com.developer.ivan.data.repository.RemoteDataSource
+import com.developer.ivan.data.datasources.RemoteDataSource
+import com.developer.ivan.easymadbus.di.DataModule
+import com.developer.ivan.easymadbus.di.UseCaseModule
 import com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragmentComponent
 import com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragmentModule
 import com.developer.ivan.easymadbus.presentation.favourites.detail.FavouriteDetailComponent

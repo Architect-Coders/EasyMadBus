@@ -1,6 +1,6 @@
 package com.developer.ivan.easymadbus.framework.datasource
 
-import com.developer.ivan.data.repository.RemoteDataSource
+import com.developer.ivan.data.datasources.RemoteDataSource
 import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.core.IRequest
 import com.developer.ivan.easymadbus.data.server.ServerMapper
@@ -13,7 +13,8 @@ import org.json.JSONObject
 data class RetrofitDataSource(
     val apiService: ApiService,
     val servermapper: ServerMapper
-) : IRequest by IRequest.RequestRetrofitImplementation(), RemoteDataSource {
+) : IRequest by IRequest.RequestRetrofitImplementation(),
+    RemoteDataSource {
     override suspend fun getLogin(headers: Map<String, String>): Either<Failure, Token> {
 
         return withContext(Dispatchers.IO) {
