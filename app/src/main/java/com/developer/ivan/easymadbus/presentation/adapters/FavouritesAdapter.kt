@@ -83,15 +83,22 @@ class SwipeToDeleteCallback(
 
 }
 
-class FavouritesAdapter(val onClick: (Pair<UIBusStop,UIStopFavourite>)->Unit) :
+class FavouritesAdapter(val onClick: (Pair<UIBusStop,UIStopFavourite>)->Unit,
+                        val itemsSize: (Int)->Unit) :
     RecyclerView.Adapter<FavouritesAdapter.FavouriteViewHolder>() {
 
 
     var items: List<Pair<UIBusStop, UIStopFavourite>> = emptyList()
         private set(value) {
             field = value
+            itemsSize.invoke(value.size)
+
             notifyDataSetChanged()
         }
+
+    init {
+        itemsSize.invoke(items.size)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteViewHolder =
         FavouriteViewHolder(

@@ -12,6 +12,14 @@
         android:layout_height="match_parent"
         >
 
+        <include
+            android:id="@+id/lyNoItems"
+            layout="@layout/layout_no_favourites"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvFavourites"
             android:layout_width="match_parent"

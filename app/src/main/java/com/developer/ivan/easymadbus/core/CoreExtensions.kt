@@ -1,17 +1,19 @@
 package com.developer.ivan.easymadbus.core
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Build
 import android.text.Html
-import android.text.Spanned
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import androidx.annotation.AnimRes
+import androidx.annotation.AnimatorRes
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
@@ -26,6 +28,28 @@ fun ViewGroup.inflateFragment
 fun View.show() = run { visibility = View.VISIBLE }
 fun View.hide() = run { visibility = View.GONE }
 fun View.invisible() = run { visibility = View.INVISIBLE }
+fun View.loadAnimation(@AnimRes resource: Int) = run { animation = AnimationUtils.loadAnimation(this.context,resource) }
+fun View.loadInfiniteAnimator(@AnimatorRes animator: Int)  {
+    AnimatorInflater.loadAnimator(this.context,animator).apply {
+    setTarget(this@loadInfiniteAnimator)
+        addListener(object: Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                start()
+
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
+    start()
+} }
 
 val Context.app: App
     get() = applicationContext as App
