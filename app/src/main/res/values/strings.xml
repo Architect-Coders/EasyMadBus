@@ -23,4 +23,5 @@
     <!--    ERRORS  -->
     <string name="bus_error">There has been a problem retrieving the data. Please check your internet connection and try again</string>
     <string name="loading">Loading...</string>
+    <string name="no_items">Ops!, It looks like you haven\'t added any stops yet to favorites. Please go to the map and add the one you want 🗺</string>
 </resources>
