@@ -3,25 +3,19 @@ package com.developer.ivan.easymadbus.presentation.notifications
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.developer.ivan.data.repository.BusRepository
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.App
-
 import com.developer.ivan.easymadbus.R
-import com.developer.ivan.easymadbus.core.*
-import com.developer.ivan.easymadbus.data.server.ServerMapper
-import com.developer.ivan.easymadbus.framework.datasource.RetrofitDataSource
-import com.developer.ivan.easymadbus.framework.datasource.RoomDataSource
+import com.developer.ivan.easymadbus.core.getViewModel
+import com.developer.ivan.easymadbus.core.hide
+import com.developer.ivan.easymadbus.core.inflateFragment
+import com.developer.ivan.easymadbus.core.show
 import com.developer.ivan.easymadbus.presentation.adapters.IncidentsAdapter
-import com.developer.ivan.easymadbus.presentation.map.BusMapFragmentModule
-import com.developer.ivan.easymadbus.presentation.map.BusMapViewModel
-import com.developer.ivan.usecases.*
 import kotlinx.android.synthetic.main.fragment_incident.*
 
 
@@ -36,7 +30,8 @@ class NotificationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        component = ((requireActivity().application) as App).component.plus(NotificationsFragmentModule())
+        component =
+            ((requireActivity().application) as App).component.plus(NotificationsFragmentModule())
     }
 
     override fun onCreateView(
@@ -69,7 +64,7 @@ class NotificationFragment : Fragment() {
     }
 
     private fun handleFailure(failure: Failure?) {
-        Log.e("Failure",failure.toString())
+        Log.e("Failure", failure.toString())
     }
 
     private fun renderFavouriteState(state: NotificationsViewModel.IncidentsScreenState?) {

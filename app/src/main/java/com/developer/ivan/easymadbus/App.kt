@@ -18,7 +18,7 @@ open class App : Application() {
     override fun onCreate() {
         component = getAppComponent(Constants.EMTApi.ENDPOINT)
 
-        database = Room.databaseBuilder(this, Database::class.java, "db").build()
+        database = component.database
 
         super.onCreate()
     }

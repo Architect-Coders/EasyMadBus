@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -46,11 +47,6 @@ data class UIBusStop(
 ) : Parcelable, ClusterItem {
 
 
-/*
-    override fun getSnippet(): String =
-            lines.map { it.split("/") }.getOrNull(0)?.joinToString(", ") ?: String.empty
-*/
-
     override fun getSnippet(): String = node
     override fun getTitle(): String = name
 
@@ -61,7 +57,8 @@ data class UIBusStop(
         node,
         geometry.toDomain(),
         name,
-        wifi)
+        wifi
+    )
 }
 
 @Parcelize
@@ -98,6 +95,7 @@ data class UIGeometry(val type: String, val coordinates: LatLng) : Parcelable {
 
 @Parcelize
 data class UIIncident(
+    val guid: String,
     val title: String,
     val description: String,
     val link: String,
@@ -105,6 +103,7 @@ data class UIIncident(
     val rssAfectaHasta: String
 ) : Parcelable {
     fun toDomain(): Incident = Incident(
+        guid,
         title,
         description,
         link,
@@ -116,7 +115,9 @@ data class UIIncident(
 
 fun convertToBusArrives(busStop: UIBusStop, arrives: List<UIArrive>): List<UILine> {
     return busStop.lines.map { line ->
-        line.arrives = arrives.filter { arrive -> arrive.line.toLowerCase() == line.label.toLowerCase() }
+        line.arrives = arrives.filter { arrive ->
+            arrive.line.toLowerCase(Locale.getDefault()) == line.label.toLowerCase(Locale.getDefault())
+        }
         line
     }
 }

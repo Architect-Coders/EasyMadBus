@@ -28,6 +28,8 @@ interface EasyMadBusComponent {
     fun plus(module: NotificationsFragmentModule): NotificationsFragmentComponent
     fun plus(module: FavouriteDetailFragmentModule): FavouriteDetailComponent
 
+    val database: Database
+
 
 
     @Component.Factory

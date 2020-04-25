@@ -96,15 +96,7 @@ data class DBBusStopWithLines(
     @Embedded
     val busStop: DBBusStop,
 
-   /* @Relation(
-        parentColumn = "node",
-        entityColumn = "line",
-        associateBy = Junction(
-            DBBusStopLineCrossRef::class,
-            parentColumn = "busStopId",
-            entityColumn = "lineId"
-        )
-    )*/
+
     @Embedded
     val crossRef: DBBusStopLineCrossRef?,
 
@@ -150,4 +142,18 @@ data class DBToken(
 ) {
     fun toUI() = UIToken(accessToken, tokenSecExpiration, timeStamp)
     fun toDomain() = Token(accessToken, tokenSecExpiration, timeStamp)
+}
+
+@Entity
+data class DBIncident(
+    @PrimaryKey
+    val guid: String,
+    val title: String,
+    val description: String,
+    val link: String,
+    val rssAfectaDesde: String,
+    val rssAfectaHasta: String){
+
+    fun toDomain() = Incident(guid, title, description, link, rssAfectaDesde, rssAfectaHasta)
+
 }
