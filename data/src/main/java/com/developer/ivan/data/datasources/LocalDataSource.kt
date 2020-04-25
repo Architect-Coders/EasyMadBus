@@ -1,9 +1,6 @@
 package com.developer.ivan.data.datasources
 
-import com.developer.ivan.domain.BusStop
-import com.developer.ivan.domain.Line
-import com.developer.ivan.domain.StopFavourite
-import com.developer.ivan.domain.Token
+import com.developer.ivan.domain.*
 
 interface LocalDataSource
 {
@@ -20,4 +17,7 @@ interface LocalDataSource
     suspend fun getFavouritesAndBusStops(id: String?=null): List<Pair<BusStop,StopFavourite?>>
     suspend fun updateFavourite(favourite: StopFavourite)
     suspend fun deleteFavourite(favourite: StopFavourite)
+    suspend fun insertIncidents(incidents: List<Incident>)
+    suspend fun getIncidents() : List<Incident>
+    suspend fun getCountIncidents() : Int
 }

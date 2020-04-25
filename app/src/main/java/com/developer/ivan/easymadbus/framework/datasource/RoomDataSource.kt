@@ -1,12 +1,10 @@
 package com.developer.ivan.easymadbus.framework.datasource
 
 import com.developer.ivan.data.datasources.LocalDataSource
-import com.developer.ivan.domain.BusStop
-import com.developer.ivan.domain.Line
-import com.developer.ivan.domain.StopFavourite
-import com.developer.ivan.domain.Token
+import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.data.db.Database
 import com.developer.ivan.easymadbus.data.db.dao.BusStopDao
+import com.developer.ivan.easymadbus.data.db.dao.IncidentDao
 import com.developer.ivan.easymadbus.data.db.dao.StopFavouriteDao
 import com.developer.ivan.easymadbus.data.db.dao.TokenDao
 import com.developer.ivan.easymadbus.data.db.models.DBBusStopLineCrossRef
@@ -18,6 +16,7 @@ class RoomDataSource(db: Database) : LocalDataSource {
     private val busStopDao: BusStopDao = db.busStopDao()
     private val tokenDao: TokenDao = db.tokenDao()
     private val favouriteDao: StopFavouriteDao = db.stopFavourite()
+    private val incidentDao: IncidentDao = db.incidentDao()
 
     override suspend fun getBusStops(): List<BusStop> =
         withContext(Dispatchers.IO) { busStopDao.getAllBusStops().map { it.toDomain() } }
@@ -114,6 +113,23 @@ class RoomDataSource(db: Database) : LocalDataSource {
         withContext(Dispatchers.IO) {
             favouriteDao.deleteFavourite(favourite.toDBStopFavourite())
         }
+    }
+
+    override suspend fun insertIncidents(incidents: List<Incident>) {
+
+        withContext(Dispatchers.IO){
+            incidentDao.insertIncidents(incidents.map { it.toDBIncident() })
+        }
+
+
+    }
+
+    override suspend fun getIncidents(): List<Incident> = withContext(Dispatchers.IO){
+            incidentDao.getAllIncidents().map { it.toDomain() }
+        }
+
+    override suspend fun getCountIncidents(): Int = withContext(Dispatchers.IO){
+        incidentDao.getIncidentsCount()
     }
 
 }

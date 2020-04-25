@@ -43,7 +43,8 @@ data class StopFavourite(val busStopId: String,
                          val name: String?
                          )
 
-data class Incident(val title: String,
+data class Incident(val guid: String,
+                    val title: String,
                     val description: String,
                     val link: String,
                     val rssAfectaDesde: String,

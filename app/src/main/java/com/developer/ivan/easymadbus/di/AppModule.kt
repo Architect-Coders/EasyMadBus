@@ -55,7 +55,7 @@ class AppModule {
     @Provides
     @Singleton
     fun databaseProvider(app: Application) =
-        Room.databaseBuilder(app, Database::class.java, "db").build()
+        Room.databaseBuilder(app, Database::class.java, "db").fallbackToDestructiveMigration().build()
 
     @Provides
     fun localDataSourceProvider(db: Database): LocalDataSource =

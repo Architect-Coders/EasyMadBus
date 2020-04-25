@@ -50,7 +50,7 @@ class EntityLine(
     private val headerB: String
 ) : ServerModel {
 
-    fun toDomain() = Line(line,label,direction,maxFreq,minFreq,headerA,headerB)
+    fun toDomain() = Line(line, label, direction, maxFreq, minFreq, headerA, headerB)
 }
 
 class EntityBusStop(
@@ -81,27 +81,33 @@ class EntityBusStop(
         node,
         geometry.toDomain(),
         name,
-        wifi)
+        wifi
+    )
 }
 
-data class EntityIncident(val title: String,
-                    val description: String,
-                    val link: String,
-                    val rssAfectaDesde: String,
-                    val rssAfectaHasta: String) : ServerModel
-{
+data class EntityIncident(
+    val guid: String,
+    val title: String,
+    val description: String,
+    val link: String,
+    val rssAfectaDesde: String,
+    val rssAfectaHasta: String
+) : ServerModel {
 
     companion object {
         fun empty() = EntityIncident(
-            String.empty, String.empty, String.empty, String.empty, String.empty
+            String.empty,String.empty, String.empty, String.empty, String.empty, String.empty
         )
     }
+
     fun toDomain() = Incident(
+        guid,
         title,
         description,
         link,
         rssAfectaDesde,
-        rssAfectaHasta)
+        rssAfectaHasta
+    )
 
 
 }

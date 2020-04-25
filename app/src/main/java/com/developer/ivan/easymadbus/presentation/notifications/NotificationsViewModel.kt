@@ -6,7 +6,6 @@ import com.developer.ivan.easymadbus.core.BaseViewModel
 import com.developer.ivan.easymadbus.presentation.models.UIIncident
 import com.developer.ivan.easymadbus.presentation.models.toUIIncident
 import com.developer.ivan.usecases.GetIncidents
-import com.developer.ivan.usecases.GetToken
 import kotlinx.coroutines.launch
 
 class NotificationsViewModel(
