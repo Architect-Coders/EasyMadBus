@@ -18,7 +18,6 @@ interface AndroidTestComponent : EasyMadBusComponent
 {
     //    Idling resources
     val okHttpClient : OkHttpClient
-    val database : Database
 
     @Component.Factory
     interface Factory {

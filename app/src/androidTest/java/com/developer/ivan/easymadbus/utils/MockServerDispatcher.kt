@@ -1,7 +1,6 @@
-package com.developer.ivan.easymadbus.framework.network
+package com.developer.ivan.easymadbus.utils
 
 import android.app.Application
-import com.developer.ivan.easymadbus.framework.ApiService
 import com.developer.ivan.easymadbus.framework.ApiService.Factory.GET_DETAIL
 import com.developer.ivan.easymadbus.framework.ApiService.Factory.GET_LOGIN
 import com.developer.ivan.easymadbus.framework.ApiService.Factory.MOBILITY_LABS_ENDPOINT
@@ -9,7 +8,6 @@ import com.developer.ivan.easymadbus.framework.ApiService.Factory.POST_STOPS
 import com.developer.ivan.easymadbus.framework.ApiService.Factory.STOPS_ENDPOINT
 import com.developer.ivan.easymadbus.framework.ApiService.Factory.TRANSPORT_ENDPOINT
 import com.developer.ivan.easymadbus.framework.ApiService.Factory.USERS_ENDPOINT
-import com.developer.ivan.easymadbus.utils.fromJson
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest

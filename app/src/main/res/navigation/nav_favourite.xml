@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragment"
-        android:label="FavouriteFragment"
+        android:label="@string/favourites"
         tools:layout="@layout/fragment_favourite" >
         <action
             android:id="@+id/action_favouriteFragment_to_favouriteDetailFragment"

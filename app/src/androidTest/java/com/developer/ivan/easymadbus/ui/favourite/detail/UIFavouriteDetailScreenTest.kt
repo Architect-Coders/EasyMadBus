@@ -4,6 +4,7 @@ import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -17,13 +18,15 @@ import com.developer.ivan.easymadbus.data.db.models.DBStopFavourite
 import com.developer.ivan.easymadbus.framework.ApiService
 import com.developer.ivan.easymadbus.framework.UIEasyMadBusDelegate
 import com.developer.ivan.easymadbus.framework.di.AndroidTestComponent
-import com.developer.ivan.easymadbus.framework.network.MockServerDispatcher
-import com.developer.ivan.easymadbus.framework.network.rule.MockServerTestRule
+import com.developer.ivan.easymadbus.utils.MockServerDispatcher
+import com.developer.ivan.easymadbus.utils.rules.network.MockServerTestRule
 import com.developer.ivan.easymadbus.presentation.MainActivity
 import com.developer.ivan.easymadbus.presentation.adapters.FavouritesAdapter
+import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.instanceOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,11 +36,18 @@ import org.junit.runner.RunWith
 class UIFavouriteDetailScreenTest {
 
     @get:Rule
-    val mockWebServerRule = MockServerTestRule()
+    val mockWebServerRule =
+        MockServerTestRule()
+
+
 
     lateinit var mockWebServer: MockWebServer
 
     lateinit var component: AndroidTestComponent
+
+    private lateinit var http: OkHttp3IdlingResource
+
+
 
 
     @get:Rule
@@ -58,7 +68,9 @@ class UIFavouriteDetailScreenTest {
         mockWebServer = mockWebServerRule.server
 
         mockWebServer.dispatcher =
-            MockServerDispatcher(ApplicationProvider.getApplicationContext()).Response()
+            MockServerDispatcher(
+                ApplicationProvider.getApplicationContext()
+            ).Response()
 
 
         mockWebServer.url("${ApiService.MOBILITY_LABS_ENDPOINT}+${ApiService.USERS_ENDPOINT}+${ApiService.GET_LOGIN}")
@@ -70,6 +82,9 @@ class UIFavouriteDetailScreenTest {
 
             component = (it.application as UIEasyMadBusDelegate).component as AndroidTestComponent
 
+            http = OkHttp3IdlingResource.create("OkHttp", component.okHttpClient)
+            IdlingRegistry.getInstance().register(http)
+
             component.database.stopFavourite().updateFavourite(DBStopFavourite("1", "myStop"))
         }
 
@@ -77,6 +92,11 @@ class UIFavouriteDetailScreenTest {
         onView(withId(R.id.favouriteFragment)).perform(click())
 
 
+    }
+
+    @After
+    fun closeIdling() {
+        IdlingRegistry.getInstance().unregister(http)
     }
 
     @Test

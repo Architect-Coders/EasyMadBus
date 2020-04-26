@@ -34,6 +34,7 @@ buildscript {
         test_rules = '1.1.0'
         okhttp_idling = '1.0.0'
         ui_automator_version = '2.2.0'
+        material_components_version = '1.1.0'
 
 
 
@@ -53,7 +54,8 @@ buildscript {
                 scalars:        "com.squareup.retrofit2:converter-scalars:$retrofit_version",
                 dagger:        "com.google.dagger:dagger:$dagger_version",
                 dagger_compiler:"com.google.dagger:dagger-compiler:$dagger_version",
-                okhttp:         "com.squareup.okhttp3:okhttp:$ok_http_version"
+                okhttp:         "com.squareup.okhttp3:okhttp:$ok_http_version",
+                material:       "com.google.android.material:material:$material_components_version"
 
 
 

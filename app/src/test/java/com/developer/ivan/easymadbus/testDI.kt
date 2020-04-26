@@ -94,6 +94,7 @@ class FakeLocalDataSource : LocalDataSource {
     var lines: List<Line> = emptyList()
 
     var busStopsFavourite: List<StopFavourite> = emptyList()
+    var incidents: List<Incident> = emptyList()
 
     override suspend fun getBusStops(): List<BusStop> = busStops
 
@@ -164,6 +165,13 @@ class FakeLocalDataSource : LocalDataSource {
         this.busStopsFavourite -= favourite
     }
 
+    override suspend fun insertIncidents(incidents: List<Incident>) {
+        this.incidents = incidents
+    }
+
+    override suspend fun getIncidents(): List<Incident> = incidents
+
+    override suspend fun getCountIncidents(): Int = this.incidents.size
 }
 
 class FakeMapManager: IMapManager{

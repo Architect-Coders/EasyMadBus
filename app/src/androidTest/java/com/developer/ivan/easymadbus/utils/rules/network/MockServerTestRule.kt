@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.framework.network.rule
+package com.developer.ivan.easymadbus.utils.rules.network
 
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.rules.TestRule

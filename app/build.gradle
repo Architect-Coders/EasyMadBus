@@ -72,6 +72,7 @@ dependencies {
     implementation mainApplication.gson
     implementation mainApplication.scalars
     implementation mainApplication.dagger
+    implementation mainApplication.material
     testImplementation mainApplication.dagger
     androidTestImplementation mainApplication.dagger
     kapt   mainApplication.dagger_compiler
