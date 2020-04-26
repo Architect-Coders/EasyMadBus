@@ -180,11 +180,26 @@ class BusRepository(
     }
 
     override suspend fun incidents(accessToken: String): Either<Failure, List<Incident>> {
-        return remoteDataSource.getIncidents(
-            mapOf(
-                "accessToken" to accessToken
-            )
-        )
+        return with(localDataSource) {
+
+            if (!networkDataSource.isConnected()) {
+                Either.Right(getIncidents())
+            } else {
+
+                val response = remoteDataSource.getIncidents(
+                    mapOf(
+                        "accessToken" to accessToken
+                    )
+                )
+                when (response) {
+                    is Either.Left -> response
+                    is Either.Right -> {
+                        localDataSource.insertIncidents(response.b)
+                        Either.Right(response.b)
+                    }
+                }
+            }
+        }
 
     }
 }

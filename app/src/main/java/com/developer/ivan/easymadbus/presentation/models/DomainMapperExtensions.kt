@@ -16,13 +16,14 @@ fun BusStop.toUIBusStop() = UIBusStop(
     geometry.toUIGeometry(),
     name,
     wifi,
-    lines.map { line-> line.toUILine() })
+    lines.map { line -> line.toUILine() })
 
 fun BusStop.toDBBusStop() = DBBusStop(
     node,
     geometry.toDBGeometry(),
     name,
-    wifi)
+    wifi
+)
 
 fun Line.toDBLine() = DBLine(
     line, label, direction, maxFreq, minFreq, headerA, headerB
@@ -46,15 +47,23 @@ fun Incident.toUIIncident(): UIIncident {
 
 
     return UIIncident(
+        guid,
         title,
         description,
         link,
         rssAfectaDesde,
         rssAfectaHasta
     )
-
-
 }
+
+fun Incident.toDBIncident() = DBIncident(
+    guid,
+    title,
+    description,
+    link,
+    rssAfectaDesde,
+    rssAfectaHasta
+)
 
 
 fun Arrive.toUIArrive() = UIArrive(line, stop, estimateArrive, distanceBus, timeStamp)

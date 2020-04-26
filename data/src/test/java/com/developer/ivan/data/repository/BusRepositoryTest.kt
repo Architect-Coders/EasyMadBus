@@ -30,13 +30,13 @@ class BusRepositoryTest {
     @Mock
     lateinit var networkDataSource: NetworkDataSource
 
-    private lateinit var transactionRepository: BusRepository
+    private lateinit var busRepository: BusRepository
 
 
     @Before
     fun setUp() {
 
-        transactionRepository = BusRepository(remoteDataSource,localDataSource, networkDataSource)
+        busRepository = BusRepository(remoteDataSource,localDataSource, networkDataSource)
         whenever(networkDataSource.isConnected()).thenReturn(true)
     }
 
@@ -51,7 +51,7 @@ class BusRepositoryTest {
             whenever(localDataSource.getToken()).thenReturn(expiredToken)
             whenever(remoteDataSource.getLogin(anyMap())).thenReturn(Either.Right(newToken))
 
-            val result = transactionRepository.login("", "", "", "")
+            val result = busRepository.login("", "", "", "")
 
             assertEquals(Either.Right(newToken),result)
         }
@@ -67,7 +67,7 @@ class BusRepositoryTest {
             whenever(localDataSource.getToken()).thenReturn(notFoundToken)
             whenever(remoteDataSource.getLogin(anyMap())).thenReturn(Either.Right(newToken))
 
-            val result = transactionRepository.login("", "", "", "")
+            val result = busRepository.login("", "", "", "")
 
             assertEquals(Either.Right(newToken),result)
         }
@@ -80,7 +80,7 @@ class BusRepositoryTest {
 
             whenever(remoteDataSource.getLogin(anyMap())).thenReturn(Either.Right(token))
 
-            transactionRepository.login("", "", "", "")
+            busRepository.login("", "", "", "")
 
             verify(localDataSource).insertToken(token)
         }
@@ -91,7 +91,7 @@ class BusRepositoryTest {
         runBlocking {
 
             whenever(localDataSource.getCountBusStops()).thenReturn(1) //Greater than 0
-            transactionRepository.busStops(tokenMock.accessToken,false)
+            busRepository.busStops(tokenMock.accessToken,false)
             verify(localDataSource).getBusStops()
         }
     }
@@ -105,7 +105,7 @@ class BusRepositoryTest {
             whenever(localDataSource.getCountBusStops()).thenReturn(0)
             whenever(remoteDataSource.getBusStops(anyMap())).thenReturn(remoteData)
 
-            val result = transactionRepository.busStops(tokenMock.accessToken)
+            val result = busRepository.busStops(tokenMock.accessToken)
 
             assertEquals(remoteData,result)
         }
@@ -120,7 +120,7 @@ class BusRepositoryTest {
             whenever(localDataSource.getCountBusStops()).thenReturn(25) //More than 0
             whenever(remoteDataSource.getBusStops(anyMap())).thenReturn(remoteData)
 
-            val result = transactionRepository.busStops(tokenMock.accessToken, true)
+            val result = busRepository.busStops(tokenMock.accessToken, true)
 
             assertEquals(remoteData,result)
         }

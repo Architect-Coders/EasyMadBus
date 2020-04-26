@@ -3,12 +3,10 @@ package com.developer.ivan.easymadbus.ui.favourite
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.swipeRight
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -24,11 +22,11 @@ import com.developer.ivan.easymadbus.framework.network.MockServerDispatcher
 import com.developer.ivan.easymadbus.framework.network.rule.MockServerTestRule
 import com.developer.ivan.easymadbus.presentation.MainActivity
 import com.developer.ivan.easymadbus.presentation.adapters.FavouritesAdapter
-import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.utils.matchers.atPosition
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.mockwebserver.MockWebServer
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -39,11 +37,13 @@ import org.junit.runner.RunWith
 class UIFavouriteScreenTest {
 
 
+
     @get:Rule
     val mockWebServerRule = MockServerTestRule()
 
     lateinit var mockWebServer: MockWebServer
     private lateinit var http: OkHttp3IdlingResource
+
 
 
     lateinit var component: AndroidTestComponent
@@ -105,50 +105,7 @@ class UIFavouriteScreenTest {
 
         mActivityRule.scenario.moveToState(Lifecycle.State.RESUMED)
 
-        onView(withId(R.id.rcvFavourites)).check(
-            matches(
-                atPosition(
-                    0,
-                    hasDescendant(withText("myStop"))
-                )
-            )
-        )
-
-
-    }
-
-    @Test
-    fun swipeFavouriteAndAcceptDialogRemoveIt() {
-
-        onView(withId(R.id.favouriteFragment)).perform(click())
-
-        mActivityRule.scenario.moveToState(Lifecycle.State.RESUMED)
-
-        onView(withId(R.id.rcvFavourites)).perform(
-            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                0,
-                swipeRight()
-            )
-        )
-
-        onView(
-            withText(
-                ApplicationProvider.getApplicationContext<UIEasyMadBusDelegate>().getString(
-                    R.string.yes
-                )
-            )
-        ).perform(click())
-
-        onView(withId(R.id.rcvFavourites)).check(
-            matches(
-                (
-                    atPosition(
-                        0,
-                        hasDescendant(not(withText("myStop")))
-                    )
-                )
-            )
-        )
+        onView(withId(R.id.rcvFavourites)).check(matches(atPosition(0, hasDescendant(withText("myStop")))))
 
 
     }

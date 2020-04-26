@@ -12,10 +12,8 @@ import com.developer.ivan.easymadbus.presentation.map.BusMapFragmentComponent
 import com.developer.ivan.easymadbus.presentation.map.BusMapFragmentModule
 import com.developer.ivan.easymadbus.presentation.notifications.NotificationsFragmentComponent
 import com.developer.ivan.easymadbus.presentation.notifications.NotificationsFragmentModule
-import com.developer.ivan.usecases.InsertStopFavourite
 import dagger.BindsInstance
 import dagger.Component
-import okhttp3.OkHttpClient
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -27,6 +25,8 @@ interface EasyMadBusComponent {
     fun plus(module: FavouriteFragmentModule): FavouriteFragmentComponent
     fun plus(module: NotificationsFragmentModule): NotificationsFragmentComponent
     fun plus(module: FavouriteDetailFragmentModule): FavouriteDetailComponent
+
+    val database: Database
 
 
 
