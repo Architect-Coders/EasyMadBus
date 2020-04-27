@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ConfirmDialog : DialogFragment() {
 
@@ -40,10 +41,10 @@ class ConfirmDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(context)
             .setMessage(context?.getString(R.string.delete_message, mItem.first.name))
             .setPositiveButton(R.string.yes) { _, _ -> mListener?.onConfirm(mItem) }
             .setNegativeButton(R.string.no) { _, _ -> mListener?.onCancel(mItem, mPosition) }
             .setOnDismissListener { mListener?.onCancel(mItem,mPosition) }
-            .create()
+            .create().also { isCancelable=false }
 }

@@ -96,7 +96,6 @@ class TimeDistanceCustomView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private val kmConstant = 1000
 
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_time_distance, this, true)
@@ -107,7 +106,6 @@ class TimeDistanceCustomView @JvmOverloads constructor(
 
         txtTime?.text = "${timeInMinutes} min"
         txtTime2?.text = "${timeInMinutes2} min"
-//        txtTime2?.text = "%.1f km".format((distanceInMeters/kmConstant.toFloat()))
 
     }
 

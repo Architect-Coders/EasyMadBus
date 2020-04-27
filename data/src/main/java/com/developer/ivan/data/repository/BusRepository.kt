@@ -104,7 +104,8 @@ class BusRepository(
         }
     }
 
-    override suspend fun busStopWithLines(
+    override
+    suspend fun busStopWithLines(
         accessToken: String,
         busStop: String,
         forceReload: Boolean

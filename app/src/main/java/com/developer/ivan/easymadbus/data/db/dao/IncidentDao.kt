@@ -1,8 +1,10 @@
 package com.developer.ivan.easymadbus.data.db.dao
 
-import androidx.room.*
-import com.developer.ivan.domain.Line
-import com.developer.ivan.easymadbus.data.db.models.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.developer.ivan.easymadbus.data.db.models.DBIncident
 
 @Dao
 interface IncidentDao {

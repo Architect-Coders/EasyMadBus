@@ -16,7 +16,9 @@ class ClusterItem(
 ) :
     DefaultClusterRenderer<UIBusStop>(context, map, clusterManager) {
 
-    private val defaultPadding = 6
+    companion object{
+        const val DEFAULT_PADDING = 6
+    }
 
     private val mClusterIconGenerator =
         IconGenerator(context)
@@ -24,7 +26,7 @@ class ClusterItem(
 
     private val bitmap = mClusterIconGenerator.apply {
         setBackground(drawable)
-        setContentPadding(defaultPadding,defaultPadding,defaultPadding,defaultPadding)
+        setContentPadding(DEFAULT_PADDING,DEFAULT_PADDING,DEFAULT_PADDING,DEFAULT_PADDING)
     }.makeIcon()
     private val markerDescriptor =
         BitmapDescriptorFactory.fromBitmap(bitmap)

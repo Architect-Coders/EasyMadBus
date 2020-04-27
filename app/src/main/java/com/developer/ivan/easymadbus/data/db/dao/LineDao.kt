@@ -1,7 +1,9 @@
 package com.developer.ivan.easymadbus.data.db.dao
 
-import androidx.room.*
-import com.developer.ivan.easymadbus.data.db.models.DBBusStop
+import androidx.room.Dao
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Insert
 import com.developer.ivan.easymadbus.data.db.models.DBLine
 
 @Dao
@@ -21,11 +23,3 @@ interface LineDao{
     fun insertLines(busStop: List<DBLine>)
 
 }
-
-/*
-@Dao
-interface BusStopFavouriteDao{
-
-    @Query("SELECT * FROM DBFavouriteBusStop")
-    fun getFavourites() : List<BusStop>
-}*/

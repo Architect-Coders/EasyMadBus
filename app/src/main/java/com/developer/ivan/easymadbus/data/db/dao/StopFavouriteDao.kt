@@ -1,6 +1,10 @@
 package com.developer.ivan.easymadbus.data.db.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Insert
 import com.developer.ivan.easymadbus.data.db.models.DBBusAndStopFavourite
 import com.developer.ivan.easymadbus.data.db.models.DBStopFavourite
 

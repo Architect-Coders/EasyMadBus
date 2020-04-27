@@ -7,21 +7,18 @@ import com.developer.ivan.data.datasources.LocationDataSource
 import com.developer.ivan.data.datasources.NetworkDataSource
 import com.developer.ivan.data.datasources.RemoteDataSource
 import com.developer.ivan.domain.*
-import com.developer.ivan.easymadbus.framework.IMapManager
-import com.developer.ivan.easymadbus.framework.OnMapEvent
-import com.developer.ivan.easymadbus.framework.OnMapReady
-import com.developer.ivan.easymadbus.framework.PermissionChecker
+import com.developer.ivan.easymadbus.framework.*
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
 
-
-class FakeNetworkDataSource(var connected: Boolean=true): NetworkDataSource{
+class FakeNetworkDataSource(var connected: Boolean = true) : NetworkDataSource {
     override fun isConnected(): Boolean = connected
 
 }
+
 class FakePermissionChecker : PermissionChecker {
     var permissionGranted = true
 
@@ -29,12 +26,12 @@ class FakePermissionChecker : PermissionChecker {
 
 }
 
-class FakeLocationDataSource: LocationDataSource{
+class FakeLocationDataSource : LocationDataSource {
 
-    var location: Locate?=null
+    var location: Locate? = null
 
     override suspend fun findLastLocation(): Either<Failure, Locate> {
-        return if(location==null)
+        return if (location == null)
             Either.Left(Failure.NullResult)
         else
             Either.Right(location!!)
@@ -42,7 +39,7 @@ class FakeLocationDataSource: LocationDataSource{
     }
 
     override suspend fun findLocationUpdates(): Either<Failure, Locate> {
-        return if(location==null)
+        return if (location == null)
             Either.Left(Failure.NullResult)
         else
             Either.Right(location!!)
@@ -50,6 +47,7 @@ class FakeLocationDataSource: LocationDataSource{
     }
 
 }
+
 class FakeRemoteDataSource :
     RemoteDataSource {
 
@@ -124,9 +122,9 @@ class FakeLocalDataSource : LocalDataSource {
         this.token = token
     }
 
-    override suspend fun getFavourites(id: Int?): List<StopFavourite>{
-        return if(id!=null)
-            busStopsFavourite.filter { it.busStopId==id.toString() }
+    override suspend fun getFavourites(id: Int?): List<StopFavourite> {
+        return if (id != null)
+            busStopsFavourite.filter { it.busStopId == id.toString() }
         else
             busStopsFavourite
     }
@@ -155,7 +153,7 @@ class FakeLocalDataSource : LocalDataSource {
 
         if (this.busStopsFavourite.find { it.busStopId == favourite.busStopId } != null) {
             this.busStopsFavourite =
-                this.busStopsFavourite.filterNot { it.busStopId==favourite.busStopId } + favourite
+                this.busStopsFavourite.filterNot { it.busStopId == favourite.busStopId } + favourite
         } else
             this.busStopsFavourite += favourite
 
@@ -174,12 +172,12 @@ class FakeLocalDataSource : LocalDataSource {
     override suspend fun getCountIncidents(): Int = this.incidents.size
 }
 
-class FakeMapManager: IMapManager{
+class FakeMapManager : IMapManager {
 
-    var mListenerMapReady: OnMapReady?=null
-    var mListenerMapEvents: OnMapEvent?=null
+    var mListenerMapReady: OnMapReady? = null
+    var mListenerMapEvents: OnMapEvent? = null
 
-    val mData : MutableList<UIBusStop> = mutableListOf()
+    val mData: MutableList<UIBusStop> = mutableListOf()
 
     override fun setMapReadyListener(listener: OnMapReady) {
         mListenerMapReady = listener
@@ -190,7 +188,7 @@ class FakeMapManager: IMapManager{
     }
 
     override fun moveToDefaultLocation() {
-        Log.i("Map", "Move to default location "+Constants.EMTApi.MADRID_LOC.toString())
+        Log.i("Map", "Move to default location " + Constants.EMTApi.MADRID_LOC.toString())
     }
 
     override fun moveToLocation(location: LatLng) {
@@ -205,7 +203,11 @@ class FakeMapManager: IMapManager{
         return null
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, defaultPoints: List<UIBusStop>) {
+    override fun onCreate(
+        savedInstanceState: Bundle?,
+        defaultPoints: List<UIBusStop>,
+        mapConfiguration: MapManager.MapConfiguration
+    ) {
         addPoints(defaultPoints)
     }
 

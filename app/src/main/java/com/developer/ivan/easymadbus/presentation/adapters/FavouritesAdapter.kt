@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.getValueInDP
+import com.developer.ivan.easymadbus.presentation.adapters.SwipeToDeleteCallback.Companion.LINE_SIZE
 import com.developer.ivan.easymadbus.presentation.map.customviews.LineCustomView
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
@@ -23,6 +24,11 @@ class SwipeToDeleteCallback(
     val onSwipe: (Pair<UIBusStop,UIStopFavourite>, Int)->Unit
 ) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+    companion object{
+        const val CORNER_OFFSET = 20
+        const val LINE_SIZE = 60
+    }
 
     override fun onMove(
         recyclerView: RecyclerView,
@@ -49,7 +55,7 @@ class SwipeToDeleteCallback(
 
         val itemView = viewHolder.itemView
         val backgroundCornerOffset =
-            20 //so background is behind the rounded corners of itemView
+            CORNER_OFFSET //so background is behind the rounded corners of itemView
 
 
         val iconMargin: Int = (itemView.height - icon.getIntrinsicHeight()) / 2
@@ -134,6 +140,7 @@ class FavouritesAdapter(val onClick: (Pair<UIBusStop,UIStopFavourite>)->Unit,
 
     inner class FavouriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+
         fun onBind(item: Pair<UIBusStop, UIStopFavourite>) {
 
             with(itemView)
@@ -149,7 +156,7 @@ class FavouritesAdapter(val onClick: (Pair<UIBusStop,UIStopFavourite>)->Unit,
                             context
                         ).apply {
                         setLine(it)
-                        setFixedSize(context.getValueInDP(60))
+                        setFixedSize(context.getValueInDP(LINE_SIZE))
                     })
                 }
                 setOnClickListener { onClick.invoke(item) }

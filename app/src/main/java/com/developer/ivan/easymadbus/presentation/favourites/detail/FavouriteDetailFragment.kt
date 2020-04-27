@@ -56,7 +56,13 @@ class FavouriteDetailFragment : Fragment(), OnMapReady {
         mapView = findViewById(R.id.mapDetail)
 
         mapView?.let { mapView ->
-            mapManager = component.mapManager.apply { onCreate(savedInstanceState,listOf(data.first)) }
+            mapManager = component.mapManager.apply {
+                onCreate(
+                    savedInstanceState,
+                    listOf(data.first),
+                    mapConfiguration = MapManager.MapConfiguration(false)
+                )
+            }
 
             mapView.apply {
                 onCreate(savedInstanceState)
@@ -95,57 +101,63 @@ class FavouriteDetailFragment : Fragment(), OnMapReady {
 
     private fun handleFailure(failure: Failure?) {
 
-        swipeRefresh.isRefreshing=false
-        Log.e("Failure",failure.toString())
+        swipeRefresh.isRefreshing = false
+        Log.e("Failure", failure.toString())
     }
 
 
     private fun renderFavouriteState(state: FavouriteDetailViewModel.FavouriteDetailScreenState?) {
-        when(state)
-        {
-            FavouriteDetailViewModel.FavouriteDetailScreenState.Loading -> {}
-            is FavouriteDetailViewModel.FavouriteDetailScreenState.ShowBusData -> renderBusData(state.busData)
-            is FavouriteDetailViewModel.FavouriteDetailScreenState.ShowBusLine -> renderBusLines(state.busData)
-            null -> {}
+        when (state) {
+            FavouriteDetailViewModel.FavouriteDetailScreenState.Loading -> {
+            }
+            is FavouriteDetailViewModel.FavouriteDetailScreenState.ShowBusData -> renderBusData(
+                state.busData
+            )
+            is FavouriteDetailViewModel.FavouriteDetailScreenState.ShowBusLine -> renderBusLines(
+                state.busData
+            )
+            null -> {
+            }
         }
     }
 
-    private fun renderBusLines(busData: UIBusStop){
+    private fun renderBusLines(busData: UIBusStop) {
 
-        swipeRefresh.isRefreshing=false
+        swipeRefresh.isRefreshing = false
 
         lines.removeAllViews()
 
-        busData.lines.forEach {line->
+        busData.lines.forEach { line ->
             lines.addView(
                 LineDetailCustomView(
                     requireContext()
                 ).apply {
-                setLineDetail(
-                    line
-                )
-            })
+                    setLineDetail(
+                        line
+                    )
+                })
         }
     }
 
     private fun renderBusData(busData: Pair<UIBusStop, UIStopFavourite>) {
 
-        swipeRefresh.isRefreshing=false
+        swipeRefresh.isRefreshing = false
 
-        busData.first.lines.forEach {line->
+        busData.first.lines.forEach { line ->
             lines.addView(
                 LineDetailCustomView(
                     requireContext()
                 ).apply {
-                setLineDetail(
-                    line
-                )
-            })
+                    setLineDetail(
+                        line
+                    )
+                })
         }
 
 
         txtTitleDetail.text = busData.first.name
-        txtSubtitleDetail.text = if(busData.first.name!=busData.second.name) busData.second.name else String.empty
+        txtSubtitleDetail.text =
+            if (busData.first.name != busData.second.name) busData.second.name else String.empty
     }
 
 

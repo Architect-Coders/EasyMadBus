@@ -9,28 +9,31 @@ import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.clustering.ClusterManager
 
-interface IMapManager : OnMapReadyCallback{
+interface IMapManager : OnMapReadyCallback {
     fun setMapReadyListener(listener: OnMapReady)
     fun setMapEventsListener(listener: OnMapEvent)
     fun moveToDefaultLocation()
     fun moveToLocation(location: LatLng)
     fun addPoints(items: List<UIBusStop>)
-    fun findMarker(markerId: String) : Marker?
-    fun onCreate(savedInstanceState: Bundle?, defaultPoints: List<UIBusStop> = emptyList())
+    fun findMarker(markerId: String): Marker?
+    fun onCreate(
+        savedInstanceState: Bundle?,
+        defaultPoints: List<UIBusStop> = emptyList(),
+        mapConfiguration: MapManager.MapConfiguration = MapManager.MapConfiguration()
+    )
 }
 
-interface OnMapReady{
+interface OnMapReady {
     fun onMapReadyCallback()
 
 }
 
-interface OnMapEvent{
+interface OnMapEvent {
     fun onMarkerClick(marker: String, snippet: String)
     fun onInfoWindowClick(markerId: String, data: Pair<UIBusStop, UIStopFavourite?>)
 
@@ -38,20 +41,19 @@ interface OnMapEvent{
 }
 
 class MapManager(
-    private val application: Application,
-    private val mapConfiguration: MapConfiguration= MapConfiguration()
+    private val application: Application
 ) :
     GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener,
-    IMapManager{
+    IMapManager {
 
     class MapConfiguration(
-        val isMarkerClickEnable: Boolean=true,
-        val isClusterAnimationEnable: Boolean=false
+        val isMarkerClickEnable: Boolean = true,
+        val isClusterAnimationEnable: Boolean = false
     )
 
 
-    private var mMapEventListener: OnMapEvent?=null
-    private var mMapReadyListener: OnMapReady?=null
+    private var mMapEventListener: OnMapEvent? = null
+    private var mMapReadyListener: OnMapReady? = null
 
     private var _mMap: GoogleMap? = null
 
@@ -59,23 +61,29 @@ class MapManager(
 
     private var mDefaultPoints = listOf<UIBusStop>()
 
+    private lateinit var mapConfiguration: MapConfiguration
 
 
     companion object {
         const val DEFAULT_ZOOM = 15f
     }
 
-    override fun setMapReadyListener(listener: OnMapReady){
+    override fun setMapReadyListener(listener: OnMapReady) {
         mMapReadyListener = listener
     }
-    override fun setMapEventsListener(listener: OnMapEvent){
+
+    override fun setMapEventsListener(listener: OnMapEvent) {
         mMapEventListener = listener
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, defaultPoints: List<UIBusStop>) {
+    override fun onCreate(
+        savedInstanceState: Bundle?,
+        defaultPoints: List<UIBusStop>,
+        mapConfiguration: MapConfiguration
+    ) {
 
         this.mDefaultPoints = defaultPoints
-
+        this.mapConfiguration = mapConfiguration
     }
 
     override fun onMapReady(p0: GoogleMap?) {
@@ -91,7 +99,7 @@ class MapManager(
     private fun configureCluster(mapConfiguration: MapConfiguration) {
         mClusterManager = ClusterManager(application.applicationContext, _mMap)
 
-        if(mapConfiguration.isClusterAnimationEnable)
+        if (mapConfiguration.isClusterAnimationEnable)
             mClusterManager?.setAnimation(true)
         else
             mClusterManager?.setAnimation(false)
@@ -116,10 +124,11 @@ class MapManager(
             )
         )
 
-        if(mapConfiguration.isMarkerClickEnable){
+        if (mapConfiguration.isMarkerClickEnable) {
             _mMap?.setOnMarkerClickListener(this)
             _mMap?.setOnInfoWindowClickListener(this)
-        }
+        } else
+            _mMap?.setOnMarkerClickListener { true }
 
 
     }
@@ -137,6 +146,7 @@ class MapManager(
         )
 
     }
+
     override fun addPoints(items: List<UIBusStop>) {
         items.forEach { mClusterManager?.addItem(it) }
         mClusterManager?.cluster()

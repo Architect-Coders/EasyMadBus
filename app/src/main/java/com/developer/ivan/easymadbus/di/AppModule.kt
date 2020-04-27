@@ -6,6 +6,7 @@ import com.developer.ivan.data.datasources.LocalDataSource
 import com.developer.ivan.data.datasources.LocationDataSource
 import com.developer.ivan.data.datasources.NetworkDataSource
 import com.developer.ivan.data.datasources.RemoteDataSource
+import com.developer.ivan.domain.Constants.EMTApi.TIMEOUT
 import com.developer.ivan.easymadbus.data.db.Database
 import com.developer.ivan.easymadbus.data.server.ServerMapper
 import com.developer.ivan.easymadbus.framework.*
@@ -31,9 +32,9 @@ class AppModule {
     @Provides
     @Singleton
     fun okHttpProvider() = OkHttpClient.Builder()
-        .connectTimeout(60, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
+        .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
         .build()
 
 
