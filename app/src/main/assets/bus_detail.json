@@ -1,0 +1,38 @@
+{
+  "code": "00",
+  "description": "Data recovered  OK, (lapsed: 372 millsecs)",
+  "datetime": "2020-04-22T14:10:04.950455",
+  "data": [
+    {
+      "stops": [
+        {
+          "stop": "1",
+          "name": "Avenida Valdemarín-Blanca de Castilla",
+          "postalAddress": "Av. de Valdemarin, 88",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -3.78288324038992,
+              40.4701435453176
+            ]
+          },
+          "pmv": null,
+          "dataLine": [
+            {
+              "line": "161",
+              "label": "161",
+              "direction": "B",
+              "maxFreq": "30",
+              "minFreq": "7",
+              "headerA": "MONCLOA",
+              "headerB": "ARAVACA SUR",
+              "startTime": "06:30",
+              "stopTime": "23:30",
+              "dayType": "LA"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

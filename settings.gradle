@@ -1,2 +1,3 @@
-include ':app'
+include ':app', ':data', ':usecases', ':domain'
 rootProject.name='EasyMadBus'
+include ':testShared'

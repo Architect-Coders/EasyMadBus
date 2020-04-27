@@ -1,0 +1,32 @@
+{
+  "code": "01",
+  "description": "Token 866f89ee-bb72-4e8c-a8b4-682726b67564 extend  into control-cache",
+  "datetime": "2020-04-20T14:33:58.038135",
+  "data": [
+    {
+      "updatedAt": "2019-12-23T14:56:29.2930000",
+      "userName": "Ivanfr89",
+      "lastUpdate": {
+        "$date": 1587383568116
+      },
+      "idUser": "7baf9473-8a50-4d55-b788-7b2c64859da3",
+      "priv": "U",
+      "tokenSecExpiration": 599,
+      "email": "ivanfr89@gmail.com",
+      "tokenDteExpiration": {
+        "$date": 1587391367116
+      },
+      "flagAdvise": true,
+      "nameApp": "EasyMadBus",
+      "accessToken": "866f89ee-bb72-4e8c-a8b4-682726b67564",
+      "apiCounter": {
+        "current": 63,
+        "dailyUse": 150000,
+        "owner": 0,
+        "licenceUse": "Please mention EMT Madrid MobilityLabs as data source. Thank you and enjoy!",
+        "aboutUses": "Important announcement! (Extend the period for limit hits to Mar 31, 2020). After this your permitted use of this API will be 20.000 hits. To increase up to 250,000 hits, please, register your App or Website in Mobilitylabs and use your own X-ClientId and  X-ApiKey instead of generic login. It is free cost (more info in https://mobilitylabs.emtmadrid.es/doc/new-app and https://apidocs.emtmadrid.es/#api-Block_1_User_identity-login)"
+      },
+      "username": "Ivanfr89"
+    }
+  ]
+}

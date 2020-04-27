@@ -3,16 +3,23 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
+    kapt {
+        generateStubs = true
+    }
     defaultConfig {
         applicationId "com.developer.ivan.easymadbus"
-        minSdkVersion 22
-        targetSdkVersion 28
+        minSdkVersion 23
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.developer.ivan.easymadbus.framework.UIRunner"
     }
     buildTypes {
         release {
@@ -20,15 +27,85 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+
 }
 
+
 dependencies {
+
+
+
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.core:core-ktx:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    implementation project(':data')
+    implementation project(':domain')
+    implementation project(':usecases')
+
+    def mainApplication = rootProject.ext.mainApplication
+    def androidX = rootProject.ext.androidX
+    def test = rootProject.ext.test
+    def androidTest = rootProject.ext.androidTest
+
+    implementation mainApplication.kotlin
+    implementation mainApplication.glide
+    implementation mainApplication.coroutines
+    implementation mainApplication.coroutines_android
+    implementation mainApplication.play_map
+    implementation mainApplication.map_utils
+    implementation mainApplication.dexter
+    implementation mainApplication.location
+    implementation mainApplication.retrofit
+    implementation mainApplication.retrofit_gson
+    implementation mainApplication.gson
+    implementation mainApplication.scalars
+    implementation mainApplication.dagger
+    implementation mainApplication.material
+    testImplementation mainApplication.dagger
+    androidTestImplementation mainApplication.dagger
+    kapt   mainApplication.dagger_compiler
+    kaptTest    mainApplication.dagger_compiler
+    kaptAndroidTest    mainApplication.dagger_compiler
+
+    kapt mainApplication.glide_compiler
+
+    implementation androidX.appCompat
+    implementation androidX.ktx
+    implementation androidX.constraintlayout
+    implementation androidX.navigation_fragment
+    implementation androidX.navigation_ui
+    implementation androidX.legacy
+    implementation androidX.room
+    implementation androidX.viewmodel
+    implementation androidX.androidxCore
+    implementation mainApplication.okhttp
+
+    kapt androidX.room_compiler
+
+    testImplementation test.values()
+    testImplementation androidTest.values()
+    androidTestImplementation androidTest.okhttp_idling
+    androidTestImplementation test.mockwebserver
+    androidTestImplementation mainApplication.okhttp
+
+
+    androidTestImplementation androidX.junit_ktx_test
+    androidTestImplementation androidX.test_rules
+    androidTestImplementation androidTest.expresso
+    androidTestImplementation androidTest.expresso_contrib
+    androidTestImplementation androidTest.ui_automator
+    androidTestImplementation androidTest.expresso_intents
 }

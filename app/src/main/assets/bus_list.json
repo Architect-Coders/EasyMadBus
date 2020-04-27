@@ -1,0 +1,22 @@
+{
+  "code": "00",
+  "description": "4721 Records recovered (lapsed: 197 millsecs)",
+  "datetime": "2020-04-20T16:06:37.787691",
+  "data": [
+    {
+      "node": "1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.78288324038992,
+          40.4701435453176
+        ]
+      },
+      "name": "Avenida Valdemarín-Blanca de Castilla",
+      "wifi": "0",
+      "lines": [
+        "161/1"
+      ]
+    }
+  ]
+}

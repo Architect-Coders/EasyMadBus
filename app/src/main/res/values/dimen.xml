@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="minMargin">8dp</dimen>
+    <dimen name="minPadding">8dp</dimen>
+    <dimen name="padding">16dp</dimen>
+    <dimen name="margin">16dp</dimen>
+    <dimen name="favouriteSizeIcon">46dp</dimen>
+    <dimen name="progressSmallSizeIcon">30dp</dimen>
+    <dimen name="minInfoWindowWidth">400dp</dimen>
+    <dimen name="minElevation">4dp</dimen>
+    <dimen name="headerDetailSize">200dp</dimen>
+
+
+</resources>

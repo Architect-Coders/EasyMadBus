@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding"
+    android:minWidth="@dimen/minInfoWindowWidth">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txtBusStopName"
+        style="@style/TitleBus"
+        android:maxLength="30"
+        android:maxLines="2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toStartOf="@+id/chkFavourite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/chkFavourite"
+        android:layout_width="@dimen/favouriteSizeIcon"
+        android:layout_height="@dimen/favouriteSizeIcon"
+        android:background="@drawable/favourite_state"
+        android:button="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/labelLine"
+        style="@style/TitleBus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Bus Line"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chkFavourite" />
+
+    <TextView
+        android:id="@+id/labelFirstBus"
+        style="@style/TitleBus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="First bus"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/chkFavourite" />
+
+    <TextView
+        android:id="@+id/labelSecondBus"
+        style="@style/TitleBus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Second bus"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/chkFavourite" />
+
+    <LinearLayout
+        android:id="@+id/lyLineContainer"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labelLine"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
