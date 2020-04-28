@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName
 interface ServerModel
 
 
-class EntityRequest<T>(val code: String, val description: String, val dateTime: String, val data: T)
 class EntityToken(private val accessToken: String, private val tokenSecExpiration: Int) :
     ServerModel {
     companion object {
@@ -17,7 +16,7 @@ class EntityToken(private val accessToken: String, private val tokenSecExpiratio
 }
 
 
-class EntityGeometry(val type: String, val coordinates: List<Double>) : ServerModel {
+class EntityGeometry(val type: String, private val coordinates: List<Double>) : ServerModel {
     companion object {
         fun empty() = EntityGeometry(String.empty, listOf())
     }
@@ -57,7 +56,7 @@ class EntityBusStop(
     private val node: String,
     private val geometry: EntityGeometry,
     val name: String,
-    val wifi: String,
+    private val wifi: String,
     val lines: List<String>
 ) : ServerModel {
 

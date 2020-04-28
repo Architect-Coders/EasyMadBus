@@ -1,3 +1,5 @@
+@file:Suppress("Annotator")
+
 package com.developer.ivan.easymadbus.presentation.map
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -28,9 +30,9 @@ import org.mockito.junit.MockitoJUnitRunner
 class BusMapIntegrationsTest {
 
 
-    lateinit var localDataSource: FakeLocalDataSource
+    private lateinit var localDataSource: FakeLocalDataSource
 
-    lateinit var remoteDataSource: FakeRemoteDataSource
+    private lateinit var remoteDataSource: FakeRemoteDataSource
 
 
     @get:Rule

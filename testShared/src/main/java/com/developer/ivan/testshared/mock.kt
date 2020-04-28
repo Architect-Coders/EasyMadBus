@@ -1,7 +1,6 @@
 package com.developer.ivan.testshared
 
 import com.developer.ivan.domain.*
-import java.util.concurrent.TimeUnit
 
 val locateMock = Locate(0.0, 0.0)
 val tokenMock = Token("1234", 9999, System.currentTimeMillis())
@@ -47,11 +46,10 @@ val busStopsLinesArrivesMock = listOf(
         "Mock1",
         "true",
         linesMock.map { line ->
-            line.arrives = arrivesMock.filter { arrive -> line.label==arrive.line }
+            line.arrives = arrivesMock.filter { arrive -> line.label == arrive.line }
             line
         }
     )
 )
 
 
-val lambdaTokenMock: suspend (Token) -> Unit = { token: Token -> Unit }

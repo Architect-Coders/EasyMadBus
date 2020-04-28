@@ -1,6 +1,5 @@
 package com.developer.ivan.easymadbus.presentation.dialogs
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
@@ -33,6 +32,7 @@ class ConfirmDialog : DialogFragment() {
                 }
             }
     }
+
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +45,6 @@ class ConfirmDialog : DialogFragment() {
             .setMessage(context?.getString(R.string.delete_message, mItem.first.name))
             .setPositiveButton(R.string.yes) { _, _ -> mListener?.onConfirm(mItem) }
             .setNegativeButton(R.string.no) { _, _ -> mListener?.onCancel(mItem, mPosition) }
-            .setOnDismissListener { mListener?.onCancel(mItem,mPosition) }
-            .create().also { isCancelable=false }
+            .setOnDismissListener { mListener?.onCancel(mItem, mPosition) }
+            .create().also { isCancelable = false }
 }

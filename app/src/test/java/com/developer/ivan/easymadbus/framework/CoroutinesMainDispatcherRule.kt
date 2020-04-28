@@ -32,7 +32,7 @@ class CoroutinesMainDispatcherRule(
         if (singleThreadExecutor != null) {
             singleThreadExecutor.shutdownNow()
         }
-        testDispatcher?.let {
+        testDispatcher.let {
             testDispatcher.cleanupTestCoroutines()
         }
         Dispatchers.resetMain()

@@ -1,7 +1,6 @@
 package com.developer.ivan.usecases
 
 import com.developer.ivan.data.repository.IBusRepository
-import com.developer.ivan.domain.Constants
 import com.developer.ivan.domain.Either
 import com.developer.ivan.testshared.tokenMock
 import com.nhaarman.mockitokotlin2.doReturn
@@ -31,8 +30,8 @@ class GetBusStopsTest {
 
 
     @Before
-    fun setup(){
-        getBusAndStopsFavourites = GetBusStops(repository,getToken)
+    fun setup() {
+        getBusAndStopsFavourites = GetBusStops(repository, getToken)
     }
 
     @Test

@@ -9,18 +9,12 @@ sealed class Either<out L, out R> {
     val isRht get() = this is Right<R>
     val isLeft get() = this is Left<L>
 
-    suspend fun <L> left(a: L) = Either.Left(a)
-    suspend fun <R> right(b: R) = Either.Right(b)
+    suspend fun <L> left(a: L) = Left(a)
+    suspend fun <R> right(b: R) = Right(b)
 
     suspend fun fold(fnL: suspend (L) -> Any, fnR: suspend (R) -> Any): Any =
         when (this) {
             is Left -> fnL(a)
-            is Right -> fnR(b)
-        }
-
-    suspend fun <T> default(defaultValue: T, fnR: (R) -> T): T =
-        when (this) {
-            is Left -> defaultValue
             is Right -> fnR(b)
         }
 

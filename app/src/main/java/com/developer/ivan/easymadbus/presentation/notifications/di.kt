@@ -1,13 +1,12 @@
 package com.developer.ivan.easymadbus.presentation.notifications
 
 import com.developer.ivan.usecases.GetIncidents
-import com.developer.ivan.usecases.GetToken
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
 
 @Module
-class NotificationsFragmentModule{
+class NotificationsFragmentModule {
 
     @Provides
     fun notificationsViewModelProvider(
@@ -18,7 +17,6 @@ class NotificationsFragmentModule{
 }
 
 @Subcomponent(modules = [(NotificationsFragmentModule::class)])
-interface NotificationsFragmentComponent
-{
+interface NotificationsFragmentComponent {
     val notificationsViewModel: NotificationsViewModel
 }

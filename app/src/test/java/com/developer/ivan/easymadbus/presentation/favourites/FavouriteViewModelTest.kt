@@ -2,9 +2,7 @@ package com.developer.ivan.easymadbus.presentation.favourites
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.developer.ivan.domain.Arrive
 import com.developer.ivan.domain.Either
-import com.developer.ivan.domain.Failure
 import com.developer.ivan.easymadbus.framework.CoroutinesMainDispatcherRule
 import com.developer.ivan.easymadbus.presentation.models.toUIBusStop
 import com.developer.ivan.easymadbus.presentation.models.toUIStopFavourite
@@ -16,13 +14,11 @@ import com.developer.ivan.usecases.DeleteStopFavourite
 import com.developer.ivan.usecases.GetBusAndStopsFavourites
 import com.developer.ivan.usecases.GetBusStopTime
 import com.nhaarman.mockitokotlin2.*
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -122,7 +118,7 @@ class FavouriteViewModelTest {
     }
 
     @Test
-    fun `onSwipedItem observer calls ShowConfirmDialogDelete`(){
+    fun `onSwipedItem observer calls ShowConfirmDialogDelete`() {
 
         val item = Pair(busStopsMock[0].toUIBusStop(), stopFavouriteMock.toUIStopFavourite())
 
@@ -131,7 +127,14 @@ class FavouriteViewModelTest {
 
             viewModel.onSwipedItem(item, 0)
 
-            verify(observer).onChanged(refEq(FavouriteViewModel.FavouriteScreenState.ShowConfirmDialogDelete(item, 0)))
+            verify(observer).onChanged(
+                refEq(
+                    FavouriteViewModel.FavouriteScreenState.ShowConfirmDialogDelete(
+                        item,
+                        0
+                    )
+                )
+            )
         }
 
     }

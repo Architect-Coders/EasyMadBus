@@ -1,7 +1,9 @@
 package com.developer.ivan.easymadbus.presentation.favourites
 
-import android.content.Intent
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.developer.ivan.domain.Arrive
 import com.developer.ivan.domain.Either
 import com.developer.ivan.domain.Failure

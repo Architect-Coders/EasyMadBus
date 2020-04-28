@@ -3,7 +3,6 @@ package com.developer.ivan.easymadbus.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
 import com.developer.ivan.easymadbus.R
 import com.developer.ivan.easymadbus.core.NavigationBottomUtil
 import com.developer.ivan.easymadbus.core.hide
@@ -17,10 +16,9 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
     private lateinit var navBottomUtil: NavigationBottomUtil
 
     @Identifier
-    private var mBottomPosition=R.id.mapFragment
+    private var mBottomPosition = R.id.mapFragment
 
-    companion object
-    {
+    companion object {
         const val ARG_BOTTOM_POSITION = "argBottomPosition"
     }
 
@@ -36,9 +34,10 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
         setupBottomNavigationItems()
 
 
-        mBottomPosition = when
-        {
-            savedInstanceState?.getInt(ARG_BOTTOM_POSITION)!=null -> savedInstanceState.getInt(ARG_BOTTOM_POSITION)
+        mBottomPosition = when {
+            savedInstanceState?.getInt(ARG_BOTTOM_POSITION) != null -> savedInstanceState.getInt(
+                ARG_BOTTOM_POSITION
+            )
             else -> R.id.mapFragment
         }
         nav_view.selectedItemId = mBottomPosition
@@ -55,12 +54,12 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
 
     private fun setupBottomNavigationItems() {
 
-        navBottomUtil.setupBottomNav(nav_view,this)
+        navBottomUtil.setupBottomNav(nav_view, this)
 
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(ARG_BOTTOM_POSITION,mBottomPosition)
+        outState.putInt(ARG_BOTTOM_POSITION, mBottomPosition)
         super.onSaveInstanceState(outState)
 
     }
@@ -91,8 +90,6 @@ class MainActivity : AppCompatActivity(), NavigationBottomUtil.IBottomNavigation
         frame_host_favourite_wrapper.hide()
         frame_host_notification_wrapper.show()
     }
-
-
 
 
 }

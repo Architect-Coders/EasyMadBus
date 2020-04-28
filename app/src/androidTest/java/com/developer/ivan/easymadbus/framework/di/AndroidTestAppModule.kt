@@ -42,7 +42,7 @@ class AndroidTestAppModule
     fun retrofitProvider(
         client: OkHttpClient,
         @Named("endpoint") endpoint: String
-    ) =
+    ): ApiService =
         Retrofit.Builder().baseUrl(endpoint)
             .addConverterFactory(ScalarsConverterFactory.create())
             .client(client)
@@ -78,7 +78,7 @@ class AndroidTestAppModule
 
 
     @Provides
-    fun permisionCheckerProvider(app: Application): PermissionChecker =
+    fun permissionCheckerProvider(app: Application): PermissionChecker =
         AndroidPermissionChecker(app)
 
     @Singleton

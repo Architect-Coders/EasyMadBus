@@ -2,15 +2,13 @@ package com.developer.ivan.easymadbus.data.db.models
 
 import androidx.room.*
 import com.developer.ivan.domain.*
-import com.developer.ivan.easymadbus.presentation.models.*
+import com.developer.ivan.easymadbus.presentation.models.UIBusStop
+import com.developer.ivan.easymadbus.presentation.models.UIGeometry
+import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
 import com.google.android.gms.maps.model.LatLng
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
 
 
 @Entity
-@TypeConverters(LinesConverter::class)
 data class DBBusStop(
     @PrimaryKey
     val node: String,
@@ -25,7 +23,7 @@ data class DBBusStop(
     fun toDomain() = BusStop(node, geometry.toDomain(), name, wifi)
 }
 
-@Entity(primaryKeys = ["line","direction"])
+@Entity(primaryKeys = ["line", "direction"])
 class DBLine(
     val line: String,
     val label: String,
@@ -34,29 +32,13 @@ class DBLine(
     val minFreq: String,
     val headerA: String,
     val headerB: String
-){
+) {
     fun toDomain() = Line(line, label, direction, maxFreq, minFreq, headerA, headerB)
 }
 
 
-class LinesConverter {
-    @TypeConverter
-    fun stringToLines(json: String?): List<String> {
-        val gson = Gson()
-        val type: Type = object : TypeToken<List<String?>?>() {}.type
-        return gson.fromJson<List<String>>(json, type)
-    }
-
-    @TypeConverter
-    fun linesToString(list: List<String?>?): String {
-        val gson = Gson()
-        val type: Type = object : TypeToken<List<String?>?>() {}.type
-        return gson.toJson(list, type)
-    }
-}
-
 @Entity(
-    primaryKeys = ["busStopId","lineId","directionId"],
+    primaryKeys = ["busStopId", "lineId", "directionId"],
     indices = [
         Index("busStopId"),
         Index("lineId")
@@ -69,8 +51,8 @@ class LinesConverter {
         ),
         ForeignKey(
             entity = DBLine::class,
-            parentColumns = ["line","direction"],
-            childColumns = ["lineId","directionId"]
+            parentColumns = ["line", "direction"],
+            childColumns = ["lineId", "directionId"]
         )
     ]
 )
@@ -103,15 +85,7 @@ data class DBBusStopWithLines(
     @Embedded
     val busLine: DBLine?
 
-//    val busLines: List<DBLine>
-) {
-    fun toDomain() = BusStop(
-        busStop.node,
-        busStop.geometry.toDomain(),
-        busStop.name,
-        busStop.wifi
-    )
-}
+)
 
 data class DBBusAndStopFavourite
     (
@@ -123,7 +97,6 @@ data class DBBusAndStopFavourite
     )
     val dbStopFavourite: DBStopFavourite? = null
 ) {
-    fun toUI() = Pair(busStop.toUI(), dbStopFavourite?.toUI())
     fun toDomain() = Pair(busStop.toDomain(), dbStopFavourite?.toDomain())
 }
 
@@ -140,7 +113,6 @@ data class DBToken(
     val tokenSecExpiration: Int,
     val timeStamp: Long
 ) {
-    fun toUI() = UIToken(accessToken, tokenSecExpiration, timeStamp)
     fun toDomain() = Token(accessToken, tokenSecExpiration, timeStamp)
 }
 
@@ -152,7 +124,8 @@ data class DBIncident(
     val description: String,
     val link: String,
     val rssAfectaDesde: String,
-    val rssAfectaHasta: String){
+    val rssAfectaHasta: String
+) {
 
     fun toDomain() = Incident(guid, title, description, link, rssAfectaDesde, rssAfectaHasta)
 

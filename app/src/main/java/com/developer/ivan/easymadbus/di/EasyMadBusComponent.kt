@@ -1,13 +1,11 @@
 package com.developer.ivan.easymadbus.di
 
 import android.app.Application
-import android.hardware.usb.UsbEndpoint
 import com.developer.ivan.easymadbus.data.db.Database
 import com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragmentComponent
 import com.developer.ivan.easymadbus.presentation.favourites.FavouriteFragmentModule
 import com.developer.ivan.easymadbus.presentation.favourites.detail.FavouriteDetailComponent
 import com.developer.ivan.easymadbus.presentation.favourites.detail.FavouriteDetailFragmentModule
-import com.developer.ivan.easymadbus.presentation.favourites.detail.FavouriteDetailViewModel
 import com.developer.ivan.easymadbus.presentation.map.BusMapFragmentComponent
 import com.developer.ivan.easymadbus.presentation.map.BusMapFragmentModule
 import com.developer.ivan.easymadbus.presentation.notifications.NotificationsFragmentComponent
@@ -29,10 +27,11 @@ interface EasyMadBusComponent {
     val database: Database
 
 
-
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance app: Application,
-                   @BindsInstance @Named("endpoint") endpoint: String): EasyMadBusComponent
+        fun create(
+            @BindsInstance app: Application,
+            @BindsInstance @Named("endpoint") endpoint: String
+        ): EasyMadBusComponent
     }
 }

@@ -187,10 +187,6 @@ class FavouriteDetailFragment : Fragment(), OnMapReady {
         mapView?.onDestroy()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     override fun onLowMemory() {
         super.onLowMemory()
         mapView?.onLowMemory()

@@ -20,8 +20,8 @@ import kotlinx.android.synthetic.main.item_favourite.view.*
 class SwipeToDeleteCallback(
     private val icon: Drawable,
     private val background: ColorDrawable,
-    val mAdapter: FavouritesAdapter,
-    val onSwipe: (Pair<UIBusStop,UIStopFavourite>, Int)->Unit
+    private val mAdapter: FavouritesAdapter,
+    private val onSwipe: (Pair<UIBusStop,UIStopFavourite>, Int)->Unit
 ) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -58,29 +58,33 @@ class SwipeToDeleteCallback(
             CORNER_OFFSET //so background is behind the rounded corners of itemView
 
 
-        val iconMargin: Int = (itemView.height - icon.getIntrinsicHeight()) / 2
+        val iconMargin: Int = (itemView.height - icon.intrinsicHeight) / 2
         val iconTop: Int =
-            itemView.top + (itemView.height - icon.getIntrinsicHeight()) / 2
-        val iconBottom: Int = iconTop + icon.getIntrinsicHeight()
+            itemView.top + (itemView.height - icon.intrinsicHeight) / 2
+        val iconBottom: Int = iconTop + icon.intrinsicHeight
 
-        if (dX > 0) { // Swiping to the right
-            val iconLeft: Int = itemView.left + iconMargin
-            val iconRight = itemView.left + iconMargin + icon.getIntrinsicWidth()
-            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
-            background.setBounds(
-                itemView.left, itemView.top,
-                itemView.left + dX.toInt() + backgroundCornerOffset, itemView.bottom
-            )
-        } else if (dX < 0) { // Swiping to the left
-            val iconLeft: Int = itemView.right - iconMargin - icon.getIntrinsicWidth()
-            val iconRight = itemView.right - iconMargin
-            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
-            background.setBounds(
-                itemView.right + dX.toInt() - backgroundCornerOffset,
-                itemView.top, itemView.right, itemView.bottom
-            )
-        } else { // view is unSwiped
-            background.setBounds(0, 0, 0, 0)
+        when {
+            dX > 0 -> { // Swiping to the right
+                val iconLeft: Int = itemView.left + iconMargin
+                val iconRight = itemView.left + iconMargin + icon.intrinsicWidth
+                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                background.setBounds(
+                    itemView.left, itemView.top,
+                    itemView.left + dX.toInt() + backgroundCornerOffset, itemView.bottom
+                )
+            }
+            dX < 0 -> { // Swiping to the left
+                val iconLeft: Int = itemView.right - iconMargin - icon.intrinsicWidth
+                val iconRight = itemView.right - iconMargin
+                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                background.setBounds(
+                    itemView.right + dX.toInt() - backgroundCornerOffset,
+                    itemView.top, itemView.right, itemView.bottom
+                )
+            }
+            else -> { // view is unSwiped
+                background.setBounds(0, 0, 0, 0)
+            }
         }
 
         background.draw(c)
@@ -90,7 +94,7 @@ class SwipeToDeleteCallback(
 }
 
 class FavouritesAdapter(val onClick: (Pair<UIBusStop,UIStopFavourite>)->Unit,
-                        val itemsSize: (Int)->Unit) :
+                        private val itemsSize: (Int)->Unit) :
     RecyclerView.Adapter<FavouritesAdapter.FavouriteViewHolder>() {
 
 

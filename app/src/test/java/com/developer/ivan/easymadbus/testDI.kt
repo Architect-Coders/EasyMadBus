@@ -139,7 +139,7 @@ class FakeLocalDataSource : LocalDataSource {
                     busStopsFavourite.find { it.busStopId == id })
             )
         } else {
-            busStops.filter { it.node in busStopsFavourite.map { it.busStopId } }
+            busStops.filter { busStop-> busStop.node in busStopsFavourite.map { it.busStopId } }
                 .map { it.copy(lines = lines) }
                 .map { element ->
                     Pair(

@@ -1,3 +1,4 @@
+@file:Suppress("Annotator")
 package com.developer.ivan.easymadbus.presentation.favourites
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule

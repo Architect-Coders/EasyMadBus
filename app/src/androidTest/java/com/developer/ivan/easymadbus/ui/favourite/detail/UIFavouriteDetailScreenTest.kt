@@ -41,9 +41,9 @@ class UIFavouriteDetailScreenTest {
 
 
 
-    lateinit var mockWebServer: MockWebServer
+    private lateinit var mockWebServer: MockWebServer
 
-    lateinit var component: AndroidTestComponent
+    private lateinit var component: AndroidTestComponent
 
     private lateinit var http: OkHttp3IdlingResource
 

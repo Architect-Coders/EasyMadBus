@@ -1,15 +1,20 @@
 package com.developer.ivan.easymadbus.presentation.map
 
 import android.Manifest
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.core.BaseViewModel
-import com.developer.ivan.easymadbus.framework.AndroidPermissionChecker
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 import com.developer.ivan.easymadbus.presentation.models.*
 import com.developer.ivan.usecases.*
 import com.google.android.gms.maps.model.Marker
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class BusMapViewModel(
     private val busStops: GetBusStops,
@@ -24,7 +29,7 @@ class BusMapViewModel(
     private val uiDispatcher: CoroutineDispatcher
 ) : BaseViewModel by BaseViewModel.BaseViewModelImpl(), ViewModel() {
 
-//    Errors
+    //    Errors
     class BusMarkError(val markId: String) : Failure.FailureAbstract()
 
     sealed class BusStopScreenState {
@@ -53,10 +58,11 @@ class BusMapViewModel(
 
     fun updateMarkerError(
         marker: Marker
-    ){
+    ) {
         marker.tag = BusMarkError(marker.id)
         _busState.value = (BusStopScreenState.UpdateMarkerInfoWindow(marker))
     }
+
     fun updateMarkerInfo(
         marker: Marker,
         busData: Pair<UIBusStop, UIStopFavourite?>,
@@ -122,11 +128,11 @@ class BusMapViewModel(
 
 
 
-            busStopWithLines.fold( {
+            busStopWithLines.fold({
                 handleFailure(BusMarkError(markId))
-            },{busStop->
+            }, { busStop ->
 
-                val arrives = when(time){
+                val arrives = when (time) {
                     is Either.Left -> listOf()
                     is Either.Right -> time.b
                 }
@@ -145,8 +151,7 @@ class BusMapViewModel(
                 }
 
 
-
-            } )
+            })
         }
     }
 
