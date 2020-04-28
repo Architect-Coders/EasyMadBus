@@ -10,6 +10,7 @@ import com.developer.ivan.easymadbus.presentation.map.customviews.LineCustomView
 import com.developer.ivan.easymadbus.presentation.map.customviews.TimeDistanceCustomView
 import com.developer.ivan.easymadbus.presentation.models.UILine
 import kotlinx.android.synthetic.main.layout_info_line_detail.view.*
+import java.util.*
 
 class LineDetailCustomView @JvmOverloads constructor(
     context: Context,
@@ -22,8 +23,8 @@ class LineDetailCustomView @JvmOverloads constructor(
 
     }
 
-    fun getDirection(headerA: String, headerB: String, direction: String): Pair<String, String> =
-        when (direction.toLowerCase()) {
+    private fun getDirection(headerA: String, headerB: String, direction: String): Pair<String, String> =
+        when (direction.toLowerCase(Locale.getDefault())) {
             "a" -> Pair(headerA,headerB)
             else -> Pair(headerB,headerA)
         }

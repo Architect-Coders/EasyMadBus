@@ -1,6 +1,5 @@
 package com.developer.ivan.usecases
 
-import com.developer.ivan.data.datasources.LocationDataSource
 import com.developer.ivan.data.repository.ILocationRepository
 import com.developer.ivan.domain.Either
 import com.developer.ivan.domain.Failure

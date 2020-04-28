@@ -1,25 +1,23 @@
 package com.developer.ivan.easymadbus.presentation.favourites.detail
 
-import android.content.Intent
-import androidx.lifecycle.*
-import com.developer.ivan.domain.Arrive
-import com.developer.ivan.domain.Either
-import com.developer.ivan.domain.Failure
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.developer.ivan.easymadbus.core.BaseViewModel
-import com.developer.ivan.easymadbus.core.Event
-import com.developer.ivan.easymadbus.presentation.models.*
-import com.developer.ivan.usecases.DeleteStopFavourite
-import com.developer.ivan.usecases.GetBusAndStopsFavourites
+import com.developer.ivan.easymadbus.presentation.models.UIBusStop
+import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
+import com.developer.ivan.easymadbus.presentation.models.convertToBusArrives
+import com.developer.ivan.easymadbus.presentation.models.toUIArrive
 import com.developer.ivan.usecases.GetBusStopTime
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 
 class FavouriteDetailViewModel(
-    private var busData: Pair<UIBusStop,UIStopFavourite>,
+    private var busData: Pair<UIBusStop, UIStopFavourite>,
     private val stopTime: GetBusStopTime,
     private val dispatcher: CoroutineDispatcher
 ) : BaseViewModel by BaseViewModel.BaseViewModelImpl(), ViewModel() {
-
-
 
 
     sealed class FavouriteDetailScreenState {
@@ -32,7 +30,7 @@ class FavouriteDetailViewModel(
 
         class ShowBusLine(
             val busData: UIBusStop
-        ): FavouriteDetailScreenState()
+        ) : FavouriteDetailScreenState()
 
 
     }
@@ -46,7 +44,6 @@ class FavouriteDetailViewModel(
     init {
         _favouriteDetailState.value = FavouriteDetailScreenState.ShowBusData(busData)
     }
-
 
 
     fun obtainLineInfo() {

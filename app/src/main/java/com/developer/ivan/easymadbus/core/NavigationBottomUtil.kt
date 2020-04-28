@@ -3,7 +3,6 @@ package com.developer.ivan.easymadbus.core
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -12,11 +11,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class NavigationBottomUtil(activity: AppCompatActivity) {
     private val mNavHostMap by lazy {
-        activity.supportFragmentManager.findFragmentById(R.id.nav_host_map) as NavHostFragment }
+        activity.supportFragmentManager.findFragmentById(R.id.nav_host_map) as NavHostFragment
+    }
     private val mNavHostFavorite by lazy {
-        activity.supportFragmentManager.findFragmentById(R.id.nav_host_favourite) as NavHostFragment }
+        activity.supportFragmentManager.findFragmentById(R.id.nav_host_favourite) as NavHostFragment
+    }
     private val mNavHostNotification by lazy {
-        activity.supportFragmentManager.findFragmentById(R.id.nav_host_notification) as NavHostFragment }
+        activity.supportFragmentManager.findFragmentById(R.id.nav_host_notification) as NavHostFragment
+    }
 
     private val mNavControllerMap by lazy { mNavHostMap.navController }
     private val mNavControllerFavourite by lazy { mNavHostFavorite.navController }

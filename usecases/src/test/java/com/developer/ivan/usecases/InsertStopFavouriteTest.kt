@@ -1,7 +1,6 @@
 package com.developer.ivan.usecases
 
 import com.developer.ivan.data.repository.IBusRepository
-import com.developer.ivan.domain.empty
 import com.developer.ivan.testshared.stopFavouriteMock
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.runBlocking

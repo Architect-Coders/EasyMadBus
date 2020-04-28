@@ -26,7 +26,7 @@ class RoomDataSource(db: Database) : LocalDataSource {
             val busStopWithLines = busStopDao.getBusStopWithLines(busStop)
 
             val convertedBusStop = busStopWithLines[0].busStop.toDomain()
-            convertedBusStop.lines = busStopWithLines.map { it.busLine?.toDomain() }.filterNotNull()
+            convertedBusStop.lines = busStopWithLines.mapNotNull { it.busLine?.toDomain() }
             convertedBusStop
 
         }
@@ -94,8 +94,7 @@ class RoomDataSource(db: Database) : LocalDataSource {
 
             dataWithoutLines.forEach { data ->
                 val busStopWithLines = busStopDao.getBusStopWithLines(data.first.node)
-                data.first.lines = busStopWithLines.map { it.busLine?.toDomain() }
-                    .filterNotNull()
+                data.first.lines = busStopWithLines.mapNotNull { it.busLine?.toDomain() }
             }
             dataWithoutLines
         }

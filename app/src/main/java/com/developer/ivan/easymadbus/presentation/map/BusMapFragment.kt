@@ -37,10 +37,6 @@ class BusMapFragment : Fragment(), OnMapReady, OnMapEvent {
     private lateinit var requestManager: PermissionRequester
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

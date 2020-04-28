@@ -43,7 +43,7 @@ class AppModule {
     fun retrofitProvider(
         client: OkHttpClient,
         @Named("endpoint") endpoint: String
-    ) =
+    ): ApiService =
         Retrofit.Builder().baseUrl(endpoint)
             .addConverterFactory(ScalarsConverterFactory.create())
             .client(client)

@@ -1,8 +1,7 @@
 package com.developer.ivan.usecases
-import com.developer.ivan.data.repository.BusRepository
+
 import com.developer.ivan.data.repository.IBusRepository
 import com.developer.ivan.domain.Either
-import com.developer.ivan.testshared.arrivesMock
 import com.developer.ivan.testshared.tokenMock
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.spy
@@ -29,11 +28,11 @@ class GetBusStopTimeTest {
 
     @Before
     fun setUp() {
-        getBusStopTime = GetBusStopTime(repository,getToken)
+        getBusStopTime = GetBusStopTime(repository, getToken)
     }
 
     @Test
-    fun `getBusStopTime always calls repository`(){
+    fun `getBusStopTime always calls repository`() {
         runBlocking {
 
             val spyTime = spy(getBusStopTime)
@@ -45,7 +44,7 @@ class GetBusStopTimeTest {
 
             spyTime.execute(stopTimeParam)
 
-            verify(repository).stopTimeLines(tokenResult.b.accessToken,"1")
+            verify(repository).stopTimeLines(tokenResult.b.accessToken, "1")
         }
 
 

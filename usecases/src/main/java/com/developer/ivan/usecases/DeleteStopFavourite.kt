@@ -1,7 +1,6 @@
 package com.developer.ivan.usecases
 
 import com.developer.ivan.data.repository.IBusRepository
-import com.developer.ivan.domain.BusStop
 import com.developer.ivan.domain.Either
 import com.developer.ivan.domain.Failure
 import com.developer.ivan.domain.StopFavourite

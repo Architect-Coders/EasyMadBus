@@ -1,17 +1,12 @@
 package com.developer.ivan.easymadbus.presentation.map
 
-import android.app.Application
-import com.developer.ivan.easymadbus.di.EasyMadBusComponent
-import com.developer.ivan.easymadbus.framework.AndroidPermissionChecker
 import com.developer.ivan.easymadbus.framework.IMapManager
-import com.developer.ivan.easymadbus.framework.MapManager
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 import com.developer.ivan.usecases.*
-import com.google.android.gms.maps.MapView
-import dagger.*
+import dagger.Module
+import dagger.Provides
+import dagger.Subcomponent
 import kotlinx.coroutines.CoroutineDispatcher
-import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 class BusMapFragmentModule {
@@ -29,7 +24,8 @@ class BusMapFragmentModule {
         permissionChecker: PermissionChecker,
         dispatcher: CoroutineDispatcher
     ): BusMapViewModel =
-        BusMapViewModel(busStops,
+        BusMapViewModel(
+            busStops,
             busStopDetail,
             stopTime,
             busAndStopsFavourites,
@@ -38,11 +34,12 @@ class BusMapFragmentModule {
             location,
             fineLocation,
             permissionChecker,
-            dispatcher)
-
+            dispatcher
+        )
 
 
 }
+
 @Subcomponent(modules = [BusMapFragmentModule::class])
 interface BusMapFragmentComponent {
     val busMapViewmodel: BusMapViewModel

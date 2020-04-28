@@ -2,7 +2,6 @@ package com.developer.ivan.easymadbus.ui.bus
 
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -20,14 +19,12 @@ import com.developer.ivan.easymadbus.framework.ApiService.Factory.TRANSPORT_ENDP
 import com.developer.ivan.easymadbus.framework.ApiService.Factory.USERS_ENDPOINT
 import com.developer.ivan.easymadbus.framework.UIEasyMadBusDelegate
 import com.developer.ivan.easymadbus.framework.di.AndroidTestComponent
-import com.developer.ivan.easymadbus.utils.MockServerDispatcher
-import com.developer.ivan.easymadbus.utils.rules.network.MockServerTestRule
 import com.developer.ivan.easymadbus.presentation.MainActivity
 import com.developer.ivan.easymadbus.presentation.map.BusMapFragmentModule
+import com.developer.ivan.easymadbus.utils.MockServerDispatcher
+import com.developer.ivan.easymadbus.utils.rules.network.MockServerTestRule
 import com.google.android.gms.maps.model.LatLng
-import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -42,9 +39,9 @@ class UIBusScreenTest {
     val mockWebServerRule =
         MockServerTestRule()
 
-    lateinit var mockWebServer: MockWebServer
+    private lateinit var mockWebServer: MockWebServer
 
-    lateinit var component: AndroidTestComponent
+    private lateinit var component: AndroidTestComponent
 
     @get:Rule
     var mActivityRule: ActivityScenarioRule<MainActivity> = activityScenarioRule()
@@ -100,11 +97,12 @@ class UIBusScreenTest {
 
 
         scenario.onActivity {
-            mapManager.moveToLocation((LatLng(40.4701435453176,-3.78288324038992)))
+            mapManager.moveToLocation((LatLng(40.4701435453176, -3.78288324038992)))
 
         }
 
-        marker = device.findObject(UiSelector().descriptionContains("Avenida Valdemarín-Blanca de Castilla"))
+        marker =
+            device.findObject(UiSelector().descriptionContains("Avenida Valdemarín-Blanca de Castilla"))
 
         marker?.click()
 

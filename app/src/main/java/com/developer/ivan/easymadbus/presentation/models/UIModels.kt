@@ -4,11 +4,9 @@ import android.os.Parcelable
 import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.data.db.models.DBBusStop
 import com.developer.ivan.easymadbus.data.db.models.DBGeometry
-import com.developer.ivan.easymadbus.data.db.models.DBLine
 import com.developer.ivan.easymadbus.data.db.models.DBToken
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 import java.util.concurrent.TimeUnit

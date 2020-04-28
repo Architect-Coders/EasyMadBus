@@ -2,13 +2,8 @@ package com.developer.ivan.easymadbus.presentation.models
 
 import com.developer.ivan.domain.*
 import com.developer.ivan.easymadbus.data.db.models.*
-import com.developer.ivan.easymadbus.presentation.map.BusMapViewModel
 import com.google.android.gms.maps.model.LatLng
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
 
-fun Token.toUIToken() = UIToken(accessToken, tokenSecExpiration, timeStamp)
 fun Token.toDBToken() = DBToken(0, accessToken, tokenSecExpiration, timeStamp)
 
 fun BusStop.toUIBusStop() = UIBusStop(

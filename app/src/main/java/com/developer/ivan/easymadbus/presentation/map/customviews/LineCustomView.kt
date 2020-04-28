@@ -1,5 +1,6 @@
 package com.developer.ivan.easymadbus.presentation.map.customviews
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -101,11 +102,12 @@ class TimeDistanceCustomView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.layout_time_distance, this, true)
     }
 
+    @SuppressLint("SetTextI18n")
     fun setTimeDistance(timeInMinutes: Int, timeInMinutes2: Int) {
 
 
-        txtTime?.text = "${timeInMinutes} min"
-        txtTime2?.text = "${timeInMinutes2} min"
+        txtTime?.text = "$timeInMinutes min"
+        txtTime2?.text = "$timeInMinutes2 min"
 
     }
 

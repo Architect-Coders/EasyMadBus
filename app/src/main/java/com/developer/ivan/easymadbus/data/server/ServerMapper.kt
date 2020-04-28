@@ -47,7 +47,7 @@ object ServerMapper {
         return try {
 
             val arrayList = JSONArray(data).getString(0)
-            parseDataServerResponse<T>(arrayList)
+            parseDataServerResponse(arrayList)
         } catch (e: JSONException) {
             Either.Left(Failure.JsonException(e.localizedMessage ?: String.empty))
         }

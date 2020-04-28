@@ -20,13 +20,12 @@ import com.developer.ivan.easymadbus.data.db.models.DBStopFavourite
 import com.developer.ivan.easymadbus.framework.ApiService
 import com.developer.ivan.easymadbus.framework.UIEasyMadBusDelegate
 import com.developer.ivan.easymadbus.framework.di.AndroidTestComponent
-import com.developer.ivan.easymadbus.utils.MockServerDispatcher
-import com.developer.ivan.easymadbus.utils.rules.network.MockServerTestRule
 import com.developer.ivan.easymadbus.presentation.MainActivity
+import com.developer.ivan.easymadbus.utils.MockServerDispatcher
 import com.developer.ivan.easymadbus.utils.matchers.atPosition
+import com.developer.ivan.easymadbus.utils.rules.network.MockServerTestRule
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.mockwebserver.MockWebServer
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.*
 import org.junit.After
 import org.junit.Before
@@ -36,7 +35,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class UIFavouriteScreenTest {
-
 
 
     @get:Rule
@@ -50,12 +48,11 @@ class UIFavouriteScreenTest {
             "android.permission.ACCESS_FINE_LOCATION"
         )
 
-    lateinit var mockWebServer: MockWebServer
+    private lateinit var mockWebServer: MockWebServer
     private lateinit var http: OkHttp3IdlingResource
 
 
-
-    lateinit var component: AndroidTestComponent
+    private lateinit var component: AndroidTestComponent
 
 
     @get:Rule
@@ -117,7 +114,14 @@ class UIFavouriteScreenTest {
 
         mActivityRule.scenario.moveToState(Lifecycle.State.RESUMED)
 
-        onView(withId(R.id.rcvFavourites)).check(matches(atPosition(0, hasDescendant(withText("myStop")))))
+        onView(withId(R.id.rcvFavourites)).check(
+            matches(
+                atPosition(
+                    0,
+                    hasDescendant(withText("myStop"))
+                )
+            )
+        )
 
 
     }
