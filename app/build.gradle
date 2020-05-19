@@ -72,10 +72,12 @@ dependencies {
     implementation mainApplication.retrofit_gson
     implementation mainApplication.gson
     implementation mainApplication.scalars
-    implementation mainApplication.dagger
     implementation mainApplication.material
-    testImplementation mainApplication.dagger
-    androidTestImplementation mainApplication.dagger
+
+    implementation mainApplication.dagger
+    kapt mainApplication.dagger
+
+
     kapt   mainApplication.dagger_compiler
     kaptTest    mainApplication.dagger_compiler
     kaptAndroidTest    mainApplication.dagger_compiler

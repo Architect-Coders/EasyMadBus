@@ -2,6 +2,7 @@ package com.developer.ivan.easymadbus.ui.bus
 
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -24,7 +25,9 @@ import com.developer.ivan.easymadbus.presentation.map.BusMapFragmentModule
 import com.developer.ivan.easymadbus.utils.MockServerDispatcher
 import com.developer.ivan.easymadbus.utils.rules.network.MockServerTestRule
 import com.google.android.gms.maps.model.LatLng
+import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,6 +38,7 @@ import org.junit.runner.RunWith
 class UIBusScreenTest {
 
 
+    private lateinit var http: OkHttp3IdlingResource
     @get:Rule
     val mockWebServerRule =
         MockServerTestRule()
@@ -76,13 +80,20 @@ class UIBusScreenTest {
         mActivityRule.scenario.onActivity {
 
             component = (it.application as UIEasyMadBusDelegate).component as AndroidTestComponent
-
+            http = OkHttp3IdlingResource.create("OkHttp", component.okHttpClient)
+            IdlingRegistry.getInstance().register(http)
             component.database.clearAllTables()
 
         }
 
 
     }
+
+    @After
+    fun closeIdling() {
+        IdlingRegistry.getInstance().unregister(http)
+    }
+
 
 
     @Test
@@ -92,7 +103,6 @@ class UIBusScreenTest {
         val device = UiDevice.getInstance(getInstrumentation())
         var marker: UiObject? = null
 
-        scenario.moveToState(Lifecycle.State.RESUMED)
         val mapManager = component.plus(BusMapFragmentModule()).mapManager
 
 

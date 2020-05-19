@@ -22,9 +22,11 @@ import com.developer.ivan.easymadbus.framework.UIEasyMadBusDelegate
 import com.developer.ivan.easymadbus.framework.di.AndroidTestComponent
 import com.developer.ivan.easymadbus.presentation.MainActivity
 import com.developer.ivan.easymadbus.utils.MockServerDispatcher
+import com.developer.ivan.easymadbus.utils.fromJson
 import com.developer.ivan.easymadbus.utils.matchers.atPosition
 import com.developer.ivan.easymadbus.utils.rules.network.MockServerTestRule
 import com.jakewharton.espresso.OkHttp3IdlingResource
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.*
 import org.junit.After
@@ -65,15 +67,13 @@ class UIFavouriteScreenTest {
 
         mockWebServer = mockWebServerRule.server
 
-        mockWebServer.dispatcher =
+        /*mockWebServer.dispatcher =
             MockServerDispatcher(
                 ApplicationProvider.getApplicationContext()
-            ).Response()
+            ).Response()*/
 
 
-        mockWebServer.url("${ApiService.MOBILITY_LABS_ENDPOINT}+${ApiService.USERS_ENDPOINT}+${ApiService.GET_LOGIN}")
-        mockWebServer.url("${ApiService.TRANSPORT_ENDPOINT}+${ApiService.STOPS_ENDPOINT}+${ApiService.POST_STOPS}")
-        mockWebServer.url("${ApiService.TRANSPORT_ENDPOINT}${ApiService.STOPS_ENDPOINT}1/${ApiService.GET_DETAIL}")
+
 
 
 
@@ -83,6 +83,32 @@ class UIFavouriteScreenTest {
 
             http = OkHttp3IdlingResource.create("OkHttp", component.okHttpClient)
             IdlingRegistry.getInstance().register(http)
+
+            mockWebServer.enqueue(
+                MockResponse().fromJson(
+                    ApplicationProvider.getApplicationContext(),
+                    "login.json"
+                ).apply {
+                    setResponseCode(200)
+                }
+            )
+
+            mockWebServer.enqueue(
+                MockResponse().fromJson(
+                    ApplicationProvider.getApplicationContext(),
+                    "bus_list.json"
+                ).apply {
+                    setResponseCode(200)
+                }
+            )
+            mockWebServer.enqueue(
+                MockResponse().fromJson(
+                    ApplicationProvider.getApplicationContext(),
+                    "bus_detail.json"
+                ).apply {
+                    setResponseCode(200)
+                }
+            )
 
 
             component.database.stopFavourite().updateFavourite(DBStopFavourite("1", "myStop"))

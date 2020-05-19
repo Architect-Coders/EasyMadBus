@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus
+package com.developer.ivan.easymadbus.di.integrations
 
 import android.os.Bundle
 import android.util.Log

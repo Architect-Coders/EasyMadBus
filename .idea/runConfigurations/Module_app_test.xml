@@ -8,6 +8,7 @@
     <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
     <dir value="$PROJECT_DIR$/app/src/test/java/com" />
     <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="false" tasks="assembleAndroidTest" externalProjectPath="$PROJECT_DIR$/app" vmOptions="" scriptParameters="" />
       <option name="Android.Gradle.BeforeRunTask" enabled="true" />
     </method>
   </configuration>

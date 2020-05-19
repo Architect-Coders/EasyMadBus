@@ -5,10 +5,10 @@ package com.developer.ivan.easymadbus.presentation.map
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.developer.ivan.domain.StopFavourite
-import com.developer.ivan.easymadbus.FakeLocalDataSource
-import com.developer.ivan.easymadbus.FakeRemoteDataSource
-import com.developer.ivan.easymadbus.diTest.DaggerEasyMadBusTestComponent
-import com.developer.ivan.easymadbus.diTest.EasyMadBusTestComponent
+import com.developer.ivan.easymadbus.di.integrations.DaggerEasyMadBusTestComponent
+import com.developer.ivan.easymadbus.di.integrations.FakeLocalDataSource
+import com.developer.ivan.easymadbus.di.integrations.FakeRemoteDataSource
+import com.developer.ivan.easymadbus.di.integrations.EasyMadBusTestComponent
 import com.developer.ivan.easymadbus.framework.CoroutinesMainDispatcherRule
 import com.developer.ivan.easymadbus.presentation.models.UIBusStop
 import com.developer.ivan.easymadbus.presentation.models.UIStopFavourite
@@ -52,7 +52,7 @@ class BusMapIntegrationsTest {
 
     @Before
     fun onSetup() {
-        component = DaggerEasyMadBusTestComponent.factory().create()
+        component = DaggerEasyMadBusTestComponent.create()
         mViewModel = component.plus(BusMapFragmentModule()).busMapViewmodel
         localDataSource = component.localDataSource as FakeLocalDataSource
         remoteDataSource = component.remoteDataSource as FakeRemoteDataSource
