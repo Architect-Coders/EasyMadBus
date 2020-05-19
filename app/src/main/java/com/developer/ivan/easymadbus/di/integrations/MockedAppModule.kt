@@ -1,10 +1,9 @@
-package com.developer.ivan.easymadbus.diTest
+package com.developer.ivan.easymadbus.di.integrations
 
 import com.developer.ivan.data.datasources.LocalDataSource
 import com.developer.ivan.data.datasources.LocationDataSource
 import com.developer.ivan.data.datasources.NetworkDataSource
 import com.developer.ivan.data.datasources.RemoteDataSource
-import com.developer.ivan.easymadbus.*
 import com.developer.ivan.easymadbus.framework.IMapManager
 import com.developer.ivan.easymadbus.framework.PermissionChecker
 import dagger.Module
@@ -43,7 +42,8 @@ class MockedAppModule {
 
     @Singleton
     @Provides
-    fun mapManagerProvider(): IMapManager = FakeMapManager()
+    fun mapManagerProvider(): IMapManager =
+        FakeMapManager()
 
 
 

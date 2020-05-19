@@ -1,13 +1,10 @@
 @file:Suppress("Annotator")
+
 package com.developer.ivan.easymadbus.presentation.favourites
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.developer.ivan.easymadbus.FakeLocalDataSource
-import com.developer.ivan.easymadbus.FakeNetworkDataSource
-import com.developer.ivan.easymadbus.FakeRemoteDataSource
-import com.developer.ivan.easymadbus.diTest.DaggerEasyMadBusTestComponent
-import com.developer.ivan.easymadbus.diTest.EasyMadBusTestComponent
+import com.developer.ivan.easymadbus.di.integrations.*
 import com.developer.ivan.easymadbus.framework.CoroutinesMainDispatcherRule
 import com.developer.ivan.easymadbus.presentation.models.toUIBusStop
 import com.developer.ivan.easymadbus.presentation.models.toUILine
@@ -52,7 +49,7 @@ class FavouriteIntegrationsTest {
     @Before
     fun onSetup() {
 
-        component = DaggerEasyMadBusTestComponent.factory().create()
+        component = DaggerEasyMadBusTestComponent.create()
 
         mViewModel = component.plus(FavouriteFragmentModule()).favouriteViewModel
         localDataSource = component.localDataSource as FakeLocalDataSource
@@ -132,11 +129,17 @@ class FavouriteIntegrationsTest {
         }
 
     }
+
     @Test
     fun `obtainInfo show data from db without connectivity`() {
 
         networkDataSource.connected = false
-        val expectedResult = listOf(Pair(busStopsMock[0].apply { lines= linesMock }.toUIBusStop(),stopFavouriteMock.toUIStopFavourite()))
+        val expectedResult = listOf(
+            Pair(
+                busStopsMock[0].apply { lines = linesMock }.toUIBusStop(),
+                stopFavouriteMock.toUIStopFavourite()
+            )
+        )
 
         coroutinesTestRule.testDispatcher.runBlockingTest {
             mViewModel.favouriteState.observeForever(observer)

@@ -1,4 +1,4 @@
-package com.developer.ivan.easymadbus.diTest
+package com.developer.ivan.easymadbus.di.integrations
 
 import com.developer.ivan.data.datasources.LocalDataSource
 import com.developer.ivan.data.datasources.LocationDataSource
