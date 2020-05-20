@@ -14,6 +14,8 @@ import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.developer.ivan.easymadbus.R
+import com.developer.ivan.easymadbus.data.db.models.DBBusStop
+import com.developer.ivan.easymadbus.data.db.models.DBGeometry
 import com.developer.ivan.easymadbus.data.db.models.DBStopFavourite
 import com.developer.ivan.easymadbus.framework.ApiService
 import com.developer.ivan.easymadbus.framework.UIEasyMadBusDelegate
@@ -85,6 +87,12 @@ class UIFavouriteDetailScreenTest {
             http = OkHttp3IdlingResource.create("OkHttp", component.okHttpClient)
             IdlingRegistry.getInstance().register(http)
 
+            component.database.busStopDao().insertBusStops(listOf(
+                DBBusStop("1", DBGeometry("Point",
+                    -3.78288324038992,
+                    40.4701435453176),"Avenida Valdemarín-Blanca de Castilla","0")
+            ))
+
             component.database.stopFavourite().updateFavourite(DBStopFavourite("1", "myStop"))
         }
 
@@ -118,6 +126,8 @@ class UIFavouriteDetailScreenTest {
                 )
             )
         )
+
+        Thread.sleep(2000)
 
     }
 

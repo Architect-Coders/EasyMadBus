@@ -15,7 +15,11 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
+import com.developer.ivan.domain.BusStop
+import com.developer.ivan.domain.Geometry
 import com.developer.ivan.easymadbus.R
+import com.developer.ivan.easymadbus.data.db.models.DBBusStop
+import com.developer.ivan.easymadbus.data.db.models.DBGeometry
 import com.developer.ivan.easymadbus.data.db.models.DBStopFavourite
 import com.developer.ivan.easymadbus.framework.ApiService
 import com.developer.ivan.easymadbus.framework.UIEasyMadBusDelegate
@@ -111,8 +115,17 @@ class UIFavouriteScreenTest {
             )
 
 
+            component.database.busStopDao().insertBusStops(listOf(DBBusStop("1", DBGeometry("Point",
+                -3.78288324038992,
+                    40.4701435453176),"Avenida Valdemarín-Blanca de Castilla","0")
+            ))
+
             component.database.stopFavourite().updateFavourite(DBStopFavourite("1", "myStop"))
+
+
         }
+        mActivityRule.scenario.moveToState(Lifecycle.State.RESUMED)
+
     }
 
     @After
@@ -138,7 +151,6 @@ class UIFavouriteScreenTest {
 
         onView(withId(R.id.favouriteFragment)).perform(click())
 
-        mActivityRule.scenario.moveToState(Lifecycle.State.RESUMED)
 
         onView(withId(R.id.rcvFavourites)).check(
             matches(
@@ -158,7 +170,6 @@ class UIFavouriteScreenTest {
 
         onView(withId(R.id.favouriteFragment)).perform(click())
 
-        mActivityRule.scenario.moveToState(Lifecycle.State.RESUMED)
 
         onView(withId(R.id.rcvFavourites)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
@@ -184,7 +195,6 @@ class UIFavouriteScreenTest {
 
         onView(withId(R.id.favouriteFragment)).perform(click())
 
-        mActivityRule.scenario.moveToState(Lifecycle.State.RESUMED)
 
         onView(withId(R.id.rcvFavourites)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
